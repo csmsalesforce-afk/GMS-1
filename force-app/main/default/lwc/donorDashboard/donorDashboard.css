@@ -1,0 +1,544 @@
+/* Reset and Override Salesforce Defaults */
+:host {
+    display: block;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+/* Dashboard Wrapper - Full Screen */
+.dashboard-wrapper {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 100vw;
+    height: 100vh;
+    margin: 0;
+    padding: 0;
+    background: #f5f7fa;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Navbar */
+.navbar {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    z-index: 100;
+    flex-shrink: 0;
+}
+
+.navbar-content {
+    padding: 20px 32px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 16px;
+}
+
+.navbar-title {
+    color: white;
+    font-size: 28px;
+    font-weight: 700;
+    margin: 0;
+    letter-spacing: -0.5px;
+}
+
+.navbar-right {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.navbar-tabs {
+    display: flex;
+    gap: 8px;
+}
+
+.navbar-tabs button {
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
+    border: 2px solid transparent;
+    padding: 10px 24px;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 15px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.navbar-tabs button:hover {
+    background: rgba(255, 255, 255, 0.3);
+}
+
+.navbar-tabs button.active {
+    background: white;
+    color: #667eea;
+    border-color: white;
+}
+
+.logout-btn {
+    background: rgba(255, 255, 255, 0.15);
+    color: white;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    padding: 10px 24px;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 15px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    white-space: nowrap;
+}
+
+.logout-btn:hover {
+    background: rgba(255, 255, 255, 0.25);
+    border-color: rgba(255, 255, 255, 0.5);
+    transform: translateY(-1px);
+}
+
+.logout-btn:active {
+    transform: translateY(0);
+}
+
+/* Main Content */
+.main-content {
+    flex: 1;
+    overflow-y: auto;
+    padding: 32px;
+    background: #f5f7fa;
+}
+
+/* Sub Tabs */
+.sub-tabs {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 24px;
+    background: white;
+    padding: 8px;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    width: fit-content;
+}
+
+.sub-tabs button {
+    background: transparent;
+    color: #64748b;
+    border: none;
+    padding: 10px 24px;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.sub-tabs button:hover {
+    background: #f1f5f9;
+    color: #334155;
+}
+
+.sub-tabs button.active {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+}
+
+/* Loader */
+.loader {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 60px;
+}
+
+/* Card Grid */
+.card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 24px;
+    width: 100%;
+}
+
+/* Card */
+.card {
+    background: white;
+    border-radius: 16px;
+    padding: 24px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    border: 2px solid transparent;
+    position: relative;
+    overflow: hidden;
+}
+
+.card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+    transform: scaleX(0);
+    transition: transform 0.3s ease;
+}
+
+.card:hover::before {
+    transform: scaleX(1);
+}
+
+.card.clickable:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 12px 32px rgba(102, 126, 234, 0.2);
+    border-color: #667eea;
+    cursor: pointer;
+}
+
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 12px;
+    gap: 12px;
+}
+
+.card-header h3 {
+    font-size: 18px;
+    font-weight: 600;
+    color: #1a202c;
+    margin: 0;
+    flex: 1;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+}
+
+.program {
+    color: #64748b;
+    font-size: 14px;
+    margin: 8px 0 16px 0;
+    line-height: 1.5;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+}
+
+.card-footer {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 16px;
+    padding-top: 16px;
+    border-top: 1px solid #e2e8f0;
+}
+
+.card-footer span {
+    color: #667eea;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+/* Badges */
+.badge {
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: capitalize;
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
+.badge.pending,
+.badge.Draft,
+.badge.Pending {
+    background: #fef3c7;
+    color: #92400e;
+}
+
+.badge.Approved {
+    background: #d1fae5;
+    color: #065f46;
+}
+
+.badge.Active {
+    background: #dbeafe;
+    color: #1e40af;
+}
+
+.badge.Rejected {
+    background: #fee2e2;
+    color: #991b1b;
+}
+
+/* Amount Display */
+.amount-display {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 12px;
+    padding: 12px;
+    background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+    border-radius: 8px;
+}
+
+.amount-label {
+    font-size: 13px;
+    color: #64748b;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.amount-value {
+    font-size: 18px;
+    font-weight: 700;
+    color: #0369a1;
+}
+
+/* Justification */
+.justification {
+    margin-top: 16px;
+    padding-top: 16px;
+    border-top: 1px solid #e2e8f0;
+}
+
+.justification label {
+    font-size: 12px;
+    color: #64748b;
+    font-weight: 600;
+    display: block;
+    margin-bottom: 6px;
+}
+
+.justification p {
+    font-size: 14px;
+    color: #334155;
+    line-height: 1.6;
+    margin: 0;
+}
+
+/* Justification Section in Detail View */
+.justification-section {
+    margin-top: 24px;
+    padding: 20px;
+    background: #f8fafc;
+    border-radius: 8px;
+    border-left: 3px solid #667eea;
+}
+
+.justification-section label {
+    font-size: 12px;
+    color: #64748b;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-weight: 600;
+    display: block;
+    margin-bottom: 12px;
+}
+
+.justification-section p {
+    font-size: 15px;
+    color: #1a202c;
+    line-height: 1.7;
+    margin: 0;
+    white-space: pre-wrap;
+}
+
+/* Empty State */
+.empty {
+    text-align: center;
+    padding: 80px 20px;
+    color: #94a3b8;
+    font-size: 16px;
+}
+
+/* Detail Container */
+.detail-container {
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+/* Back Button */
+.back-btn {
+    margin-bottom: 24px;
+    background: white;
+    border: 2px solid #e2e8f0;
+    color: #667eea;
+    cursor: pointer;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 14px;
+    transition: all 0.2s;
+}
+
+.back-btn:hover {
+    background: #f8fafc;
+    border-color: #667eea;
+    transform: translateX(-4px);
+}
+
+/* Detail Card */
+.detail-card {
+    background: white;
+    padding: 32px;
+    border-radius: 16px;
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
+    border: 1px solid #e2e8f0;
+}
+
+.detail-card h2 {
+    font-size: 24px;
+    font-weight: 700;
+    color: #1a202c;
+    margin: 0 0 20px 0;
+}
+
+.status-line {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 24px;
+    padding-bottom: 20px;
+    border-bottom: 2px solid #e2e8f0;
+}
+
+.status-line .label {
+    font-weight: 600;
+    color: #64748b;
+}
+
+/* Grid */
+.grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 24px;
+    margin-top: 20px;
+}
+
+.grid > div {
+    background: #f8fafc;
+    padding: 16px;
+    border-radius: 8px;
+    border-left: 3px solid #667eea;
+}
+
+.grid label {
+    font-size: 12px;
+    color: #64748b;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-weight: 600;
+    display: block;
+    margin-bottom: 8px;
+}
+
+.grid p {
+    font-weight: 600;
+    color: #1a202c;
+    font-size: 15px;
+    margin: 0;
+}
+
+/* Action Buttons */
+.actions {
+    margin-top: 32px;
+    display: flex;
+    gap: 16px;
+    justify-content: flex-start;
+}
+
+.approve,
+.reject {
+    border: none;
+    padding: 14px 32px;
+    border-radius: 10px;
+    font-weight: 600;
+    font-size: 15px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.approve {
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    color: white;
+}
+
+.approve:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(16, 185, 129, 0.3);
+}
+
+.approve:active {
+    transform: translateY(0);
+}
+
+.reject {
+    background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+    color: white;
+}
+
+.reject:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(239, 68, 68, 0.3);
+}
+
+.reject:active {
+    transform: translateY(0);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .navbar-content {
+        padding: 16px 20px;
+    }
+    
+    .navbar-title {
+        font-size: 22px;
+        width: 100%;
+    }
+    
+    .navbar-right {
+        width: 100%;
+        justify-content: space-between;
+    }
+    
+    .navbar-tabs {
+        flex: 1;
+    }
+    
+    .navbar-tabs button {
+        padding: 8px 16px;
+        font-size: 14px;
+    }
+    
+    .logout-btn {
+        padding: 8px 20px;
+        font-size: 14px;
+    }
+    
+    .main-content {
+        padding: 20px;
+    }
+    
+    .card-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .actions {
+        flex-direction: column;
+    }
+    
+    .approve,
+    .reject {
+        width: 100%;
+    }
+}

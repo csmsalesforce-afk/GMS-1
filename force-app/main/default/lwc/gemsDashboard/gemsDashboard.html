@@ -1,0 +1,154 @@
+<template>
+    <div class="dashboard-container">
+
+        <!-- =========================
+             WELCOME SECTION
+        ========================== -->
+        <div class="welcome-section">
+            <h1>
+                Welcome, {userName}
+                <template if:true={isApproved}>
+                    <span class="verified-badge">
+                        ✔ Verified Applicant
+                    </span>
+                </template>
+            </h1>
+        </div>
+
+        <!-- =========================
+             PROFILE COMPLETION BANNER
+        ========================== -->
+        <template if:true={showBanner}>
+            <div class={bannerClass}>
+
+                <div class="banner-left">
+
+                    <!-- Circular Progress -->
+                    <div class="custom-progress" style={progressStyle}>
+                        <div class="progress-circle">
+                            <span class="progress-value">
+                                {profileCompletion}%
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- Banner Text -->
+                    <div class="banner-text">
+                        <h2>{bannerTitle}</h2>
+                        <p>{bannerMessage}</p>
+                    </div>
+
+                </div>
+
+                <!-- Right Side Buttons -->
+                <div class="banner-right">
+
+                    <!-- Create Profile -->
+                    <template if:true={showCreateButton}>
+                        <lightning-button 
+                            label="Create Profile"
+                            variant="brand"
+                            onclick={handleCreateProfile}>
+                        </lightning-button>
+                    </template>
+
+                    <!-- Explore Programs (Only When Approved) -->
+                    <template if:true={showExploreButton}>
+                        <lightning-button 
+                            label="Explore Grant Programs"
+                            variant="brand"
+                            onclick={handleExplorePrograms}>
+                        </lightning-button>
+                    </template>
+
+                </div>
+
+            </div>
+        </template>
+
+        <!-- =========================
+             IMPORTANT NOTE SECTION
+        ========================== -->
+       <template if:true={showImportantNote}>
+    <div class="important-note">
+        <lightning-icon 
+            icon-name="utility:info" 
+            size="small" 
+            class="note-icon">
+        </lightning-icon>
+
+        <div class="note-text">
+            <strong>Important:</strong>
+            Your profile must be verified and approved before you can apply for any grant program.
+            Please ensure all details are accurate before submitting for approval.
+        </div>
+    </div>
+</template>
+
+        <!-- =========================
+             HOW TO APPLY SECTION
+        ========================== -->
+        <div class="how-to-apply-section">
+
+            <h2 class="section-title">How to Apply</h2>
+
+            <p class="section-subtitle">
+                Follow the steps below to complete your profile and submit a grant application successfully.
+            </p>
+
+            <div class="steps-grid">
+
+                <div class="step-card">
+                    <div class="step-number">1</div>
+                    <h3>Register on the Portal</h3>
+                    <p>
+                        Create your login credentials to securely access the GEMS Applicant Portal.
+                    </p>
+                </div>
+
+                <div class="step-card">
+                    <div class="step-number">2</div>
+                    <h3>Create Applicant Profile</h3>
+                    <p>
+                        After logging in, navigate to your profile section and complete all required organization and contact details.
+                    </p>
+                </div>
+
+                <div class="step-card">
+                    <div class="step-number">3</div>
+                    <h3>Submit Profile for Approval</h3>
+                    <p>
+                        Click on “Submit for Approval” to send your profile to the administrator for verification.
+                    </p>
+                </div>
+
+                <div class="step-card">
+                    <div class="step-number">4</div>
+                    <h3>Create & Complete Application</h3>
+                    <p>
+                        Once your profile is approved, select a grant program and fill in all required application details.
+                    </p>
+                </div>
+
+                <div class="step-card">
+                    <div class="step-number">5</div>
+                    <h3>Generate PDF & Submit</h3>
+                    <p>
+                        Generate the official application snapshot PDF and submit your application for review.
+                    </p>
+                </div>
+
+                <div class="step-card">
+                    <div class="step-number">6</div>
+                    <h3>Review & Final Decision</h3>
+                    <p>
+                        Your application undergoes multi-level review and you will receive email updates regarding the final decision.
+                    </p>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+</template>

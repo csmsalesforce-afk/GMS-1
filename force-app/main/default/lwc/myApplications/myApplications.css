@@ -1,0 +1,214 @@
+:host{
+    display:block;
+}
+
+/* FULL WIDTH FIX */
+.full-width-container{
+    width:100vw;
+    margin-left:calc(-50vw + 50%);
+}
+
+/* PAGE CONTENT */
+.page-wrapper{
+    padding:2rem 3rem;
+}
+
+/* TITLE */
+
+.page-title{
+    font-size:1.8rem;
+    font-weight:600;
+    margin-bottom:2rem;
+}
+
+/* ================= STATS ================= */
+
+.stats-container{
+    display:grid;
+    grid-template-columns:repeat(6,1fr);
+    gap:1.2rem;
+    margin-bottom:2rem;
+}
+
+.stat-card{
+    padding:1.4rem;
+    border-radius:14px;
+    text-align:center;
+    transition:transform 0.2s ease,box-shadow 0.2s ease;
+}
+
+.stat-card:hover{
+    transform:translateY(-4px);
+    box-shadow:0 10px 20px rgba(0,0,0,0.08);
+}
+
+.stat-number{
+    font-size:1.7rem;
+    font-weight:700;
+}
+
+.stat-label{
+    margin-top:0.4rem;
+    font-weight:500;
+    font-size:0.9rem;
+}
+
+/* COLORS */
+
+.total-card{
+    background:#eef2ff;
+    color:#3730a3;
+}
+
+.draft-card{
+    background:#e5e7eb;
+    color:#374151;
+}
+
+.review-card{
+    background:#fef3c7;
+    color:#92400e;
+}
+
+.approved-card{
+    background:#d1fae5;
+    color:#065f46;
+}
+
+.withdrawn-card{
+    background:#e0f2fe;
+    color:#075985;
+}
+
+.rejected-card{
+    background:#fee2e2;
+    color:#991b1b;
+}
+
+/* ================= TABLE ================= */
+
+.table-wrapper{
+    background:white;
+    border-radius:14px;
+    overflow:hidden;
+    box-shadow:0 8px 24px rgba(0,0,0,0.05);
+}
+
+/* RESPONSIVE TABLE */
+
+.table-scroll{
+    width:100%;
+    overflow-x:auto;
+}
+
+.custom-table{
+    width:100%;
+    border-collapse:collapse;
+    min-width:900px;
+}
+
+.custom-table th{
+    text-align:left;
+    padding:1rem;
+    background:#f9fafb;
+    font-weight:600;
+    font-size:0.9rem;
+}
+
+.custom-table td{
+    padding:1rem;
+    border-bottom:1px solid #f1f1f1;
+}
+
+.program-name{
+    font-weight:600;
+}
+
+.app-number{
+    font-size:0.8rem;
+    color:#6b7280;
+}
+
+/* ================= STATUS ================= */
+
+.status-badge{
+    padding:5px 12px;
+    border-radius:20px;
+    font-size:0.8rem;
+    font-weight:600;
+}
+
+.status-badge.approved{
+    background:#d1fae5;
+    color:#065f46;
+}
+
+.status-badge.draft{
+    background:#e5e7eb;
+    color:#374151;
+}
+
+.status-badge.review{
+    background:#fef3c7;
+    color:#92400e;
+}
+
+.status-badge.revision{
+    background:#fde68a;
+    color:#78350f;
+}
+
+.status-badge.withdrawn{
+    background:#e0f2fe;
+    color:#075985;
+}
+
+.status-badge.rejected{
+    background:#fee2e2;
+    color:#991b1b;
+}
+
+.status-badge.submitted{
+    background:#ede9fe;
+    color:#5b21b6;
+}
+
+/* ================= ACTION ================= */
+
+.action-btn{
+    padding:6px 14px;
+    border-radius:8px;
+    border:1px solid #2563eb;
+    background:white;
+    color:#2563eb;
+    cursor:pointer;
+    font-weight:500;
+    transition:all 0.2s ease;
+}
+
+.action-btn:hover{
+    background:#2563eb;
+    color:white;
+}
+
+/* ================= RESPONSIVE ================= */
+
+@media(max-width:1400px){
+
+.stats-container{
+grid-template-columns:repeat(3,1fr);
+}
+
+}
+
+@media(max-width:768px){
+
+.stats-container{
+grid-template-columns:repeat(2,1fr);
+}
+
+.page-wrapper{
+padding:1.5rem;
+}
+
+}

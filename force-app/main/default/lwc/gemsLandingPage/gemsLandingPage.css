@@ -1,0 +1,137 @@
+:host {
+    display: block;
+}
+
+/* GENERAL CONTAINER */
+.container {
+    max-width: 1100px;
+    margin: auto;
+    padding: 60px 20px;
+}
+
+/* HERO */
+.hero {
+    background: linear-gradient(120deg, #0a2e73, #163e9c);
+    color: white;
+    text-align: center;
+    padding: 80px 0;
+}
+
+.hero h1 {
+    font-size: 40px;
+    font-weight: 700;
+}
+
+.subtitle {
+    color: #ffcc00;
+    font-weight: 600;
+    margin-top: 15px;
+}
+
+.description {
+    margin-top: 15px;
+    font-size: 16px;
+    max-width: 650px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.buttons {
+    margin-top: 30px;
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+/* BUTTONS */
+.btn-primary {
+    background: #ffcc00;
+    color: black;
+    padding: 12px 26px;
+    border-radius: 6px;
+    border: none;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.btn-light {
+    background: white;
+    color: #0a2e73;
+    padding: 12px 26px;
+    border-radius: 6px;
+    border: none;
+    font-weight: 600;
+}
+
+.btn-outline {
+    background: transparent;
+    border: 2px solid white;
+    color: white;
+    padding: 12px 26px;
+    border-radius: 6px;
+    font-weight: 600;
+}
+
+/* SECTIONS */
+.section.white {
+    background: white;
+}
+
+.section.light {
+    background: #f4f6fb;
+}
+
+.section h2 {
+    text-align: center;
+    margin-bottom: 40px;
+    color: #0a2e73;
+}
+
+/* GRID */
+.grid-3 {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 30px;
+}
+
+/* CARD */
+.card {
+    background: white;
+    padding: 25px;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    text-align: center;
+}
+
+/* STEPS */
+.steps {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    flex-wrap: wrap;
+}
+
+.step {
+    text-align: center;
+}
+
+.step span {
+    display: inline-block;
+    background: #ffcc00;
+    color: black;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    line-height: 40px;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+/* CTA */
+.cta {
+    background: #0a2e73;
+    color: white;
+    text-align: center;
+    padding: 60px 0;
+}

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Fund_Source__c</fullName>
+    <label>Fund Source</label>
+    <required>false</required>
+    <trackHistory>true</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Internal Funds</fullName>
+                <default>false</default>
+                <label>Internal Funds</label>
+            </value>
+            <value>
+                <fullName>Donor Restricted Funds</fullName>
+                <default>false</default>
+                <label>Donor Restricted Funds</label>
+            </value>
+            <value>
+                <fullName>Government Funds</fullName>
+                <default>false</default>
+                <label>Government Funds</label>
+            </value>
+            <value>
+                <fullName>External Partner Funds</fullName>
+                <default>false</default>
+                <label>External Partner Funds</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

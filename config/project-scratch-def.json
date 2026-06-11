@@ -1,0 +1,25 @@
+{
+  "orgName": "Demo company",
+  "edition": "Enterprise",
+
+  "features": [
+    "EnableSetPasswordInApi",
+    "Communities",
+    "CustomerCommunity",
+    "CustomerCommunityPlus"
+  ],
+
+  "settings": {
+    "lightningExperienceSettings": {
+      "enableS1DesktopEnabled": true
+    },
+
+    "mobileSettings": {
+      "enableS1EncryptedStoragePref2": false
+    },
+
+    "communitiesSettings": {
+      "enableNetworksEnabled": true
+    }
+  }
+}

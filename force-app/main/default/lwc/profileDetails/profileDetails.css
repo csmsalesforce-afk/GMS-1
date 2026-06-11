@@ -1,0 +1,122 @@
+:host {
+    display: block;
+}
+
+/* PAGE WRAPPER (Fix spacing from navbar) */
+
+.page-wrapper {
+    padding-top: 25px;
+}
+
+
+/* PROFILE CARD */
+
+.profile-card {
+    background: white;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+    margin-top: 20px;
+}
+
+
+/* GRID */
+
+.profile-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+}
+
+
+/* FIELD BOX */
+
+.field-item {
+    background: #f9fafc;
+    padding: 14px;
+    border-radius: 8px;
+}
+
+
+/* STATUS BANNER BASE */
+
+.status-banner {
+    padding: 18px 24px;
+    border-radius: 12px;
+    margin-bottom: 20px;
+    font-weight: 600;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+}
+
+
+/* STATUS COLORS */
+
+/* Draft */
+
+.draft {
+    background: #e3f2fd;
+    border: 1px solid #42a5f5;
+    color: #0d47a1;
+}
+
+
+/* Pending */
+
+.pending {
+    background: #fff4e5;
+    border: 1px solid #ffb74d;
+    color: #e65100;
+}
+
+
+/* Approved */
+
+.approved {
+    background: #e8f5e9;
+    border: 1px solid #66bb6a;
+    color: #1b5e20;
+}
+
+
+/* Rejected */
+
+.rejected {
+    background: #ffebee;
+    border: 1px solid #ef5350;
+    color: #b71c1c;
+}
+
+
+/* SUBMIT BUTTON HEADER */
+
+.action-header {
+    display: flex;
+    justify-content: flex-start;
+    margin-bottom: 15px;
+}
+
+
+/* NO PROFILE CARD */
+
+.no-profile-card {
+    text-align: center;
+    padding: 60px 40px;
+    background: white;
+    border-radius: 20px;
+    box-shadow: 0 20px 45px rgba(0,0,0,0.08);
+    max-width: 500px;
+    margin: 60px auto;
+}
+
+
+.no-profile-card h2 {
+    font-size: 24px;
+    margin-bottom: 15px;
+}
+
+
+.no-profile-card p {
+    color: #6b7280;
+    margin-bottom: 25px;
+    font-size: 16px;
+}

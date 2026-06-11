@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <label><!-- Organization Type --></label>
+    <name>Organization_Type__c</name>
+    <picklistValues>
+        <masterLabel>Academic Institution</masterLabel>
+        <translation><!-- Academic Institution --></translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Individual Applicant</masterLabel>
+        <translation><!-- Individual Applicant --></translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>NGO</masterLabel>
+        <translation><!-- NGO --></translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Private Organization</masterLabel>
+        <translation><!-- Private Organization --></translation>
+    </picklistValues>
+</CustomFieldTranslation>

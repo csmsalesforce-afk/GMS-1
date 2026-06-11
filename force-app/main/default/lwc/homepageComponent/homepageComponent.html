@@ -1,0 +1,52 @@
+<template>
+    <div class="homepage-wrapper">
+
+        <!-- HERO SECTION -->
+        <section class="hero">
+            <div class="hero-content">
+                <h1>Empowering Change Through Grants</h1>
+                <p>
+                    Submit applications, track progress, and manage your funding journey securely.
+                </p>
+
+                <div class="hero-buttons">
+                    <lightning-button 
+                        label="Apply for Grant"
+                        variant="brand"
+                        onclick={handleApply}>
+                    </lightning-button>
+
+                    <lightning-button 
+                        label="View My Applications"
+                        variant="neutral"
+                        onclick={handleMyApplications}>
+                    </lightning-button>
+                </div>
+            </div>
+        </section>
+
+        <!-- DASHBOARD STATS -->
+        <section class="dashboard">
+            <div class="card">
+                <h3>Draft Applications</h3>
+                <p class="stat">{draftCount}</p>
+            </div>
+
+            <div class="card">
+                <h3>Submitted</h3>
+                <p class="stat">{submittedCount}</p>
+            </div>
+
+            <div class="card">
+                <h3>Approved</h3>
+                <p class="stat">{approvedCount}</p>
+            </div>
+
+            <div class="card">
+                <h3>Rejected</h3>
+                <p class="stat">{rejectedCount}</p>
+            </div>
+        </section>
+
+    </div>
+</template>

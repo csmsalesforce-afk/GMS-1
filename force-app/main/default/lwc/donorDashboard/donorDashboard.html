@@ -1,0 +1,371 @@
+<template>
+    <div class="dashboard-wrapper">
+
+        <!-- 🔷 NAVBAR -->
+        <nav class="navbar">
+            <div class="navbar-content">
+                <h1 class="navbar-title">Donor Dashboard</h1>
+                <div class="navbar-right">
+                    <div class="navbar-tabs">
+                        <button 
+                            class={agreementsTabClass}
+                            onclick={handleAgreementsTab}>
+                            Agreements
+                        </button>
+                        <button 
+                            class={fundingRequestsTabClass}
+                            onclick={handleFundingRequestsTab}>
+                            Funding Requests
+                        </button>
+                    </div>
+                    <button class="logout-btn" onclick={handleLogout}>
+                        Logout
+                    </button>
+                </div>
+            </div>
+        </nav>
+
+        <!-- 🔷 LOADER -->
+        <template if:true={isLoading}>
+            <div class="loader">
+                <lightning-spinner alternative-text="Loading"></lightning-spinner>
+            </div>
+        </template>
+
+        <!-- 🔷 MAIN CONTENT -->
+        <div class="main-content">
+
+            <!-- ================= AGREEMENTS TAB ================= -->
+            <template if:true={showAgreements}>
+                
+                <!-- LIST VIEW -->
+                <template if:false={selectedAgreement}>
+                    
+                    <div class="sub-tabs">
+                        <button 
+                            class={pendingSubTabClass}
+                            onclick={handlePendingSubTab}>
+                            Pending
+                        </button>
+                        <button 
+                            class={activeSubTabClass}
+                            onclick={handleActiveSubTab}>
+                            Active
+                        </button>
+                    </div>
+
+                    <!-- Pending Agreements -->
+                    <template if:true={showPendingAgreements}>
+                        <template if:true={pendingAgreements.length}>
+                            <div class="card-grid">
+                                <template for:each={pendingAgreements} for:item="agr">
+                                    <div key={agr.Id}
+                                         class="card clickable"
+                                         data-id={agr.Id}
+                                         onclick={handleAgreementClick}>
+
+                                        <div class="card-header">
+                                            <h3>{agr.Name}</h3>
+                                            <span class="badge pending">{agr.Status__c}</span>
+                                        </div>
+
+                                        <p class="program">{agr.Program__r.Name}</p>
+
+                                        <div class="amount-display">
+                                            <span class="amount-label">Amount:</span>
+                                            <span class="amount-value">$ {agr.Agreement_Amount__c}</span>
+                                        </div>
+
+                                        <div class="card-footer">
+                                            <span>Click to review →</span>
+                                        </div>
+                                    </div>
+                                </template>
+                            </div>
+                        </template>
+
+                        <template if:false={pendingAgreements.length}>
+                            <p class="empty">No pending agreements</p>
+                        </template>
+                    </template>
+
+                    <!-- Active Agreements -->
+                    <template if:true={showActiveAgreements}>
+                        <template if:true={respondedAgreements.length}>
+                            <div class="card-grid">
+                                <template for:each={respondedAgreements} for:item="agr">
+                                    <div key={agr.Id}
+                                         class="card clickable"
+                                         data-id={agr.Id}
+                                         onclick={handleAgreementClick}>
+
+                                        <div class="card-header">
+                                            <h3>{agr.Name}</h3>
+                                            <span class="badge {agr.Status__c}">{agr.Status__c}</span>
+                                        </div>
+
+                                        <p class="program">{agr.Program__r.Name}</p>
+
+                                        <div class="amount-display">
+                                            <span class="amount-label">Amount:</span>
+                                            <span class="amount-value">$ {agr.Agreement_Amount__c}</span>
+                                        </div>
+                                    </div>
+                                </template>
+                            </div>
+                        </template>
+
+                        <template if:false={respondedAgreements.length}>
+                            <p class="empty">No active agreements</p>
+                        </template>
+                    </template>
+
+                </template>
+
+                <!-- DETAIL VIEW -->
+                <template if:true={selectedAgreement}>
+                    <div class="detail-container">
+
+                        <button class="back-btn" onclick={handleBack}>← Back</button>
+
+                        <div class="detail-card">
+
+                            <h2>{selectedAgreement.Name}</h2>
+
+                            <div class="status-line">
+                                <span class="label">Status:</span>
+                                <span class="badge">{selectedAgreement.Status__c}</span>
+                            </div>
+
+                            <div class="grid">
+                                <div>
+                                    <label>Program</label>
+                                    <p>{selectedAgreement.Program__r.Name}</p>
+                                </div>
+
+                                <div>
+                                    <label>Agreement Name</label>
+                                    <p>{selectedAgreement.Agreement_Name__c}</p>
+                                </div>
+
+                                <div>
+                                    <label>Total Amount</label>
+                                    <p>$ {selectedAgreement.Agreement_Amount__c}</p>
+                                </div>
+
+                                <div>
+                                    <label>Start Date</label>
+                                    <p>{selectedAgreement.Start_Date__c}</p>
+                                </div>
+
+                                <div>
+                                    <label>End Date</label>
+                                    <p>{selectedAgreement.End_Date__c}</p>
+                                </div>
+
+                                <div>
+                                    <label>Funding Type</label>
+                                    <p>{selectedAgreement.Funding_Type__c}</p>
+                                </div>
+
+                                <div>
+                                    <label>Reporting</label>
+                                    <p>{selectedAgreement.Reporting_Frequency__c}</p>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <!-- ACTIONS -->
+                        <template if:true={isSelectedPending}>
+                            <div class="actions">
+                                <button class="approve"
+                                        data-id={selectedAgreement.Id}
+                                        onclick={handleApprove}>
+                                    Approve
+                                </button>
+
+                                <button class="reject"
+                                        data-id={selectedAgreement.Id}
+                                        onclick={handleReject}>
+                                    Reject
+                                </button>
+                            </div>
+                        </template>
+
+                    </div>
+                </template>
+
+            </template>
+
+            <!-- ================= FUNDING REQUESTS TAB ================= -->
+            <template if:true={showFundingRequests}>
+                
+                <!-- LIST VIEW -->
+                <template if:false={selectedFundingRequest}>
+                    
+                    <div class="sub-tabs">
+                        <button 
+                            class={pendingFRSubTabClass}
+                            onclick={handlePendingFRSubTab}>
+                            Pending
+                        </button>
+                        <button 
+                            class={reviewedFRSubTabClass}
+                            onclick={handleReviewedFRSubTab}>
+                            Reviewed
+                        </button>
+                    </div>
+
+                    <!-- Pending Funding Requests -->
+                    <template if:true={showPendingFundingRequests}>
+                        <template if:true={pendingFundingRequests.length}>
+                            <div class="card-grid">
+                                <template for:each={pendingFundingRequests} for:item="fr">
+                                    <div key={fr.Id} 
+                                         class="card clickable"
+                                         data-id={fr.Id}
+                                         onclick={handleFundingRequestClick}>
+
+                                        <div class="card-header">
+                                            <h3>{fr.Name}</h3>
+                                            <span class="badge pending">{fr.Status__c}</span>
+                                        </div>
+
+                                        <p class="program">{fr.Grant_Applicant__r.Name}</p>
+
+                                        <div class="amount-display">
+                                            <span class="amount-label">Requested:</span>
+                                            <span class="amount-value">₹ {fr.Requested_Amount_FR__c}</span>
+                                        </div>
+
+                                        <div class="card-footer">
+                                            <span>Click to review →</span>
+                                        </div>
+
+                                    </div>
+                                </template>
+                            </div>
+                        </template>
+
+                        <template if:false={pendingFundingRequests.length}>
+                            <p class="empty">No pending funding requests</p>
+                        </template>
+                    </template>
+
+                    <!-- Reviewed Funding Requests -->
+                    <template if:true={showReviewedFundingRequests}>
+                        <template if:true={reviewedFundingRequests.length}>
+                            <div class="card-grid">
+                                <template for:each={reviewedFundingRequests} for:item="fr">
+                                    <div key={fr.Id} 
+                                         class="card clickable"
+                                         data-id={fr.Id}
+                                         onclick={handleFundingRequestClick}>
+
+                                        <div class="card-header">
+                                            <h3>{fr.Name}</h3>
+                                            <span class="badge {fr.Status__c}">{fr.Status__c}</span>
+                                        </div>
+
+                                        <p class="program">{fr.Grant_Applicant__r.Name}</p>
+
+                                        <div class="amount-display">
+                                            <span class="amount-label">Requested:</span>
+                                            <span class="amount-value">₹ {fr.Requested_Amount_FR__c}</span>
+                                        </div>
+
+                                    </div>
+                                </template>
+                            </div>
+                        </template>
+
+                        <template if:false={reviewedFundingRequests.length}>
+                            <p class="empty">No reviewed funding requests</p>
+                        </template>
+                    </template>
+
+                </template>
+
+                <!-- DETAIL VIEW -->
+                <template if:true={selectedFundingRequest}>
+                    <div class="detail-container">
+
+                        <button class="back-btn" onclick={handleBackFromFundingRequest}>← Back</button>
+
+                        <div class="detail-card">
+
+                            <h2>{selectedFundingRequest.Name}</h2>
+
+                            <div class="status-line">
+                                <span class="label">Status:</span>
+                                <span class="badge pending">{selectedFundingRequest.Status__c}</span>
+                            </div>
+
+                            <div class="grid">
+                                <div>
+                                    <label>Grant Applicant</label>
+                                    <p>{selectedFundingRequest.Grant_Applicant__r.Name}</p>
+                                </div>
+
+                                <div>
+                                    <label>Donor</label>
+                                    <p>{selectedFundingRequest.Donor__r.Name}</p>
+                                </div>
+
+                                <div>
+                                    <label>Requested Amount</label>
+                                    <p>₹ {selectedFundingRequest.Requested_Amount_FR__c}</p>
+                                </div>
+
+                                <div>
+                                    <label>Created By</label>
+                                    <p>{selectedFundingRequest.CreatedBy.Name}</p>
+                                </div>
+
+                                <div>
+                                    <label>Created Date</label>
+                                    <p>{selectedFundingRequest.CreatedDate}</p>
+                                </div>
+
+                                <div>
+                                    <label>Last Modified By</label>
+                                    <p>{selectedFundingRequest.LastModifiedBy.Name}</p>
+                                </div>
+                            </div>
+
+                            <template if:true={selectedFundingRequest.Justification__c}>
+                                <div class="justification-section">
+                                    <label>Justification</label>
+                                    <p>{selectedFundingRequest.Justification__c}</p>
+                                </div>
+                            </template>
+
+                        </div>
+
+                        <!-- ACTIONS FOR PENDING FUNDING REQUESTS -->
+                        <template if:true={isFundingRequestPending}>
+                            <div class="actions">
+                                <button class="approve"
+                                        data-id={selectedFundingRequest.Id}
+                                        onclick={handleApproveFundingRequest}>
+                                    Approve
+                                </button>
+
+                                <button class="reject"
+                                        data-id={selectedFundingRequest.Id}
+                                        onclick={handleRejectFundingRequest}>
+                                    Reject
+                                </button>
+                            </div>
+                        </template>
+
+                    </div>
+                </template>
+
+            </template>
+
+        </div>
+
+    </div>
+</template>

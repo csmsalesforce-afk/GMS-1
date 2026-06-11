@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Prevent_Over_Allocation</fullName>
+    <active>true</active>
+    <errorConditionFormula>Amount__c &gt; Donor_Agreement__r.Agreement_Amount__c</errorConditionFormula>
+    <errorMessage>Line item amount cannot exceed agreement amount</errorMessage>
+</ValidationRule>

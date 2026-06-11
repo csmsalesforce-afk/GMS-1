@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Block_Invoice_If_Award_Not_Active</fullName>
+    <active>true</active>
+    <errorConditionFormula>AND (ISNEW (), TEXT(Award__r.Award_Status__c) &lt;&gt; &quot;Active&quot;)</errorConditionFormula>
+    <errorMessage>Block Invoice If Award is Not Active</errorMessage>
+</ValidationRule>

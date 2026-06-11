@@ -1,0 +1,115 @@
+<template>
+
+    <!-- STEP 1 -->
+    <template if:true={isStepOne}>
+    <div class="page-container">
+
+        <div class="wizard-card">
+
+            <h1 class="wizard-title">Create Your Profile</h1>
+            <p class="wizard-subtitle">
+                Select your organization type
+            </p>
+
+            <div class="card-grid">
+
+                <div class="type-card"
+                     data-value="Academic Institution"
+                     onclick={handleTypeSelect}>
+                    🎓
+                    <span>Academic Institution</span>
+                </div>
+
+                <div class="type-card"
+                     data-value="Individual Applicant"
+                     onclick={handleTypeSelect}>
+                    👤
+                    <span>Individual Applicant</span>
+                </div>
+
+                <div class="type-card"
+                     data-value="NGO"
+                     onclick={handleTypeSelect}>
+                    🌍
+                    <span>NGO</span>
+                </div>
+
+                <div class="type-card"
+                     data-value="Private Organisation"
+                     onclick={handleTypeSelect}>
+                    🏢
+                    <span>Private Organisation</span>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+</template>
+
+
+    <!-- STEP 2 -->
+    <template if:true={isStepTwo}>
+        <div class="page-container">
+
+            <div class="wizard-card">
+
+                <div class="progress-wrapper">
+                    <lightning-progress-indicator
+                        current-step="2"
+                        type="path"
+                        variant="base">
+
+                        <lightning-progress-step
+                            label="Organization Type"
+                            value="1">
+                        </lightning-progress-step>
+
+                        <lightning-progress-step
+                            label="Profile Details"
+                            value="2">
+                        </lightning-progress-step>
+
+                    </lightning-progress-indicator>
+                </div>
+
+                <h1 class="wizard-title">Profile Details</h1>
+
+                <lightning-record-edit-form
+                    object-api-name="Grant_Program__c"
+                    record-type-id={recordTypeId}
+                    onsuccess={handleSuccess}
+                    onerror={handleError}
+                    onsubmit={handleSubmit}
+                    class="form-wrapper">
+
+                    <div class="form-grid">
+                        <template for:each={fieldSetFields} for:item="field">
+                            <div key={field} class="field-wrapper">
+                                <lightning-input-field field-name={field}>
+                                </lightning-input-field>
+                            </div>
+                        </template>
+                    </div>
+
+                    <div class="button-row space-between">
+                        <lightning-button
+                            label="Back"
+                            onclick={goBack}
+                            variant="neutral">
+                        </lightning-button>
+
+                        <lightning-button
+                            label="Submit"
+                            variant="brand"
+                            type="submit">
+                        </lightning-button>
+                    </div>
+
+                </lightning-record-edit-form>
+
+            </div>
+        </div>
+    </template>
+
+</template>

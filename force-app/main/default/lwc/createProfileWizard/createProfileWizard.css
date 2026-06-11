@@ -1,0 +1,291 @@
+/* =========================
+   HOST - FULL WIDTH FIX
+========================= */
+
+:host {
+    display: block;
+
+    width: 100vw;
+    min-height: 100vh;
+
+    margin: 0;
+    padding: 0;
+
+    background: linear-gradient(135deg,#0f172a,#1e3a8a,#2563eb);
+
+    /* Remove Experience Cloud spacing */
+    --lwc-spacingMedium: 0px;
+}
+
+/* =========================
+   PAGE CONTAINER
+========================= */
+
+.page-container {
+
+    width: 100%;
+    min-height: calc(100vh - 70px);
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 40px 20px;
+}
+
+/* =========================
+   MAIN CARD
+========================= */
+
+.wizard-card {
+
+    width: 100%;
+    max-width: 900px;
+
+    background: white;
+
+    padding: 60px 70px;
+
+    border-radius: 20px;
+
+    box-shadow: 0 20px 60px rgba(0,0,0,0.25);
+
+    transition: all .3s ease;
+}
+
+/* =========================
+   TITLES
+========================= */
+
+.wizard-title {
+
+    font-size: 38px;
+    font-weight: 800;
+
+    color: #1e293b;
+
+    margin-bottom: 10px;
+}
+
+.wizard-subtitle {
+
+    font-size: 18px;
+    color: #64748b;
+
+    margin-bottom: 40px;
+}
+
+/* =========================
+   CARD GRID
+========================= */
+
+.card-grid {
+
+    display: grid;
+
+    grid-template-columns: repeat(2,1fr);
+
+    gap: 28px;
+}
+
+/* =========================
+   TYPE CARD
+========================= */
+
+.type-card {
+
+    background: #f8fafc;
+
+    border-radius: 16px;
+
+    padding: 36px;
+
+    font-size: 38px;
+
+    font-weight: 600;
+
+    cursor: pointer;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    gap: 14px;
+
+    border: 2px solid transparent;
+
+    transition: all .25s ease;
+}
+
+.type-card span {
+
+    font-size: 18px;
+    color: #334155;
+}
+
+/* Hover */
+
+.type-card:hover {
+
+    background: linear-gradient(135deg,#2563eb,#3b82f6);
+
+    color: white;
+
+    transform: translateY(-5px);
+
+    box-shadow: 0 18px 35px rgba(0,0,0,0.25);
+}
+
+.type-card:hover span {
+    color: white;
+}
+
+/* =========================
+   FORM SECTION
+========================= */
+
+.progress-wrapper {
+    margin-bottom: 30px;
+}
+
+.form-wrapper {
+    margin-top: 20px;
+}
+
+/* FORM GRID */
+
+.form-grid {
+
+    display: grid;
+
+    grid-template-columns: repeat(2,1fr);
+
+    gap: 24px 40px;
+}
+
+.field-wrapper {
+    width: 100%;
+}
+
+/* LABEL */
+
+:host .slds-form-element__label {
+
+    font-size: 15px !important;
+    font-weight: 700 !important;
+
+    color: #334155 !important;
+}
+
+/* INPUT */
+
+:host input,
+:host textarea,
+:host select {
+
+    font-size: 15px !important;
+
+    padding: 10px 14px !important;
+}
+
+/* =========================
+   BUTTONS
+========================= */
+
+.button-row {
+
+    margin-top: 40px;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* Submit */
+
+:host .slds-button_brand {
+
+    background: linear-gradient(135deg,#2563eb,#1d4ed8);
+
+    border: none;
+
+    font-size: 16px;
+
+    padding: 12px 28px;
+
+    border-radius: 10px;
+
+    font-weight: 600;
+
+    box-shadow: 0 8px 20px rgba(37,99,235,0.4);
+
+    transition: all .25s ease;
+}
+
+:host .slds-button_brand:hover {
+
+    transform: translateY(-2px);
+
+    box-shadow: 0 10px 25px rgba(37,99,235,0.5);
+}
+
+/* Back */
+
+:host .slds-button_neutral {
+
+    padding: 10px 26px;
+
+    font-size: 15px;
+
+    border-radius: 10px;
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media (max-width: 900px) {
+
+    .wizard-card {
+
+        max-width: 95%;
+
+        padding: 45px 35px;
+    }
+}
+
+@media (max-width: 768px) {
+
+    .wizard-title {
+        font-size: 28px;
+    }
+
+    .wizard-subtitle {
+        font-size: 16px;
+    }
+
+    .card-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .form-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .button-row {
+        flex-direction: column;
+        gap: 20px;
+    }
+}
+
+@media (max-width: 480px) {
+
+    .wizard-card {
+        padding: 35px 25px;
+    }
+
+    .type-card {
+        padding: 28px;
+    }
+}

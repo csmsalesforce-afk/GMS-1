@@ -1,0 +1,120 @@
+<template>
+
+<div class="full-width-container">
+
+    <div class="page-wrapper">
+
+        <!-- PAGE TITLE -->
+        <h1 class="page-title">My Applications</h1>
+
+        <!-- STATS CARDS -->
+        <div class="stats-container">
+
+            <div class="stat-card total-card">
+                <div>
+                    <p class="stat-number">{totalCount}</p>
+                    <p class="stat-label">Total Applications</p>
+                </div>
+            </div>
+
+            <div class="stat-card draft-card">
+                <div>
+                    <p class="stat-number">{draftCount}</p>
+                    <p class="stat-label">Draft</p>
+                </div>
+            </div>
+
+            <div class="stat-card review-card">
+                <div>
+                    <p class="stat-number">{underReviewCount}</p>
+                    <p class="stat-label">Under Review</p>
+                </div>
+            </div>
+
+            <div class="stat-card approved-card">
+                <div>
+                    <p class="stat-number">{approvedCount}</p>
+                    <p class="stat-label">Approved</p>
+                </div>
+            </div>
+
+            <div class="stat-card withdrawn-card">
+                <div>
+                    <p class="stat-number">{withdrawnCount}</p>
+                    <p class="stat-label">Withdrawn</p>
+                </div>
+            </div>
+
+            <div class="stat-card rejected-card">
+                <div>
+                    <p class="stat-number">{rejectedCount}</p>
+                    <p class="stat-label">Rejected</p>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- TABLE -->
+        <div class="table-wrapper">
+
+            <div class="table-scroll">
+
+                <table class="custom-table">
+
+                    <thead>
+                        <tr>
+                            <th>Program Name</th>
+                            <th>Project Name</th>
+                            <th>Funded Up To</th>
+                            <th>Amount Requested</th>
+                            <th>Status</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        <template for:each={applications} for:item="app">
+                            <tr key={app.Id}>
+
+                                <td>
+                                    <div class="program-name">{app.programName}</div>
+                                    <div class="app-number">{app.Name}</div>
+                                </td>
+
+                                <td>{app.Project_Title__c}</td>
+
+                                <td>${app.Approved_Amount__c}</td>
+
+                                <td>${app.Requested_Amount__c}</td>
+
+                                <td>
+                                    <span class={app.statusClass}>
+                                        {app.Application_Status__c}
+                                    </span>
+                                </td>
+
+                                <td>
+                                    <button 
+                                        class="action-btn"
+                                        data-id={app.Id}
+                                        data-status={app.Application_Status__c}
+                                        onclick={handleAction}>
+                                        {app.actionLabel}
+                                    </button>
+                                </td>
+
+                            </tr>
+                        </template>
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+</template>

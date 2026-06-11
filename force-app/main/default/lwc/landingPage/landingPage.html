@@ -1,0 +1,248 @@
+<template>
+    <section class="hero">
+        <div class="hero-left">
+            <h1>Find the Right Grants<br/>to Fuel Your Initiatives</h1>
+            <p>Discover funding opportunities tailored to your sector, apply seamlessly, and track every stage of your grant journey.</p>
+            <button class="primary-btn" onclick={scrollToPrograms}>
+                Explore Grant Programs ➔
+            </button>
+        </div>
+
+        <div class="hero-right">
+            <div class="approval-card">
+                <p class="status">Application Approved</p>
+                <p class="label">Amount Granted</p>
+                <strong class="amount">$20M</strong>
+                <div class="check-circle">✔</div>
+            </div>
+            <img class="hero-img" src={heroImage} alt="Girl with Laptop" />
+        </div>
+    </section>
+
+    <section class="explore-section" data-section="programs">
+        <h2>Explore Grant Programs by Sectors</h2>
+        
+        <div class="tabs-container">
+            <ul class="sector-tabs">
+                <li data-type="All" onclick={handleFilterClick} class={allClass}>All</li>
+                <li data-type="Social Welfare Program" onclick={handleFilterClick} class={socialClass}>Social Welfare</li>
+                <li data-type="Education Program" onclick={handleFilterClick} class={educationClass}>Education</li>
+                <li data-type="Healthcare Program" onclick={handleFilterClick} class={healthClass}>Healthcare</li>
+                <li data-type="Community Development" onclick={handleFilterClick} class={communityClass}>Development</li>
+                <li data-type="Livelihood Support" onclick={handleFilterClick} class={livelihoodClass}>Support</li>
+                <li data-type="Emergency Assistance" onclick={handleFilterClick} class={emergencyClass}>Assistance</li>
+                <li data-type="Research Program" onclick={handleFilterClick} class={researchClass}>Research</li>
+            </ul>
+        </div>
+
+        <div class="card-grid">
+            <template for:each={programs} for:item="program">
+                <div key={program.id} class="program-card">
+                    <div class="card-header">
+                        <div class="icon-container">
+                            <lightning-icon icon-name={program.icon} size="small"></lightning-icon>
+                        </div>
+                        <span class="tag">{program.category}</span>
+                    </div>
+                    <h3>{program.title}</h3>
+                    <div class="card-footer">
+                        <p>Funding Up To</p>
+                        <strong>{program.amount}</strong>
+                    </div>
+                </div>
+            </template>
+        </div>
+        
+      <div class="view-all-container">
+            <button class="view-all-btn" onclick={handleViewAllClick}>View All</button>
+        </div>
+    </section>
+
+
+
+  <!-- ================= ELIGIBILITY ================= -->
+    <section class="eligible-section">
+
+        <h2>Who is Eligible</h2>
+
+        <p class="subtitle">
+            Identify your applicant category to explore grants tailored to your organization type.
+        </p>
+
+        <div class="eligible-grid">
+
+            <div class="eligible-card">
+                <img src={academicImage} alt="Academic & Research Institutions" class="eligible-image">
+                <h3>Academic & Research Institutions</h3>
+                <p>Institutes and research centers seeking project-based or innovation grants.</p>
+            </div>
+
+            <div class="eligible-card">
+                <img src={ngoImage} alt="Non-Profit Organizations" class="eligible-image">
+                <h3>Non-Profit Organizations (NGOs)</h3>
+                <p>Registered organizations working on social, community, and development initiatives.</p>
+            </div>
+
+            <div class="eligible-card">
+                <img src={startupImage} alt="Startups & Innovation-Driven Enterprises" class="eligible-image">
+                <h3>Startups & Innovation-Driven Enterprises</h3>
+                <p>Startups and enterprises developing innovative solutions.</p>
+            </div>
+
+            <div class="eligible-card">
+                <img src={researcherImage} alt="Independent Researchers" class="eligible-image">
+                <h3>Independent Researchers</h3>
+                <p>Independent researchers working on eligible research or innovation projects.</p>
+            </div>
+
+        </div>
+
+    </section>
+
+
+
+
+
+
+
+
+
+    <!-- <section class="eligible-section">
+        <h2>Who is Eligible</h2>
+        <p class="subtitle">Identify your applicant category to explore grants tailored to your organization type.</p>
+
+        <div class="eligible-grid">
+            <div class="eligible-card">
+                <div class="card-img academic-img"></div>
+                <div class="card-content">
+                    <h3>Academic & Research Institutions</h3>
+                    <p>Institutes and research centers seeking project-based or innovation grants.</p>
+                </div>
+            </div>
+            <div class="eligible-card">
+                <div class="card-img ngo-img"></div>
+                <div class="card-content">
+                    <h3>Non-Profit Organizations (NGOs)</h3>
+                    <p>Registered organizations working on social, community, and development initiatives.</p>
+                </div>
+            </div>
+            <div class="eligible-card">
+                <div class="card-img startup-img"></div>
+                <div class="card-content">
+                    <h3>Startups & Innovation-Driven Enterprises</h3>
+                    <p>Startups & Innovation-Driven Enterprises</p>
+                </div>
+            </div>
+            <div class="eligible-card">
+                <div class="card-img researcher-img"></div>
+                <div class="card-content">
+                    <h3>Independent Researchers</h3>
+                    <p>Independent researchers working on eligible research or innovation projects.</p>
+                </div>
+            </div>
+        </div>
+    </section> -->
+
+    <section class="benefits-section">
+        <div class="benefits-header">
+            <h2>Key Benefits</h2>
+            <p class="subtitle">Everything you need to manage grants—clearly, quickly, and securely</p>
+        </div>
+
+        <div class="benefits-layout">
+            <div class="benefits-grid">
+                <div class="benefit-card">
+                    <div class="benefit-icon"><lightning-icon icon-name="utility:task" size="small"></lightning-icon></div>
+                    <h3>Transparent Evaluation</h3>
+                    <p>A structured and fair review process with clear approval stages.</p>
+                </div>
+                <div class="benefit-card">
+                    <div class="benefit-icon"><lightning-icon icon-name="utility:shield" size="small"></lightning-icon></div>
+                    <h3>Secure Submissions</h3>
+                    <p>Applications and documents are securely stored & managed online.</p>
+                </div>
+                <div class="benefit-card">
+                    <div class="benefit-icon"><lightning-icon icon-name="utility:clock" size="small"></lightning-icon></div>
+                    <h3>Real Time Tracking</h3>
+                    <p>Track application status and receive timely notifications.</p>
+                </div>
+                <div class="benefit-card">
+                    <div class="benefit-icon"><lightning-icon icon-name="utility:database" size="small"></lightning-icon></div>
+                    <h3>Centralized Management</h3>
+                    <p>Manage grants, awards, and invoices from a single dashboard.</p>
+                </div>
+            </div>
+
+            <div class="benefit-feature-card">
+                <img src={benefitMainImage} alt="Grant Management" class="benefits-main-image">
+                <div class="feature-overlay">
+                    <h3>Streamlined & Secure Grant Management</h3>
+                    <p>A unified platform for transparent review, secure submissions, real-time tracking, and centralized management.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="how-section">
+        <h2>How it Works</h2>
+        <p class="subtitle">Understand the complete process from application to fund utilization and closure.</p>
+
+        <div class="timeline-container">
+        <img src={timelineImage} alt="Process Path" class="timeline-line-bg">
+ 
+        <div class="steps-overlay">
+           
+            <div class="step-group step-1">
+                <div class="step-number color-1">1</div>
+                <div class="step-content text-down">
+                    <h4>Discover Grants</h4>
+                    <p>Explore relevant grant programs by sector, eligibility, and objectives.</p>
+                </div>
+            </div>
+ 
+            <div class="step-group step-2">
+                <div class="step-content text-up">
+                    <h4>Apply Online</h4>
+                    <p>Complete the application form and submit required documents.</p>
+                </div>
+                <div class="step-number color-2">2</div>
+            </div>
+ 
+            <div class="step-group step-3">
+                <div class="step-number color-3">3</div>
+                <div class="step-content text-down">
+                    <h4>Review & Approval</h4>
+                    <p>Applications undergo screening, evaluation, and committee approval.</p>
+                </div>
+            </div>
+ 
+            <div class="step-group step-4">
+                <div class="step-content text-up">
+                    <h4>Fund Disbursement</h4>
+                    <p>Funds are disbursed to the applicant's registered account.</p>
+                </div>
+                <div class="step-number color-4">4</div>
+            </div>
+ 
+            <div class="step-group step-5">
+                <div class="step-number color-5">5</div>
+                <div class="step-content text-down">
+                    <h4>Monitor & Close</h4>
+                    <p>Report progress, share utilization, and close the grant.</p>
+                </div>
+            </div>
+ 
+        </div>
+    </div>
+    </section>
+
+    <footer class="footer">
+        <div class="footer-links">
+            <a href="#">Security Policy</a>
+            <a href="#">Privacy Policy</a>
+            <a href="#">Terms & Conditions</a>
+        </div>
+        <hr class="footer-divider" />
+        <p>© 2026 Grant Management System. All Rights Reserved</p>
+    </footer>
+</template>

@@ -1,0 +1,123 @@
+<template>
+
+<header class="navbar-wrapper">
+
+<nav class="navbar">
+
+<!-- LEFT LOGO -->
+<div class="nav-left" onclick={navigateHome}>
+<img src={logoUrl} class="logo"/>
+</div>
+
+<!-- CENTER MENU -->
+<div class="nav-center">
+
+<a class="nav-link active" onclick={navigateHome}>
+Dashboard
+</a>
+
+<a class="nav-link" onclick={navigatePrograms}>
+Grant Programs
+</a>
+
+</div>
+
+<!-- RIGHT SECTION -->
+<div class="nav-right">
+
+<!-- 🔔 NOTIFICATION BELL -->
+<div class="notification-container" onclick={toggleNotifications}>
+
+<lightning-icon
+icon-name="utility:notification"
+size="small"
+class="notification-icon">
+</lightning-icon>
+
+<template if:true={notificationCount}>
+<span class="notification-badge">
+{notificationCount}
+</span>
+</template>
+
+</div>
+
+<!-- NOTIFICATION DROPDOWN -->
+<template if:true={showNotifications}>
+
+<div class="notification-dropdown">
+
+<template if:true={notifications}>
+
+<template for:each={notifications} for:item="note">
+
+<div
+key={note.Id}
+class="notification-item"
+data-id={note.Id}
+onclick={openApplication}>
+
+Application {note.Name} requires review
+
+</div>
+
+</template>
+
+</template>
+
+<template if:false={notifications}>
+
+<div class="notification-item">
+No notifications
+</div>
+
+</template>
+
+</div>
+
+</template>
+
+<!-- PROFILE -->
+<div class="profile-container" onclick={toggleDropdown}>
+
+<div class="profile-circle">
+{userInitials}
+</div>
+
+<div class="profile-info">
+
+<div class="profile-name">
+{userName}
+</div>
+
+<div class="profile-role">
+{profileName}
+</div>
+
+</div>
+
+</div>
+
+<template if:true={showDropdown}>
+
+<div class="dropdown">
+
+<div class="dropdown-item" onclick={navigateProfile}>
+My Profile
+</div>
+
+<div class="dropdown-item logout" onclick={handleLogout}>
+Logout
+</div>
+
+</div>
+
+</template>
+
+</div>
+
+</nav>
+
+</header>
+
+</template>

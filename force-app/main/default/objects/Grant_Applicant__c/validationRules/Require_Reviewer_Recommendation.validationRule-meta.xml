@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Require_Reviewer_Recommendation</fullName>
+    <active>true</active>
+    <errorConditionFormula>AND(
+    ISPICKVAL(Application_Status__c, &quot;Under Internal Review&quot;),
+    ISBLANK(TEXT(Reviewer_Recommendation__c)),
+    $Profile.Name = &quot;Reviewer&quot;
+)</errorConditionFormula>
+    <errorDisplayField>Reviewer_Recommendation__c</errorDisplayField>
+    <errorMessage>Please select Reviewer Recommendation before approving the Grant Application.</errorMessage>
+</ValidationRule>

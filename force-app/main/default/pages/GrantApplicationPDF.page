@@ -1,0 +1,11 @@
+<apex:page standardController="Grant_Applicant__c" renderAs="pdf">
+    <h1 style="text-align:center;">Grant Application</h1>
+
+    <p><b>Application Number:</b> {!Grant_Applicant__c.Name}</p>
+    <p><b>Applicant Organization:</b> {!Grant_Applicant__c.Account__r.Name}</p>
+    <p><b>Project Title:</b> {!Grant_Applicant__c.Project_Title__c}</p>
+    <p><b>Country:</b> {!Grant_Applicant__c.Country__c}</p>
+    <p><b>Requested Amount:</b> {!Grant_Applicant__c.Requested_Amount__c}</p>
+    <p><b>Status:</b> {!Grant_Applicant__c.Application_Status__c}</p>
+    <p><b>Submission Date:</b> {!TODAY()}</p>
+</apex:page>

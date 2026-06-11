@@ -1,0 +1,37 @@
+<template>
+    <lightning-card title="Welcome Component" icon-name="standard:user">
+        <div style="padding: 20px;">
+            
+            <lightning-input 
+                label="Enter Your Name"
+                value={name}
+                onchange={handleChange}>
+            </lightning-input>
+
+            <br/>
+
+            <lightning-button 
+                label="Greet Me"
+                variant="brand"
+                onclick={handleClick}>
+            </lightning-button>
+
+            <template if:true={showMessage}>
+                <div style="
+                    margin-top: 15px;
+                    font-size: 16px;
+                    font-weight: bold;
+                    color: #1589ee;
+                    background-color: #f3f9ff;
+                    padding: 10px;
+                    border-radius: 8px;
+                    text-align: center;">
+                    
+                    Hello {name}, welcome to LWC 🚀
+                    
+                </div>
+            </template>
+
+        </div>
+    </lightning-card>
+</template>

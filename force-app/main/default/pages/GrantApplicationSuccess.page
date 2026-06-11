@@ -1,0 +1,6 @@
+<apex:page standardController="Grant_Applicant__c" extensions="GrantAppPDFSaver" action="{!savePDF}">
+    <apex:sectionHeader title="Generating PDF..." subtitle="Please wait"/>
+    <div style="text-align: center; font-size: 16px; padding: 20px;">
+        Saving PDF to related files...
+    </div>
+</apex:page>

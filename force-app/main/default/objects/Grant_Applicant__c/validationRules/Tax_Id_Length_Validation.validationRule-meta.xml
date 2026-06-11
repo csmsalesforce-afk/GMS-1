@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Tax_Id_Length_Validation</fullName>
+    <active>false</active>
+    <errorConditionFormula>OR(
+    LEN(Tax_ID_applicant__c) &lt; 8,
+    LEN(Tax_ID_applicant__c) &gt; 10
+)</errorConditionFormula>
+    <errorMessage>Tax id must be between 8 and 10 characters.</errorMessage>
+</ValidationRule>

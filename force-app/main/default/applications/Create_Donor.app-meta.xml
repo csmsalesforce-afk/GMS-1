@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomApplication xmlns="http://soap.sforce.com/2006/04/metadata">
+    <brand>
+        <headerColor>#0070D2</headerColor>
+        <shouldOverrideOrgTheme>false</shouldOverrideOrgTheme>
+    </brand>
+    <formFactors>Small</formFactors>
+    <formFactors>Large</formFactors>
+    <isNavAutoTempTabsDisabled>false</isNavAutoTempTabsDisabled>
+    <isNavPersonalizationDisabled>false</isNavPersonalizationDisabled>
+    <isNavTabPersistenceDisabled>false</isNavTabPersistenceDisabled>
+    <isOmniPinnedViewEnabled>false</isOmniPinnedViewEnabled>
+    <label>Create Donor</label>
+    <navType>Standard</navType>
+    <tabs>Create_Donor_And_Agremeent</tabs>
+    <tabs>Agreement_Line_Item__c</tabs>
+    <tabs>Fund_Utilization__c</tabs>
+    <uiType>Lightning</uiType>
+    <utilityBar>Create_Donor_UtilityBar</utilityBar>
+</CustomApplication>

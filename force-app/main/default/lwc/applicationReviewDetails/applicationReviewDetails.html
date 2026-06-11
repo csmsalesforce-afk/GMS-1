@@ -1,0 +1,301 @@
+<template>
+    <template if:true={application}>
+        <div class="page slds-p-around_medium">
+
+            <div class="left-panel">
+
+                <div class="header-card">
+                    <div class="header-title">
+                        <h1>{application.Name} <span class="badge badge-pending">{application.Application_Status__c}</span></h1>
+                    </div>
+
+                    <div class="applicant-info-box">
+                        <div class="info-row">
+                            <div class="info-group main-entity">
+                                <lightning-icon icon-name="standard:account" size="medium"></lightning-icon>
+                                <div>
+                                    <template if:true={application.Account__r}>
+                                        <strong>{application.Account__r.Name}</strong>
+                                    </template>
+                                </div>
+                            </div>
+
+                            <template if:true={application.Account__r}>
+                                <div class="info-group">
+                                    <span>Contact Person Name:</span>
+                                    <strong>{application.Account__r.Primary_Contact_Name__c}</strong>
+                                </div>
+                                <div class="info-group">
+                                    <span>Email ID:</span>
+                                    <strong>{application.Account__r.Primary_Contact_Email__c}</strong>
+                                </div>
+                            </template>
+                        </div>
+
+                        <div class="info-row bottom-row">
+                            <div class="info-group link">
+                                <a href="#">View Applicant Details</a>
+                            </div>
+
+                            <template if:true={application.Grant_Program__r}>
+                                <div class="info-group">
+                                    <span>Institution Category:</span>
+                                    <strong>{application.Grant_Program__r.Organization_Type__c}</strong>
+                                </div>
+
+                                <div class="info-group">
+                                    <span>Region:</span>
+                                    <strong>{application.Grant_Program__r.Region__r.Name}</strong>
+                                </div>
+                            </template>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h2 class="section-title">Project Details</h2>
+                    <div class="details-grid">
+                        <div class="full-width">
+                            <span>Project Title</span>
+                            <p>{application.Project_Title__c}</p>
+                        </div>
+                        <div class="full-width">
+                            <span>Project Description</span>
+                            <p>{application.Project_Description__c}</p>
+                        </div>
+                        <div>
+                            <span>Requested Amount</span>
+                            <p>${application.Requested_Amount__c}</p>
+                        </div>
+                        <div>
+                            <span>Budget details</span>
+                            <p class="pre-line">{application.Budget_Details__c}</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section hr-top">
+                    <h2 class="section-title">Bank Details</h2>
+                    <div class="details-grid">
+                        <div>
+                            <span>Bank Name</span>
+                            <p>{application.Bank_Name_applicant__c}</p>
+                        </div>
+                        <div>
+                            <span>Account Number</span>
+                            <p>{application.Bank_Account_Number_applicant__c}</p>
+                        </div>
+                        <div>
+                            <span>IFSC / SWIFT Code</span>
+                            <p>{application.IFSC_SWIFT_Code_applicant__c}</p>
+                        </div>
+                        <div>
+                            <span>Tax ID</span>
+                            <p>{application.Tax_ID_applicant__c}</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section hr-top">
+                    <h2 class="section-title">Uploaded Documents</h2>
+                    <div class="document-grid">
+                        <template for:each={files} for:item="file">
+                            <div key={file.ContentDocumentId} class="file-card">
+                                <div class="file-info">
+                                    <lightning-icon icon-name="doctype:pdf" size="small"></lightning-icon>
+                                    <div class="file-name">
+                                        <p>{file.ContentDocument.Title}</p>
+                                    </div>
+                                </div>
+                                 <a href={file.downloadUrl} target="_blank">
+                                    <lightning-icon icon-name="utility:download" size="x-small"></lightning-icon>
+                                </a> 
+                            </div>
+                        </template>
+                    </div>
+                </div>
+            </div>
+
+            <div class="right-panel">
+
+                <template if:true={showActionSection}>
+                    <div class="action-card">
+                        <h2>Take Action</h2>
+
+                        <template lwc:if={showReviewerForm}>
+                            <lightning-radio-group 
+                                label="Reviewer Decision" 
+                                name="decision" 
+                                options={decisionOptions} 
+                                value={decision} 
+                                onchange={handleDecision} 
+                                class="custom-radio">
+                            </lightning-radio-group>
+
+                            <lightning-input 
+                                type="number" 
+                                min="0" max="100" 
+                                label="Overall Evaluation Score (out of 100)*" 
+                                onchange={handleOverallScore} 
+                                class="dark-input">
+                            </lightning-input>
+                            
+                            <div class="remarks-wrapper">
+                                <lightning-textarea 
+                                    label="Remarks*" 
+                                    value={remarks} 
+                                    placeholder="Enter Your Remarks" 
+                                    max-length="50" 
+                                    onchange={handleRemarks} 
+                                    class="dark-input">
+                                </lightning-textarea>
+                                <div class="char-count">{remarksRemainingChars} Characters</div>
+                            </div>
+
+                            <div class="action-buttons">
+                                <button class="btn-cancel">Cancel</button>
+                                <button class="btn-submit" onclick={handleReviewerSubmit}>Submit</button>
+                            </div>
+                        </template>
+
+                        <template lwc:elseif={showReviewerReadOnly}>
+                            <div class="read-only-box slds-m-top_medium">
+                                <p class="read-only-label">Decision</p>
+                                <p class="read-only-value">{inferredDecision}</p>
+                                
+                                <p class="read-only-label slds-m-top_small">Overall Score</p>
+                                <p class="read-only-value">{application.Reviewer_Score__c} / 100</p>
+                                
+                                <p class="read-only-label slds-m-top_small">Remarks</p>
+                                <p class="read-only-value">{application.Reviewer_Comments__c}</p>
+                            </div>
+                        </template>
+
+                        <template lwc:elseif={showPOForm}>
+                            <lightning-radio-group 
+                                label="Program Officer Decision" 
+                                name="decision" 
+                                options={decisionOptions} 
+                                value={decision} 
+                                onchange={handleDecision} 
+                                class="custom-radio">
+                            </lightning-radio-group>
+                            
+                            <lightning-input 
+                                type="number" min="0" max="100" 
+                                label="Eligibility Score (out of 100)*" 
+                                onchange={handleEligibilityScore} 
+                                class="dark-input">
+                            </lightning-input>
+                            
+                            <lightning-input 
+                                type="number" min="1" max="5" 
+                                label="Program Alignment Score (1 to 5)*" 
+                                onchange={handleAlignmentScore} 
+                                class="dark-input">
+                            </lightning-input>
+                            
+                            <lightning-input 
+                                type="number" min="0" max="100" 
+                                label="Budget Compliance Score (out of 100)*" 
+                                onchange={handleBudgetScore} 
+                                class="dark-input">
+                            </lightning-input>
+                            
+                            <lightning-combobox 
+                                label="Funding Priority*" 
+                                options={priorityOptions} 
+                                value={fundingPriority} 
+                                onchange={handlePriority}
+                                placeholder="Select Priority..."
+                                class="dark-input">
+                            </lightning-combobox>
+
+                            <div class="remarks-wrapper">
+                                <lightning-textarea 
+                                    label="External Reviewer Comments*" 
+                                    value={remarks} 
+                                    placeholder="Enter Your Remarks" 
+                                    max-length="50" 
+                                    onchange={handleRemarks} 
+                                    class="dark-input">
+                                </lightning-textarea>
+                                <div class="char-count">{remarksRemainingChars} Characters</div>
+                            </div>
+
+                            <div class="action-buttons">
+                                <button class="btn-cancel">Cancel</button>
+                                <button class="btn-submit" onclick={handlePOSubmit}>Submit</button>
+                            </div>
+                        </template>
+
+                        <template lwc:elseif={showPOReadOnly}>
+                            <div class="read-only-box slds-m-top_medium">
+                                <p class="read-only-label">Decision</p>
+                                <p class="read-only-value">{inferredDecision}</p>
+                                
+                                <p class="read-only-label slds-m-top_small">Eligibility Score</p>
+                                <p class="read-only-value">{application.Eligibility_Score__c} / 100</p>
+                                
+                                <p class="read-only-label slds-m-top_small">Alignment Score</p>
+                                <p class="read-only-value">{application.Program_Alignment_Score__c} / 5</p>
+                                
+                                <p class="read-only-label slds-m-top_small">Approval Type</p>
+                                <p class="read-only-value">{application.Approval_Type__c}</p>
+                                
+                                <p class="read-only-label slds-m-top_small">Funding Priority</p>
+                                <p class="read-only-value">{application.Funding_Priority__c}</p>
+                                
+                                <p class="read-only-label slds-m-top_small">Remarks</p>
+                                <p class="read-only-value">{application.External_Reviewer_Comments__c}</p>
+                            </div>
+                        </template>
+                    </div>
+                </template>
+
+                <div class="history-card">
+                    <h2>Approval History</h2>
+                    <ul class="timeline">
+                        <template for:each={approvalHistory} for:item="step">
+                            <li key={step.id} class="timeline-item">
+                                <div class="timeline-icon">
+                                    <lightning-icon icon-name={step.icon} size="x-small" variant={step.iconVariant}></lightning-icon>
+                                </div>
+                                <div class="timeline-content">
+                                    <h3>{step.status}</h3>
+                                    <p class="role">{step.roleName}</p>
+                                    
+                                    <template lwc:if={step.isPO}>
+                                        <div class="history-detail-box po-details">
+                                            <p><strong>Eligibility Score:</strong> {step.eligibilityScore} / 100</p>
+                                            <p><strong>Alignment Score:</strong> {step.alignmentScore} / 5</p>
+                                            <p><strong>Approval Type:</strong> {step.approvalType}</p>
+                                            <p><strong>Funding Priority:</strong> {step.fundingPriority}</p>
+                                        </div>
+                                        <template lwc:if={step.remarks}>
+                                            <p class="remarks">Remarks: {step.remarks}</p>
+                                        </template>
+                                    </template>
+
+                                    <template lwc:elseif={step.isReviewerStep}>
+                                        <template lwc:if={step.score}>
+                                            <div class="history-detail-box">
+                                                <p>Score: {step.score} / 100</p>
+                                            </div>
+                                        </template>
+                                        <template lwc:if={step.remarks}>
+                                            <p class="remarks">Remarks: {step.remarks}</p>
+                                        </template>
+                                    </template>
+                                    
+                                    <p class="date-text">{step.date}</p>
+                                </div>
+                            </li>
+                        </template>
+                    </ul>
+                </div>
+
+            </div>
+        </div>
+    </template>
+</template>

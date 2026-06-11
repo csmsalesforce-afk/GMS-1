@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <label><!-- Change Type --></label>
+    <name>Change_Type__c</name>
+    <picklistValues>
+        <masterLabel>Amount</masterLabel>
+        <translation><!-- Amount --></translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Duration</masterLabel>
+        <translation><!-- Duration --></translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Score</masterLabel>
+        <translation><!-- Score --></translation>
+    </picklistValues>
+</CustomFieldTranslation>

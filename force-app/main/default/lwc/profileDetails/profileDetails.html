@@ -1,0 +1,102 @@
+<template>
+
+    <!-- ========================= -->
+    <!-- NO PROFILE STATE -->
+    <!-- ========================= -->
+
+    <template if:true={noProfile}>
+        <div class="no-profile-card">
+            <h2>No Profile Found</h2>
+            <p>You have not created your profile yet.</p>
+
+            <lightning-button
+                label="Create Profile"
+                variant="brand"
+                onclick={handleCreateProfile}>
+            </lightning-button>
+        </div>
+    </template>
+
+
+    <!-- ========================= -->
+    <!-- PROFILE SECTION -->
+    <!-- ========================= -->
+
+    <template if:true={profileRec}>
+
+        <div class="page-wrapper">
+
+            <!-- STATUS BANNER -->
+
+            <template if:true={isDraft}>
+                <div class="status-banner draft">
+                    📝 Profile Not Submitted
+                    <p>Please click <b>Submit for Approval</b> to start the verification process.</p>
+                </div>
+            </template>
+
+            <template if:true={isInApproval}>
+                <div class="status-banner pending">
+                    ⏳ Profile Under Review
+                    <p>Your profile is currently under verification. You will be notified once completed.</p>
+                </div>
+            </template>
+
+            <template if:true={isApproved}>
+                <div class="status-banner approved">
+                    ✔ Profile Approved
+                    <p>Your profile has been successfully verified.</p>
+                </div>
+            </template>
+
+            <template if:true={isRejected}>
+                <div class="status-banner rejected">
+                    ❌ Profile Not Eligible
+                    <p>Your profile was not approved. Please contact support.</p>
+                </div>
+            </template>
+
+
+            <!-- PROFILE CARD -->
+
+            <div class="profile-card">
+
+                <!-- SUBMIT BUTTON -->
+
+                <div class="action-header">
+
+                    <template if:true={isDraft}>
+                        <lightning-button
+                            label="Submit for Approval"
+                            variant="brand"
+                            onclick={handleSubmitForApproval}
+                            disabled={isSubmitting}>
+                        </lightning-button>
+                    </template>
+
+                </div>
+
+
+                <lightning-record-view-form
+                    record-id={profileRec.Id}
+                    object-api-name="Grant_Program__c">
+
+                    <div class="profile-grid">
+
+                        <template for:each={fieldPaths} for:item="field">
+                            <div key={field} class="field-item">
+                                <lightning-output-field field-name={field}></lightning-output-field>
+                            </div>
+                        </template>
+
+                    </div>
+
+                </lightning-record-view-form>
+
+            </div>
+
+        </div>
+
+    </template>
+
+</template>

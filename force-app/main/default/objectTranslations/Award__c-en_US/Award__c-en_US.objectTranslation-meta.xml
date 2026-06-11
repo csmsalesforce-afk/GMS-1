@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <caseValues>
+        <plural>false</plural>
+        <value>Award</value>
+    </caseValues>
+    <caseValues>
+        <plural>true</plural>
+        <value>Awards</value>
+    </caseValues>
+    <layouts>
+        <layout>Award Layout</layout>
+        <sections>
+            <label><!-- Award Details --></label>
+            <section>Award Details</section>
+        </sections>
+        <sections>
+            <label><!-- Custom Links --></label>
+            <section>Custom Links</section>
+        </sections>
+        <sections>
+            <label><!-- Dates &amp; Status --></label>
+            <section>Dates &amp; Status</section>
+        </sections>
+    </layouts>
+    <layouts>
+        <layout>Award for Applicant</layout>
+        <sections>
+            <label><!-- Award Details --></label>
+            <section>Award Details</section>
+        </sections>
+        <sections>
+            <label><!-- Custom Links --></label>
+            <section>Custom Links</section>
+        </sections>
+        <sections>
+            <label><!-- Dates &amp; Status --></label>
+            <section>Dates &amp; Status</section>
+        </sections>
+    </layouts>
+    <startsWith>Vowel</startsWith>
+</CustomObjectTranslation>

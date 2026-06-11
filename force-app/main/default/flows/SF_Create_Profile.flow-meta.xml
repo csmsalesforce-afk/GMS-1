@@ -1,0 +1,263 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Flow xmlns="http://soap.sforce.com/2006/04/metadata" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <apiVersion>65.0</apiVersion>
+    <areMetricsLoggedToDataCloud>false</areMetricsLoggedToDataCloud>
+    <choices>
+        <name>Academic_Institution</name>
+        <choiceText>Academic Institution</choiceText>
+        <dataType>String</dataType>
+        <value>
+            <stringValue>Academic Institution</stringValue>
+        </value>
+    </choices>
+    <choices>
+        <name>Individual_Applicant</name>
+        <choiceText>Individual Applicant</choiceText>
+        <dataType>String</dataType>
+        <value>
+            <stringValue>Individual Applicant</stringValue>
+        </value>
+    </choices>
+    <choices>
+        <name>NGO</name>
+        <choiceText>NGO</choiceText>
+        <dataType>String</dataType>
+        <value>
+            <stringValue>NGO</stringValue>
+        </value>
+    </choices>
+    <choices>
+        <name>Private_Organisation</name>
+        <choiceText>Private Organisation</choiceText>
+        <dataType>String</dataType>
+        <value>
+            <stringValue>Private Organisation</stringValue>
+        </value>
+    </choices>
+    <customProperties>
+        <name>ScreenProgressIndicator</name>
+        <value>
+            <stringValue>{&quot;location&quot;:&quot;top&quot;,&quot;type&quot;:&quot;simple&quot;}</stringValue>
+        </value>
+    </customProperties>
+    <decisions>
+        <name>Decide_Organisation_Type</name>
+        <label>Decide Organisation Type</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
+        <rules>
+            <name>Academic_Institution1</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>orgTypeChoice</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <elementReference>Academic_Institution</elementReference>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Create_Academic_Profile</targetReference>
+            </connector>
+            <label>Academic Institution</label>
+        </rules>
+        <rules>
+            <name>NGO1</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>orgTypeChoice</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <elementReference>NGO</elementReference>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Create_NGO_Profile</targetReference>
+            </connector>
+            <label>NGO</label>
+        </rules>
+        <rules>
+            <name>Private_Organisation1</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>orgTypeChoice</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <elementReference>Private_Organisation</elementReference>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Create_Private_Profile</targetReference>
+            </connector>
+            <label>Private Organisation</label>
+        </rules>
+        <rules>
+            <name>Individual_Applicant1</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>orgTypeChoice</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <elementReference>Individual_Applicant</elementReference>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Create_Individual_Profile</targetReference>
+            </connector>
+            <label>Individual Applicant</label>
+        </rules>
+    </decisions>
+    <dynamicChoiceSets>
+        <name>orgType</name>
+        <dataType>Picklist</dataType>
+        <displayField xsi:nil="true"/>
+        <object xsi:nil="true"/>
+        <picklistField>Organization_Type__c</picklistField>
+        <picklistObject>Grant_Program__c</picklistObject>
+    </dynamicChoiceSets>
+    <environments>Default</environments>
+    <interviewLabel>SF Create Profile {!$Flow.CurrentDateTime}</interviewLabel>
+    <label>SF Create Profile</label>
+    <processMetadataValues>
+        <name>BuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>CanvasMode</name>
+        <value>
+            <stringValue>AUTO_LAYOUT_CANVAS</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>OriginBuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processType>Flow</processType>
+    <recordCreates>
+        <name>Create_Academic_Profile</name>
+        <label>Create Academic Profile</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <inputAssignments>
+            <field>Organization_Type__c</field>
+            <value>
+                <stringValue>Academic Institution</stringValue>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>RecordTypeId</field>
+            <value>
+                <stringValue>012fj000004AqRFAA0</stringValue>
+            </value>
+        </inputAssignments>
+        <object>Grant_Program__c</object>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordCreates>
+    <recordCreates>
+        <name>Create_Individual_Profile</name>
+        <label>Create Individual Profile</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <inputAssignments>
+            <field>Organization_Type__c</field>
+            <value>
+                <stringValue>Individual Applicant</stringValue>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>RecordTypeId</field>
+            <value>
+                <stringValue>012fj000004ArITAA0</stringValue>
+            </value>
+        </inputAssignments>
+        <object>Grant_Program__c</object>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordCreates>
+    <recordCreates>
+        <name>Create_NGO_Profile</name>
+        <label>Create NGO Profile</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <inputAssignments>
+            <field>Organization_Type__c</field>
+            <value>
+                <stringValue>NGO</stringValue>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>RecordTypeId</field>
+            <value>
+                <stringValue>012fj000004AqW5AAK</stringValue>
+            </value>
+        </inputAssignments>
+        <object>Grant_Program__c</object>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordCreates>
+    <recordCreates>
+        <name>Create_Private_Profile</name>
+        <label>Create Private Profile</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <inputAssignments>
+            <field>Organization_Type__c</field>
+            <value>
+                <stringValue>Private Organization</stringValue>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>RecordTypeId</field>
+            <value>
+                <stringValue>012fj000004ArGrAAK</stringValue>
+            </value>
+        </inputAssignments>
+        <object>Grant_Program__c</object>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordCreates>
+    <runInMode>SystemModeWithoutSharing</runInMode>
+    <screens>
+        <name>Choose_Org_Type</name>
+        <label>Choose Org Type</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <allowBack>true</allowBack>
+        <allowFinish>true</allowFinish>
+        <allowPause>true</allowPause>
+        <connector>
+            <targetReference>Decide_Organisation_Type</targetReference>
+        </connector>
+        <fields>
+            <name>orgTypeChoice</name>
+            <choiceReferences>Academic_Institution</choiceReferences>
+            <choiceReferences>NGO</choiceReferences>
+            <choiceReferences>Private_Organisation</choiceReferences>
+            <choiceReferences>Individual_Applicant</choiceReferences>
+            <dataType>String</dataType>
+            <fieldText>Choose Your Organization Type</fieldText>
+            <fieldType>RadioButtons</fieldType>
+            <inputsOnNextNavToAssocScrn>UseStoredValues</inputsOnNextNavToAssocScrn>
+            <isRequired>true</isRequired>
+            <styleProperties>
+                <verticalAlignment>
+                    <stringValue>top</stringValue>
+                </verticalAlignment>
+                <width>
+                    <stringValue>12</stringValue>
+                </width>
+            </styleProperties>
+        </fields>
+        <showFooter>true</showFooter>
+        <showHeader>true</showHeader>
+    </screens>
+    <start>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <connector>
+            <targetReference>Choose_Org_Type</targetReference>
+        </connector>
+    </start>
+    <status>Obsolete</status>
+</Flow>

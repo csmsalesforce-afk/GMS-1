@@ -1,0 +1,68 @@
+<template>
+
+    <div class="container">
+
+        <h1 class="page-title">Applications</h1>
+
+        <div class="table-container">
+
+            <table class="app-table">
+
+                <thead>
+                    <tr>
+                        <th>SL No</th>
+                        <th>Application Name</th>
+                        <th>Applicant</th>
+                        <th>Requested Amount</th>
+                        <th>Status</th>
+                        <th>Submitted On</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                    <template for:each={applications} for:item="app">
+
+                        <tr key={app.Id}>
+
+                            <td>{app.slNo}</td>
+
+                            <td>{app.Name}</td>
+
+                            <td>{app.applicantName}</td>
+
+                            <td>{app.formattedAmount}</td>
+
+                            <td>
+                                <span class={app.statusClass}>
+                                    {app.Application_Status__c}
+                                </span>
+                            </td>
+
+                            <td>
+                                <lightning-formatted-date-time value={app.CreatedDate}>
+                                </lightning-formatted-date-time>
+                            </td>
+<td>
+    <lightning-button
+        label="Review"
+        variant="brand"
+        data-id={app.Id}
+        onclick={handleReview}>
+    </lightning-button>
+</td>
+
+                        </tr>
+
+                    </template>
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</template>

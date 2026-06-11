@@ -1,0 +1,120 @@
+.navbar{
+    height:72px;
+    background:white;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:0 36px;
+    border-bottom:1px solid #e6e8ec;
+    font-family:"Salesforce Sans", Arial, sans-serif;
+}
+
+/* LOGO */
+
+.logo{
+    height:80px;
+}
+
+
+/* CENTER MENU */
+
+.nav-center{
+    display:flex;
+    gap:24px;
+}
+
+.menu-item{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    padding:8px 14px;
+    border-radius:8px;
+    font-size:14px;
+    font-weight:500;
+    color:#555;
+    cursor:pointer;
+    transition:all 0.2s ease;
+}
+
+.menu-item:hover{
+    background:#e8f0ff;
+    color:#2f5fe3;
+}
+
+.menu-item.active{
+    background:#e8f0ff;
+    color:#2f5fe3;
+}
+
+
+/* RIGHT */
+
+.nav-right{
+    display:flex;
+    align-items:center;
+}
+
+
+/* PROFILE */
+
+.profile-wrapper{
+    position:relative;
+}
+
+.profile{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    cursor:pointer;
+}
+
+.avatar{
+    width:36px;
+    height:36px;
+    border-radius:50%;
+    background:#e7ecf8;
+    color:#2f5fe3;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-weight:600;
+}
+
+.user-details{
+    display:flex;
+    flex-direction:column;
+}
+
+.user-name{
+    font-size:14px;
+    font-weight:600;
+}
+
+.profile-name{
+    font-size:12px;
+    color:#8c8f96;
+}
+
+
+/* DROPDOWN */
+
+.profile-dropdown{
+    position:absolute;
+    top:45px;
+    right:0;
+    background:white;
+    border-radius:8px;
+    box-shadow:0 6px 18px rgba(0,0,0,0.15);
+    width:120px;
+    z-index:100;
+}
+
+.dropdown-item{
+    padding:10px 14px;
+    font-size:13px;
+    cursor:pointer;
+}
+
+.dropdown-item:hover{
+    background:#f5f7fb;
+}

@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <caseValues>
+        <plural>false</plural>
+        <value>Profile</value>
+    </caseValues>
+    <caseValues>
+        <plural>true</plural>
+        <value>Profiles</value>
+    </caseValues>
+    <fieldSets>
+        <label><!-- Academic Institution --></label>
+        <name>Academic_Institution</name>
+    </fieldSets>
+    <fieldSets>
+        <label><!-- Individual --></label>
+        <name>Individual</name>
+    </fieldSets>
+    <fieldSets>
+        <label><!-- NGO --></label>
+        <name>NGO</name>
+    </fieldSets>
+    <fieldSets>
+        <label><!-- Private Organisation --></label>
+        <name>Private_Organisation</name>
+    </fieldSets>
+    <layouts>
+        <layout>Academic Institution Layout</layout>
+        <sections>
+            <label><!-- Banking Information --></label>
+            <section>Banking Information</section>
+        </sections>
+        <sections>
+            <label><!-- Custom Links --></label>
+            <section>Custom Links</section>
+        </sections>
+        <sections>
+            <label><!-- Legal &amp; Tax Information --></label>
+            <section>Legal &amp; Tax Information</section>
+        </sections>
+        <sections>
+            <label><!-- Location Information --></label>
+            <section>Location Information</section>
+        </sections>
+        <sections>
+            <label><!-- Primary Contact Details --></label>
+            <section>Primary Contact Details</section>
+        </sections>
+        <sections>
+            <label><!-- Profile Details --></label>
+            <section>Profile Details</section>
+        </sections>
+        <sections>
+            <label><!-- System Information --></label>
+            <section>System Information</section>
+        </sections>
+    </layouts>
+    <layouts>
+        <layout>Grant Program Layout</layout>
+        <sections>
+            <label><!-- Banking Information --></label>
+            <section>Banking Information</section>
+        </sections>
+        <sections>
+            <label><!-- Custom Links --></label>
+            <section>Custom Links</section>
+        </sections>
+        <sections>
+            <label><!-- Legal &amp; Tax Information --></label>
+            <section>Legal &amp; Tax Information</section>
+        </sections>
+        <sections>
+            <label><!-- Location Information --></label>
+            <section>Location Information</section>
+        </sections>
+        <sections>
+            <label><!-- Primary Contact Details --></label>
+            <section>Primary Contact Details</section>
+        </sections>
+        <sections>
+            <label><!-- Profile Details --></label>
+            <section>Profile Details</section>
+        </sections>
+        <sections>
+            <label><!-- System Information --></label>
+            <section>System Information</section>
+        </sections>
+    </layouts>
+    <layouts>
+        <layout>Individual Layout</layout>
+        <sections>
+            <label><!-- Banking Information --></label>
+            <section>Banking Information</section>
+        </sections>
+        <sections>
+            <label><!-- Custom Links --></label>
+            <section>Custom Links</section>
+        </sections>
+        <sections>
+            <label><!-- Legal &amp; Tax Information --></label>
+            <section>Legal &amp; Tax Information</section>
+        </sections>
+        <sections>
+            <label><!-- Location Information --></label>
+            <section>Location Information</section>
+        </sections>
+        <sections>
+            <label><!-- Primary Contact Details --></label>
+            <section>Primary Contact Details</section>
+        </sections>
+        <sections>
+            <label><!-- Profile Details --></label>
+            <section>Profile Details</section>
+        </sections>
+        <sections>
+            <label><!-- System Information --></label>
+            <section>System Information</section>
+        </sections>
+    </layouts>
+    <layouts>
+        <layout>NGO Layout</layout>
+        <sections>
+            <label><!-- Banking Information --></label>
+            <section>Banking Information</section>
+        </sections>
+        <sections>
+            <label><!-- Custom Links --></label>
+            <section>Custom Links</section>
+        </sections>
+        <sections>
+            <label><!-- Legal &amp; Tax Information --></label>
+            <section>Legal &amp; Tax Information</section>
+        </sections>
+        <sections>
+            <label><!-- Location Information --></label>
+            <section>Location Information</section>
+        </sections>
+        <sections>
+            <label><!-- Primary Contact Details --></label>
+            <section>Primary Contact Details</section>
+        </sections>
+        <sections>
+            <label><!-- Profile Details --></label>
+            <section>Profile Details</section>
+        </sections>
+        <sections>
+            <label><!-- System Information --></label>
+            <section>System Information</section>
+        </sections>
+    </layouts>
+    <layouts>
+        <layout>Private Organisation</layout>
+        <sections>
+            <label><!-- Banking Information --></label>
+            <section>Banking Information</section>
+        </sections>
+        <sections>
+            <label><!-- Custom Links --></label>
+            <section>Custom Links</section>
+        </sections>
+        <sections>
+            <label><!-- Legal &amp; Tax Information --></label>
+            <section>Legal &amp; Tax Information</section>
+        </sections>
+        <sections>
+            <label><!-- Location Information --></label>
+            <section>Location Information</section>
+        </sections>
+        <sections>
+            <label><!-- Primary Contact Details --></label>
+            <section>Primary Contact Details</section>
+        </sections>
+        <sections>
+            <label><!-- Profile Details --></label>
+            <section>Profile Details</section>
+        </sections>
+        <sections>
+            <label><!-- System Information --></label>
+            <section>System Information</section>
+        </sections>
+    </layouts>
+    <quickActions>
+        <label><!-- Create Grant Application --></label>
+        <name>Create_Grant_Application</name>
+    </quickActions>
+    <quickActions>
+        <label><!-- Test Create --></label>
+        <name>Test_Create</name>
+    </quickActions>
+    <recordTypes>
+        <label><!-- Academic Institution --></label>
+        <name>Academic_Institution</name>
+    </recordTypes>
+    <recordTypes>
+        <label><!-- Individual Applicant --></label>
+        <name>Individual_Applicant</name>
+    </recordTypes>
+    <recordTypes>
+        <label><!-- NGO --></label>
+        <name>NGO</name>
+    </recordTypes>
+    <recordTypes>
+        <label><!-- Private Organisation --></label>
+        <name>Private_Organisation</name>
+    </recordTypes>
+    <startsWith>Consonant</startsWith>
+</CustomObjectTranslation>

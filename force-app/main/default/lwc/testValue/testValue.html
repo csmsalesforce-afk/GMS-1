@@ -1,0 +1,62 @@
+<template>
+    <template if:true={applications}>
+        <div class="slds-grid slds-wrap slds-gutters">
+
+            <template for:each={paginatedApplications} for:item="app">
+                <div key={app.Id} class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-3">
+                    
+                    <article class="slds-card slds-m-around_small app-card">
+
+                        <div class="slds-card__header slds-grid">
+                            <header class="slds-media slds-media_center slds-has-flexi-truncate">
+                                <div class="slds-media__figure">
+                                    <lightning-icon 
+                                        icon-name="standard:account" 
+                                        size="small">
+                                    </lightning-icon>
+                                </div>
+                                <div class="slds-media__body">
+                                    <h2 class="slds-card__header-title">
+                                        {app.Name}
+                                    </h2>
+                                </div>
+                            </header>
+                        </div>
+
+                        <div class="slds-card__body slds-card__body_inner">
+                            <p class="slds-text-title">Application Status</p>
+                            <span class="status-badge">
+                                {app.Application_Status__c}
+                            </span>
+                        </div>
+
+                    </article>
+
+                </div>
+            </template>
+
+        </div>
+
+        <!-- Pagination Controls -->
+        <div class="slds-align_absolute-center slds-m-top_medium">
+
+            <lightning-button 
+                label="Previous"
+                onclick={handlePrevious}
+                disabled={isFirstPage}>
+            </lightning-button>
+
+            <span class="slds-m-horizontal_medium">
+                Page {currentPage} of {totalPages}
+            </span>
+
+            <lightning-button 
+                label="Next"
+                onclick={handleNext}
+                disabled={isLastPage}>
+            </lightning-button>
+
+        </div>
+
+    </template>
+</template>

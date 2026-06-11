@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Bank_Account_Number_length_validation</fullName>
+    <active>false</active>
+    <errorConditionFormula>OR(
+    LEN(Bank_Account_Number_applicant__c) &lt; 12,
+    LEN(Bank_Account_Number_applicant__c) &gt; 15
+)</errorConditionFormula>
+    <errorMessage>Bank Account Number must be between 12 and 15 characters.</errorMessage>
+</ValidationRule>

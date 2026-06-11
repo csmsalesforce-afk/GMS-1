@@ -1,0 +1,321 @@
+<template>
+
+    <div class="page-wrapper">
+
+        <!-- ================= SPINNER ================= -->
+        <template if:true={isLoading}>
+            <div class="loading-container">
+                <lightning-spinner alternative-text="Loading" size="medium"></lightning-spinner>
+            </div>
+        </template>
+
+        <!-- ================= MAIN CONTENT ================= -->
+        <template if:true={application}>
+
+            <!-- ================= APPROVAL BANNER ================= -->
+            <template if:true={isInApproval}>
+                <div class="approval-banner">
+                    <lightning-icon icon-name="utility:lock" size="x-small"></lightning-icon>
+                    <span>This application is currently under review</span>
+                </div>
+            </template>
+
+            <!-- ================= HEADER CARD ================= -->
+            <div class="header-card">
+
+                <div class="header-left">
+                    <h1 class="app-title">{application.Name}</h1>
+                    <div class={statusClass}>
+                        {application.Application_Status__c}
+                    </div>
+                </div>
+
+                <div class="action-buttons">
+
+                    <template if:true={showSubmitButton}>
+                        <lightning-button
+                            label="Submit For Approval"
+                            variant="brand"
+                            onclick={handleGenerateAndSubmit}
+                            disabled={isLoading}>
+                        </lightning-button>
+                    </template>
+
+                    <template if:true={showWithdrawButton}>
+                        <lightning-button
+                            label="Withdraw Application"
+                            variant="destructive"
+                            onclick={openWithdrawModal}
+                            disabled={isLoading}>
+                        </lightning-button>
+                    </template>
+
+                </div>
+
+            </div>
+
+            <!-- ================= MAIN TWO COLUMN LAYOUT ================= -->
+            <div class="main-layout">
+
+                <!-- ================= LEFT PANEL ================= -->
+                <div class="left-panel">
+
+                    <!-- ================= APPLICANT PROFILE ================= -->
+                    <div class="section-card">
+                        <h2>Applicant Profile</h2>
+
+                        <div class="grid">
+                            <div>
+                                <label>Applicant Name</label>
+                                <p>{application.Applicant_Name__c}</p>
+                            </div>
+
+                            <div>
+                                <label>Region</label>
+                                <p>{application.Region__c}</p>
+                            </div>
+
+                            <div>
+                                <label>Country</label>
+                                <p>{application.Country__c}</p>
+                            </div>
+
+                            <div>
+                                <label>Bank Account Number</label>
+                                <p>{application.Bank_Account_Number_applicant__c}</p>
+                            </div>
+
+                            <div>
+                                <label>Bank Name</label>
+                                <p>{application.Bank_Name_applicant__c}</p>
+                            </div>
+
+                            <div>
+                                <label>IFSC / SWIFT Code</label>
+                                <p>{application.IFSC_SWIFT_Code_applicant__c}</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ================= APPLICATION DETAILS ================= -->
+                    <div class="section-card">
+                        <h2>Application Details</h2>
+
+                        <div class="grid">
+
+                            <div>
+                                <label>Application Number</label>
+                                <p>{application.Name}</p>
+                            </div>
+
+                            <div>
+                                <label>Application Version</label>
+                                <p>{application.Application_Version__c}</p>
+                            </div>
+
+                            <div>
+                                <label>Submission Date</label>
+                                <p>{application.Submission_Date__c}</p>
+                            </div>
+
+                            <div>
+                                <label>Project Title</label>
+                                <p>{application.Project_Title__c}</p>
+                            </div>
+
+                            <div class="full-width">
+                                <label>Project Description</label>
+                                <p>{application.Project_Description__c}</p>
+                            </div>
+
+                            <div>
+                                <label>Requested Amount</label>
+                                <p>$ {application.Requested_Amount__c}</p>
+                            </div>
+
+                            <div>
+                                <label>Budget Details</label>
+                                <p>{application.Budget_Details__c}</p>
+                            </div>
+
+                            <div>
+                                <label>Resubmission Count</label>
+                                <p>{application.Resubmission_Count__c}</p>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <!-- ================= REVIEW SECTION ================= -->
+                    <template if:true={showReviewSection}>
+                        <div class="section-card">
+                            <h2>Review Information</h2>
+
+                            <div class="grid">
+
+                                <div>
+                                    <label>Reviewer Assigned</label>
+                                    <p>{application.Reviewer_Assigned__r.Name}</p>
+                                </div>
+
+                                <div>
+                                    <label>Reviewer Recommendation</label>
+                                    <p>{application.Reviewer_Recommendation__c}</p>
+                                </div>
+
+                                <div>
+                                    <label>Reviewer Score</label>
+                                    <p>{application.Reviewer_Score__c}</p>
+                                </div>
+
+                                <div>
+                                    <label>Risk Level</label>
+                                    <p>{application.Risk_Level__c}</p>
+                                </div>
+
+                                <div class="full-width">
+                                    <label>Reviewer Comments</label>
+                                    <p>{application.Reviewer_Comments__c}</p>
+                                </div>
+
+                            </div>
+                        </div>
+                    </template>
+
+                    <!-- ================= SLA SECTION ================= -->
+                    <template if:true={showReviewSection}>
+                        <div class="section-card">
+                            <h2>SLA Tracking</h2>
+
+                            <div class="grid">
+
+                                <div>
+                                    <label>SLA Start</label>
+                                    <p>{application.Reviewer_SLA_Start__c}</p>
+                                </div>
+
+                                <div>
+                                    <label>SLA End</label>
+                                    <p>{application.Reviewer_SLA_End__c}</p>
+                                </div>
+
+                                <div>
+                                    <label>SLA Duration (Hours)</label>
+                                    <p>{application.Reviewer_SLA_Duration__c}</p>
+                                </div>
+
+                                <div>
+                                    <label>SLA Breached</label>
+                                    <p>{application.SLA_Breached__c}</p>
+                                </div>
+
+                            </div>
+                        </div>
+                    </template>
+
+                    <!-- ================= APPROVAL SECTION ================= -->
+                    <template if:true={isApproved}>
+                        <div class="section-card">
+                            <h2>Approval Outcome</h2>
+
+                            <div class="grid">
+                                <div>
+                                    <label>Approval Type</label>
+                                    <p>{application.Approval_Type__c}</p>
+                                </div>
+
+                                <div>
+                                    <label>Approved Amount</label>
+                                    <p> {application.Approved_Amount__c}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </template>
+
+                </div>
+
+                <!-- ================= RIGHT PANEL (FILES) ================= -->
+                <div class="right-panel">
+
+                    <div class="files-card">
+                        <h2>Related Files</h2>
+
+                        <template if:true={hasFiles}>
+    <template for:each={files} for:item="file">
+        <div key={file.documentId} class="file-item">
+
+            <lightning-icon
+                icon-name="doctype:pdf"
+                size="small">
+            </lightning-icon>
+
+            <div class="file-info">
+                <p class="file-name">{file.title}</p>
+                <p class="file-date">{file.formattedDate}</p>
+            </div>
+
+            <!-- <lightning-button
+                label="Download"
+                variant="base"
+                data-id={file.documentId}
+                onclick={handleDownload}>
+            </lightning-button> -->
+
+        </div>
+    </template>
+</template>
+
+                        <template if:false={files}>
+                            <p class="no-files">No files uploaded</p>
+                        </template>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </template>
+
+    </div>
+
+    <!-- ================= WITHDRAW MODAL ================= -->
+    <template if:true={showWithdrawModal}>
+        <section role="dialog" class="slds-modal slds-fade-in-open">
+            <div class="slds-modal__container">
+
+                <header class="slds-modal__header">
+                    <h2 class="slds-text-heading_medium">
+                        Withdraw Application
+                    </h2>
+                </header>
+
+                <div class="slds-modal__content slds-p-around_medium">
+                    <lightning-textarea
+                        label="Reason for Withdrawal"
+                        value={withdrawReason}
+                        onchange={handleReasonChange}>
+                    </lightning-textarea>
+                </div>
+
+                <footer class="slds-modal__footer">
+                    <lightning-button
+                        label="Cancel"
+                        onclick={closeWithdrawModal}>
+                    </lightning-button>
+
+                    <lightning-button
+                        variant="destructive"
+                        label="Confirm Withdraw"
+                        onclick={confirmWithdraw}
+                        class="slds-m-left_small">
+                    </lightning-button>
+                </footer>
+
+            </div>
+        </section>
+
+        <div class="slds-backdrop slds-backdrop_open"></div>
+    </template>
+
+</template>

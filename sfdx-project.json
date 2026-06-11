@@ -1,0 +1,50 @@
+{
+  "packageDirectories": [
+    {
+      "versionName": "ver 0.1",
+      "versionNumber": "0.1.0.NEXT",
+      "path": "force-app",
+      "default": true,
+      "package": "GMS_Test",
+      "versionDescription": ""
+    },
+    {
+      "versionName": "ver 0.1",
+      "versionNumber": "0.1.0.NEXT",
+      "path": "force-app",
+      "default": false,
+      "package": "GMS_Test1",
+      "versionDescription": ""
+    },
+    {
+      "versionName": "ver 0.1",
+      "versionNumber": "0.1.0.NEXT",
+      "path": "force-app",
+      "default": false,
+      "package": "GMS-1",
+      "versionDescription": ""
+    },
+    {
+      "versionName": "ver 0.1",
+      "versionNumber": "0.1.0.NEXT",
+      "path": "force-app",
+      "default": false,
+      "package": "GMS-2",
+      "versionDescription": ""
+    }
+  ],
+  "name": "GMS",
+  "namespace": "",
+  "sfdcLoginUrl": "https://login.salesforce.com",
+  "sourceApiVersion": "66.0",
+  "packageAliases": {
+    "GMS_Test": "0Hofj0000001v7VCAQ",
+    "GMS_Test1": "0Hofj0000001v97CAA",
+    "GMS_Test1@0.1.0-1": "04tfj000000JmddAAC",
+    "GMS_Test1@0.1.0-2": "04tfj000000JrLZAA0",
+    "GMS_Test1@0.1.0-3": "04tfj000000Jv4DAAS",
+    "GMS-1": "0Hofj0000001xAvCAI",
+    "GMS-2": "0Hofj0000001xdxCAA",
+    "GMS-2@0.1.0-1": "04tfj000000KRthAAG"
+  }
+}

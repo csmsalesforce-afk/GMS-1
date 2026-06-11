@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Program_Type__c</fullName>
+    <label>Program Type</label>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Education</fullName>
+                <default>false</default>
+                <label>Education</label>
+            </value>
+            <value>
+                <fullName>Research</fullName>
+                <default>false</default>
+                <label>Research</label>
+            </value>
+            <value>
+                <fullName>Healthcare</fullName>
+                <default>false</default>
+                <label>Healthcare</label>
+            </value>
+            <value>
+                <fullName>Infrastructure Development (instead of only Construction)</fullName>
+                <default>false</default>
+                <label>Infrastructure Development</label>
+            </value>
+            <value>
+                <fullName>Skill Development</fullName>
+                <default>false</default>
+                <label>Skill Development</label>
+            </value>
+            <value>
+                <fullName>Women Empowerment</fullName>
+                <default>false</default>
+                <label>Women Empowerment</label>
+            </value>
+            <value>
+                <fullName>Rural Development</fullName>
+                <default>false</default>
+                <label>Rural Development</label>
+            </value>
+            <value>
+                <fullName>Environmental Sustainability</fullName>
+                <default>false</default>
+                <label>Environmental Sustainability</label>
+            </value>
+            <value>
+                <fullName>Technology &amp; Innovation</fullName>
+                <default>false</default>
+                <label>Technology &amp; Innovation</label>
+            </value>
+            <value>
+                <fullName>Community Development</fullName>
+                <default>false</default>
+                <label>Community Development</label>
+            </value>
+            <value>
+                <fullName>Entrepreneurship Support</fullName>
+                <default>false</default>
+                <label>Entrepreneurship Support</label>
+            </value>
+            <value>
+                <fullName>Social Welfare</fullName>
+                <default>false</default>
+                <label>Social Welfare</label>
+            </value>
+            <value>
+                <fullName>Child Welfare</fullName>
+                <default>false</default>
+                <label>Child Welfare</label>
+            </value>
+            <value>
+                <fullName>Agriculture &amp; Livelihood</fullName>
+                <default>false</default>
+                <label>Agriculture &amp; Livelihood</label>
+            </value>
+            <value>
+                <fullName>Disaster Relief &amp; Rehabilitation</fullName>
+                <default>false</default>
+                <label>Disaster Relief &amp; Rehabilitation</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

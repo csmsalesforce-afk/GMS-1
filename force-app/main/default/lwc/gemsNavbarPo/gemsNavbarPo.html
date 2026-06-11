@@ -1,0 +1,61 @@
+<template>
+    <nav class="navbar">
+
+        <!-- LEFT : LOGO -->
+        <div class="nav-left">
+            <img src={logoUrl} class="logo"/>
+        </div>
+
+        <!-- CENTER : MENU -->
+        <div class="nav-center">
+
+            <div class={programClass} onclick={navigatePrograms}>
+                <lightning-icon icon-name="utility:table" size="x-small" class="menu-icon"></lightning-icon>
+                <span>Grant Programs</span>
+            </div>
+
+        </div>
+
+        <!-- RIGHT : PROFILE -->
+        <div class="nav-right">
+
+            <div class="profile-wrapper">
+
+                <!-- PROFILE -->
+                <div class="profile" onclick={toggleProfileMenu}>
+
+                    <div class="avatar">
+                        {initials}
+                    </div>
+
+                    <div class="user-details">
+
+                        <div class="user-name">
+                            {userName}
+                        </div>
+
+                        <div class="profile-name">
+                            {profileName}
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <!-- DROPDOWN -->
+                <template if:true={showProfileMenu}>
+                    <div class="profile-dropdown">
+
+                        <div class="dropdown-item" onclick={logout}>
+                            Logout
+                        </div>
+
+                    </div>
+                </template>
+
+            </div>
+
+        </div>
+
+    </nav>
+</template>

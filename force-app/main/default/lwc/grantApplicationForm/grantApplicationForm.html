@@ -1,0 +1,75 @@
+<template>
+    <div class="form-wrapper">
+
+        <!-- HEADER -->
+          <div class="back-btn" onclick={goBack}>
+                ← Back to Programs
+            </div>
+        <div class="header">
+         <h1>Grant Application</h1>
+        </div>
+
+        <!-- STEP INDICATOR -->
+        <div class="steps">
+            <div class="step active">1 Project & Bank Details</div>
+            <div class="step">2 Upload Documents</div>
+            <div class="step">3 Preview</div>
+        </div>
+
+        <!-- FORM -->
+        <lightning-record-edit-form
+            object-api-name="Grant_Applicant__c"
+            onsuccess={handleSuccess}
+            onsubmit={handleSubmit}>
+
+            <!-- PROJECT DETAILS -->
+            <div class="section">
+                <h2>Project Details</h2>
+
+                <div class="grid">
+                    <lightning-input-field field-name="Project_Title__c"></lightning-input-field>
+                    <lightning-input-field field-name="Project_Description__c"></lightning-input-field>
+
+                    <lightning-input-field field-name="Requested_Amount__c"></lightning-input-field>
+                    <lightning-input-field field-name="Budget_Details__c"></lightning-input-field>
+                </div>
+            </div>
+
+            <!-- BANK DETAILS -->
+            <div class="section">
+                <h2>Bank Details</h2>
+
+                <div class="grid">
+                    <lightning-input-field field-name="Bank_Name__c"></lightning-input-field>
+                    <lightning-input-field field-name="Account_Number__c"></lightning-input-field>
+
+                    <lightning-input-field field-name="IFSC_Code__c"></lightning-input-field>
+                    <lightning-input-field field-name="Tax_ID__c"></lightning-input-field>
+                </div>
+            </div>
+
+            <!-- Hidden Program Field -->
+            <lightning-input-field
+                field-name="Program__c"
+                value={programId}
+                class="hidden-field">
+            </lightning-input-field>
+
+            <!-- BUTTONS -->
+            <div class="button-section">
+                <lightning-button
+                    label="Save as Draft"
+                    onclick={handleDraft}>
+                </lightning-button>
+
+                <lightning-button
+                    variant="brand"
+                    type="submit"
+                    label="Save & Continue">
+                </lightning-button>
+            </div>
+
+        </lightning-record-edit-form>
+
+    </div>
+</template>

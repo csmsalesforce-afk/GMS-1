@@ -1,0 +1,305 @@
+<template>
+    <div class="page-wrapper">
+
+        <!-- ===== HEADER ===== -->
+        <div class="header">
+            <h1>Grant Application</h1>
+            <p>Complete the steps below to submit your application</p>
+        </div>
+
+        <!-- ===== STEPPER ===== -->
+        <div class="stepper">
+
+            <div class="step-container">
+                <div class={step1Circle}>1</div>
+                <div class="step-label">Project Details</div>
+            </div>
+
+            <div class="line"></div>
+
+            <div class="step-container">
+                <div class={step2Circle}>2</div>
+                <div class="step-label">Documents</div>
+            </div>
+
+            <div class="line"></div>
+
+            <div class="step-container">
+                <div class={step3Circle}>3</div>
+                <div class="step-label">Review</div>
+            </div>
+
+        </div>
+
+        <!-- ===== CONTENT CONTAINER ===== -->
+        <div class="content-container">
+
+        <!-- ================= STEP 1 ================= -->
+        <template if:true={isStep1}>
+            <div class="card">
+
+                <h2>Applicant & Project Details</h2>
+
+                <div class="form-grid">
+
+                    <!-- AUTO FILLED -->
+                    <lightning-input label="Applicant Name" value={applicantName} disabled class="full-width">
+                    </lightning-input>
+
+                    <lightning-input label="Program" value={programName} disabled class="full-width">
+                    </lightning-input>
+
+                    <!-- PROJECT -->
+
+                    <lightning-input label="Project Title" value={application.Project_Title__c}
+                        data-field="Project_Title__c" onchange={handleChange} required>
+                    </lightning-input>
+
+                    <lightning-input type="number" label="Requested Amount" value={application.Requested_Amount__c}
+                        data-field="Requested_Amount__c" onchange={handleChange} required>
+                    </lightning-input>
+
+                    <lightning-textarea label="Project Description" value={application.Project_Description__c}
+                        data-field="Project_Description__c" onchange={handleChange} class="full-width" required>
+                    </lightning-textarea>
+
+                    <lightning-textarea label="Budget Details" value={application.Budget_Details__c}
+                        data-field="Budget_Details__c" onchange={handleChange} class="full-width">
+                    </lightning-textarea>
+
+                    <!-- BANK -->
+
+                    <lightning-input label="Bank Account Number" value={application.Bank_Account_Number_applicant__c}
+                        data-field="Bank_Account_Number_applicant__c" onchange={handleChange}>
+                    </lightning-input>
+
+                    <lightning-input label="Bank Name" value={application.Bank_Name_applicant__c}
+                        data-field="Bank_Name_applicant__c" onchange={handleChange}>
+                    </lightning-input>
+
+                    <lightning-input label="IFSC / SWIFT Code" value={application.IFSC_SWIFT_Code_applicant__c}
+                        data-field="IFSC_SWIFT_Code_applicant__c" onchange={handleChange}>
+                    </lightning-input>
+
+                    <lightning-input label="Tax ID" value={application.Tax_ID_applicant__c}
+                        data-field="Tax_ID_applicant__c" onchange={handleChange}>
+                    </lightning-input>
+
+                    <lightning-input type="date" label="Start Date" value={application.Start_Date__c}
+                        data-field="Start_Date__c" onchange={handleChange}>
+                    </lightning-input>
+
+                </div>
+
+                <div class="button-row">
+                    <lightning-button label="Save Draft" onclick={saveDraft}></lightning-button>
+                    <lightning-button variant="brand" label="Next" onclick={nextStep}></lightning-button>
+                </div>
+
+            </div>
+        </template>
+
+        <!-- ================= STEP 2 ================= -->
+        <!-- ================= STEP 2 ================= -->
+        <template if:true={isStep2}>
+            <div class="card">
+
+                <h2>Upload Required Documents</h2>
+
+                <template for:each={documents} for:item="doc">
+                    <div key={doc.Id} class="document-card">
+
+                        <div class="doc-title">
+                            {doc.Name}
+                            <template if:true={doc.Is_Mandatory__c}>
+                                <span class="mandatory">*</span>
+                            </template>
+                        </div>
+
+                        <!-- IF NOT UPLOADED -->
+                        <template if:false={doc.uploaded}>
+                            <lightning-file-upload label="Upload File" record-id={recordId} data-id={doc.Id}
+                                multiple="false" onuploadfinished={handleUploadFinished}>
+                            </lightning-file-upload>
+                        </template>
+
+                        <!-- IF UPLOADED -->
+                        <template if:true={doc.uploaded}>
+                            <div class="uploaded-info">
+                                ✅ {doc.uploadedFileName}
+                            </div>
+                        </template>
+
+                    </div>
+                </template>
+
+                <template if:false={documents.length}>
+                    <p>No documents required for this program.</p>
+                </template>
+
+                <div class="button-row">
+                    <lightning-button label="Back" onclick={prevStep}></lightning-button>
+                    <lightning-button variant="brand" label="Next" onclick={nextStep}></lightning-button>
+                </div>
+
+            </div>
+        </template>
+
+        <!-- ================= STEP 3 ================= -->
+        <template if:true={isStep3}>
+            <div class="card">
+
+                <h2>Review & Submit</h2>
+
+                <!-- ===== PROJECT INFO ===== -->
+                <!-- <div class="review-box">
+
+            <p><strong>Project Title:</strong> {application.Project_Title__c}</p>
+            <p><strong>Requested Amount:</strong> ₹{application.Requested_Amount__c}</p>
+            <p><strong>Project Description:</strong> {application.Project_Description__c}</p>
+            <p><strong>Budget Details:</strong> {application.Budget_Details__c}</p>
+
+            <p><strong>Bank Account Number:</strong> {application.Bank_Account_Number_applicant__c}</p>
+            <p><strong>Bank Name:</strong> {application.Bank_Name_applicant__c}</p>
+            <p><strong>IFSC Code:</strong> {application.IFSC_SWIFT_Code_applicant__c}</p>
+            <p><strong>Tax ID:</strong> {application.Tax_ID_applicant__c}</p>
+            <p><strong>Start Date:</strong> {application.Start_Date__c}</p>
+
+        </div> -->
+                <div class="review-block">
+                    <div class="header-row">
+                        <h3 class="section-title">Project & Bank Details</h3>
+                        <a onclick={goToStep1} class="edit-link">
+                            <lightning-icon icon-name="utility:edit" size="xx-small" class="edit-icon"></lightning-icon>
+                            Edit
+                        </a>
+                    </div>
+
+                    <h4 class="sub-heading">Project Details</h4>
+                    <div class="form-grid">
+                        <div class="field-group full-width">
+                            <span class="label">Project Title</span>
+                            <span class="value">{application.Project_Title__c}</span>
+                        </div>
+                        <div class="field-group full-width">
+                            <span class="label">Project Description</span>
+                            <span class="value">{application.Project_Description__c}</span>
+                        </div>
+                        <div class="field-group">
+                            <span class="label">Requested Amount</span>
+                            <span class="value">₹{application.Requested_Amount__c}</span>
+                        </div>
+                        <div class="field-group">
+                            <span class="label">Budget details</span>
+                            <span class="value">{application.Budget_Details__c}</span>
+                        </div>
+                    </div>
+
+                    <h4 class="sub-heading bank-heading">Bank Details</h4>
+                    <div class="form-grid">
+                        <div class="field-group">
+                            <span class="label">Bank Name</span>
+                            <span class="value">{application.Bank_Name_applicant__c}</span>
+                        </div>
+                        <div class="field-group">
+                            <span class="label">Account Number</span>
+                            <span class="value">{application.Bank_Account_Number_applicant__c}</span>
+                        </div>
+                        <div class="field-group">
+                            <span class="label">IFSC / SWIFT Code</span>
+                            <span class="value">{application.IFSC_SWIFT_Code_applicant__c}</span>
+                        </div>
+                        <div class="field-group">
+                            <span class="label">Tax ID</span>
+                            <span class="value">{application.Tax_ID_applicant__c}</span>
+                        </div>
+                        <div class="field-group">
+                            <span class="label">Start Date</span>
+                            <span class="value">{application.Start_Date__c}</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ===== UPLOADED FILES ===== -->
+                <!-- <div class="uploaded-files-section">
+                    <h3>Uploaded Documents</h3>
+
+                    <template if:true={uploadedFiles.length}>
+                        <ul class="file-list">
+                            <template for:each={uploadedFiles} for:item="file">
+                                <li key={file.ContentDocumentId}>
+                                    {file.ContentDocument.Title}.{file.ContentDocument.FileExtension}
+
+                                    <a href={file.fileUrl} target="_blank" class="view-link">
+                                        View
+                                    </a>
+                                </li>
+                            </template>
+                        </ul>
+                    </template>
+
+                    <template if:false={uploadedFiles.length}>
+                        <p>No files uploaded.</p>
+                    </template>
+
+                </div> -->
+
+                 <div class="review-block">
+                    <div class="header-row">
+                        <h3 class="section-title">Uploaded Documents</h3>
+                        <a onclick={goToStep2} class="edit-link">
+                            <lightning-icon icon-name="utility:edit" size="xx-small" class="edit-icon"></lightning-icon> Edit
+                        </a>
+                    </div>
+
+                    <div class="doc-table-wrapper">
+                        <table class="doc-table">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <template if:true={uploadedFiles.length}>
+                                    <template for:each={uploadedFiles} for:item="file">
+                                        <tr key={file.ContentDocumentId}>
+                                            <td>{file.ContentDocument.Title}.{file.ContentDocument.FileExtension}</td>
+                                            <td class="col-center">
+                                                <!-- <a href={file.fileUrl} target="_blank" class="doc-icon-link">
+                                                    <lightning-icon icon-name="utility:file" size="x-small"></lightning-icon>
+                                                </a> -->
+                                            </td>
+                                        </tr>
+                                    </template>
+                                </template>
+                                <template if:false={uploadedFiles.length}>
+                                    <tr>
+                                        <td colspan="2" class="no-files-msg">No files uploaded.</td>
+                                    </tr>
+                                </template>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="confirmation-section">
+                    <lightning-input type="checkbox"
+                        label="I hereby confirm that the details provided are true and correct. I acknowledge that no changes can be made once the application is submitted."
+                        onchange={handleConfirmationChange}>
+                    </lightning-input>
+                </div>
+
+                <div class="button-row">
+                    <lightning-button label="Back" onclick={prevStep}></lightning-button>
+                    <lightning-button variant="brand" label="Submit Application" onclick={submitApplication}>
+                    </lightning-button>
+                </div>
+
+            </div>
+        </template>
+
+        </div> <!-- End content-container -->
+
+    </div> <!-- End page-wrapper -->
+</template>

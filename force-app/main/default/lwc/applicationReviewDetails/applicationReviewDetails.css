@@ -1,0 +1,165 @@
+/* Layout Basics */
+.page {
+    display: flex;
+    gap: 30px;
+    background-color: #fcfdfd;
+    font-family: 'Salesforce Sans', sans-serif;
+}
+.left-panel { flex: 7; }
+.right-panel { flex: 3; }
+
+/* Typography & Badges */
+h1 { font-size: 24px; font-weight: bold; color: #333; margin-bottom: 5px; }
+.badge { font-size: 12px; padding: 3px 8px; border-radius: 12px; margin-left: 10px; font-weight: normal; vertical-align: middle; }
+.badge-pending { background-color: #fff3e0; color: #e65100; }
+.section-title { font-size: 18px; font-weight: bold; margin-bottom: 15px; color: #444; }
+
+/* Applicant Header Box */
+.applicant-info-box { background-color: #f4f6fc; border-radius: 8px; padding: 20px; margin-top: 15px;}
+.info-row { display: flex; justify-content: space-between; align-items: center; }
+.info-group { display: flex; flex-direction: column; font-size: 13px; color: #666; }
+.info-group strong { color: #111; font-size: 14px; margin-top: 4px; }
+.main-entity { flex-direction: row; align-items: center; gap: 10px; }
+
+/* Details Sections */
+.section { margin-top: 30px; }
+.hr-top { border-top: 1px solid #eaeaea; padding-top: 30px; }
+.details-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; row-gap: 25px; }
+.details-grid .full-width { grid-column: span 2; }
+.details-grid span { color: #888; font-size: 13px; display: block; margin-bottom: 4px; }
+.details-grid p { color: #333; font-size: 14px; margin: 0; }
+.pre-line { white-space: pre-line; }
+
+/* Documents Grid */
+.document-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+.file-card { display: flex; justify-content: space-between; align-items: center; border: 1px solid #e2e2e2; border-radius: 8px; padding: 12px 15px; }
+.file-info { display: flex; align-items: center; gap: 12px; }
+.file-name p { font-weight: bold; font-size: 13px; margin: 0; }
+
+/* Right Panel: Action Card */
+.action-card { background-color: #1a2b56; color: white; border-radius: 12px; padding: 25px; margin-bottom: 25px; }
+.action-card h2 { font-size: 18px; font-weight: bold; margin-bottom: 20px; color: white;}
+
+/* LWC inputs overrides inside dark background */
+.dark-input { 
+    --sds-c-input-color-background: transparent; 
+    --sds-c-input-text-color: white; 
+    --sds-c-input-label-color: #ccc; 
+    --sds-c-textarea-sizing-min-height: 80px; /* Makes the remarks box taller like the image */
+    margin-bottom: 10px; 
+    color: #111;
+      --lwc-colorTextLabel: beige;
+        --slds-g-color-neutral-base-30: beige;
+    --slds-c-input-placeholder-color: #ccc;
+
+}
+.custom-radio {
+    --slds-c-radio-color-border: white;
+    --slds-c-radio-color-background: transparent;
+    --slds-c-radio-mark-color-foreground: white;
+    --slds-c-radio-color-border-checked: #4a90e2;
+    --slds-c-radio-mark-color-foreground-checked: white;
+--sds-c-radio-label-color: white;
+    --lwc-colorTextLabel: white;
+}
+.po-details p { margin-bottom: 5px; font-size: 13px; }
+.po-details p:last-child { margin-bottom: 0; }
+.po-details strong { color: #444; }
+/* Add to bottom of your existing CSS */
+
+/* Read Only Box for Submitted Action */
+.read-only-box {
+    background-color: rgba(255, 255, 255, 0.05);
+    padding: 15px;
+    border-radius: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.read-only-label {
+    font-size: 12px;
+    color: #a8b0cc;
+    margin-bottom: 2px;
+}
+
+.read-only-value {
+    font-size: 15px;
+    color: #ffffff;
+    font-weight: 500;
+}
+/* .custom-radio { --sds-c-radio-label-color: white; margin-bottom: 20px;} */
+
+/* --- UPDATED REMARKS STYLING --- */
+.remarks-wrapper {
+    position: relative;
+    margin-bottom: 20px;
+}
+.char-count {
+    text-align: right;
+    color: #a8b0cc; /* Faded light blue/grey color */
+    font-size: 11px;
+    margin-top: -5px; 
+}
+
+.action-buttons { display: flex; gap: 15px; margin-top: 25px; }
+.btn-cancel { flex: 1; background: transparent; border: 1px solid #fff; color: white; padding: 10px; border-radius: 6px; cursor: pointer; }
+.btn-submit { flex: 1; background: white; border: none; color: #1a2b56; padding: 10px; border-radius: 6px; font-weight: bold; cursor: pointer; }
+
+/* Right Panel: History Card */
+.history-card { border: 1px solid #eef1f6; background-color: #fdfdff; border-radius: 12px; padding: 25px; }
+.history-card h2 { font-size: 16px; font-weight: bold; margin-bottom: 25px; }
+
+/* Custom Vertical Timeline */
+.timeline { list-style: none; padding: 0; margin: 0; position: relative; }
+.timeline::before { content: ''; position: absolute; top: 15px; bottom: 0; left: 15px; width: 2px; background: #c9d2e5; }
+.timeline-item { position: relative; padding-left: 40px; margin-bottom: 25px; }
+.timeline-icon { position: absolute; left: 0; top: 0; width: 32px; height: 32px; background: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; z-index: 1; }
+.timeline-content h3 { font-weight: bold; font-size: 14px; margin-bottom: 2px; }
+.timeline-content .role { color: #666; font-size: 13px; margin-bottom: 5px; }
+.history-detail-box { background: #f0f3fa; padding: 10px; border-radius: 6px; margin: 8px 0; font-size: 13px; color: #333; }
+.remarks { font-style: italic; color: #555; font-size: 13px; margin-bottom: 5px; }
+.date-text { color: #888; font-size: 11px; margin-top: 5px; }
+
+/* Row layout */
+.info-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+}
+
+/* Bottom row spacing */
+.bottom-row {
+    margin-top: 12px;
+}
+
+/* Each info block */
+.info-group {
+    display: flex;
+    flex-direction: column;
+    min-width: 180px;
+}
+
+/* Label styling */
+.info-group span {
+    font-size: 12px;
+    color: #6b7280;
+}
+
+/* Value styling */
+.info-group strong {
+    font-size: 14px;
+    color: #111827;
+}
+
+/* Link styling */
+.info-group.link {
+    justify-content: center;
+}
+
+/* Make layout responsive */
+@media (max-width: 768px) {
+    .info-row {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+}

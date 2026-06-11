@@ -1,0 +1,46 @@
+<apex:page showHeader="false" sidebar="false">
+
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        .header-container {
+            width: 100%;
+            background: linear-gradient(90deg, #0176d3, #005fb2);
+            color: white;
+            padding: 20px 25px;
+            box-sizing: border-box;
+            border-radius: 6px;
+        }
+
+        .title {
+            font-size: 22px;
+            font-weight: 600;
+        }
+
+        .subtitle {
+            font-size: 13px;
+            margin-top: 4px;
+        }
+
+        .footer {
+            font-size: 12px;
+            margin-top: 8px;
+            opacity: 0.9;
+        }
+    </style>
+
+    <div class="header-container">
+        <div class="title">Donor Management Hub</div>
+        <div class="subtitle">
+            Streamline donor onboarding, agreements, and funding lifecycle
+        </div>
+        <div class="footer">
+            Create • Manage • Track
+        </div>
+    </div>
+
+</apex:page>

@@ -1,0 +1,4 @@
+<apex:page standardController="InvoiceForAward__c"
+    extensions="InvoicePDFSaver"
+    action="{!savePDF}">
+</apex:page>

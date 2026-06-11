@@ -1,0 +1,40 @@
+<template>
+    <div class="page-container">
+        
+        <button class="back-btn" onclick={handleBack}>
+            <lightning-icon icon-name="utility:back" size="x-small" class="back-icon"></lightning-icon>
+            Back to Home
+        </button>
+
+        <div class="header-section">
+            <h2>Explore All Grant Programs</h2>
+            <p class="subtitle">Browse all available funding opportunities tailored to your sector.</p>
+        </div>
+
+        <template if:true={isLoading}>
+            <div class="spinner-container">
+                <lightning-spinner alternative-text="Loading" size="medium"></lightning-spinner>
+            </div>
+        </template>
+
+        <template if:false={isLoading}>
+            <div class="card-grid">
+                <template for:each={programs} for:item="program">
+                    <div key={program.id} class="program-card">
+                        <div class="card-header">
+                            <div class="icon-container">
+                                <lightning-icon icon-name={program.icon} size="small"></lightning-icon>
+                            </div>
+                            <span class="tag">{program.category}</span>
+                        </div>
+                        <h3>{program.title}</h3>
+                        <div class="card-footer">
+                            <p>Funding Up To</p>
+                            <strong>{program.amount}</strong>
+                        </div>
+                    </div>
+                </template>
+            </div>
+        </template>
+    </div>
+</template>

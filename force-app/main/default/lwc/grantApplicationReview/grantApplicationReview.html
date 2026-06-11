@@ -1,0 +1,221 @@
+<template>
+
+<div class="container">
+
+    <!-- LEFT SECTION -->
+    <div class="left">
+
+        <!-- APPLICATION DETAILS -->
+        <div class="card">
+
+            <h2>{application.Name}</h2>
+
+            <div class="details-grid">
+
+                <div>
+                    <p class="label">Project Title</p>
+                    <p>{application.Project_Title__c}</p>
+                </div>
+
+                <div>
+                    <p class="label">Requested Amount</p>
+                    <p>${application.Requested_Amount__c}</p>
+                </div>
+
+            </div>
+
+            <div class="description">
+
+                <p class="label">Project Description</p>
+
+                <p>{application.Project_Description__c}</p>
+
+            </div>
+
+        </div>
+
+
+        <!-- BANK DETAILS -->
+        <div class="card">
+
+            <h3>Bank Details</h3>
+
+            <div class="details-grid">
+
+                <div>
+                    <p class="label">Bank Name</p>
+                    <p>{application.Bank_Name__c}</p>
+                </div>
+
+                <div>
+                    <p class="label">Account Number</p>
+                    <p>{application.Bank_Account_Number__c}</p>
+                </div>
+
+                <div>
+                    <p class="label">IFSC</p>
+                    <p>{application.IFSC_Code__c}</p>
+                </div>
+
+                <div>
+                    <p class="label">Tax ID</p>
+                    <p>{application.Tax_ID__c}</p>
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- DOCUMENTS -->
+        <div class="card">
+
+            <h3>Uploaded Documents</h3>
+
+            <template for:each={documents} for:item="doc">
+
+                <div key={doc.ContentDocumentId} class="doc">
+
+                    <span>{doc.ContentDocument.Title}</span>
+
+                    <a href={doc.downloadUrl} target="_blank">
+                        Download
+                    </a>
+
+                </div>
+
+            </template>
+
+        </div>
+
+    </div>
+
+
+    <!-- RIGHT SECTION -->
+    <div class="right">
+
+        <!-- TAKE ACTION -->
+        <div class="action">
+
+            <h2>Take Action</h2>
+
+            <lightning-radio-group
+                label="Decision"
+                options={decisionOptions}
+                value={decision}
+                onchange={handleDecisionChange}>
+            </lightning-radio-group>
+
+
+            <!-- REVIEWER -->
+            <template if:true={isReviewer}>
+
+                <lightning-input
+                    label="Reviewer Score"
+                    type="number"
+                    value={reviewerScore}
+                    onchange={handleReviewerScore}>
+                </lightning-input>
+
+                <lightning-textarea
+                    label="Reviewer Comments"
+                    value={reviewerComments}
+                    onchange={handleReviewerComments}>
+                </lightning-textarea>
+
+            </template>
+
+
+            <!-- PROGRAM OFFICER -->
+            <template if:true={isProgramOfficer}>
+
+                <lightning-input
+                    label="Eligibility Score"
+                    type="number"
+                    onchange={handleEligibilityScore}>
+                </lightning-input>
+
+                <lightning-input
+                    label="Program Alignment Score"
+                    type="number"
+                    onchange={handleAlignmentScore}>
+                </lightning-input>
+
+                <lightning-input
+                    label="Budget Compliance Score"
+                    type="number"
+                    onchange={handleBudgetScore}>
+                </lightning-input>
+
+                <lightning-combobox
+                    label="Funding Priority"
+                    options={priorityOptions}
+                    onchange={handlePriority}>
+                </lightning-combobox>
+
+                <lightning-textarea
+                    label="Remarks"
+                    onchange={handleRemarks}>
+                </lightning-textarea>
+
+            </template>
+
+
+            <!-- FINANCE -->
+            <template if:true={isFinance}>
+
+                <lightning-input
+                    label="Approved Amount"
+                    type="number"
+                    onchange={handleApprovedAmount}>
+                </lightning-input>
+
+            </template>
+
+
+            <div class="btns">
+
+                <lightning-button
+                    label="Cancel"
+                    variant="neutral">
+                </lightning-button>
+
+                <lightning-button
+                    label="Submit"
+                    variant="brand"
+                    onclick={handleSubmit}>
+                </lightning-button>
+
+            </div>
+
+        </div>
+
+
+        <!-- APPROVAL HISTORY -->
+        <div class="timeline">
+
+            <h3>Approval History</h3>
+
+            <template for:each={history} for:item="step">
+
+                <div key={step.Id} class="timeline-item">
+
+                    <p class="status">{step.StepStatus}</p>
+
+                    <p>{step.Actor.Name}</p>
+
+                    <p>{step.Comments}</p>
+
+                    <p>{step.CreatedDate}</p>
+
+                </div>
+
+            </template>
+
+        </div>
+
+    </div>
+
+</div>
+
+</template>

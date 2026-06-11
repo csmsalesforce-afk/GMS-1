@@ -1,0 +1,63 @@
+<template>
+
+    <div class="page-wrapper">
+
+        <h1 class="page-title">Grant Programs</h1>
+
+        <div class="program-grid">
+
+            <template for:each={programs} for:item="program">
+
+                <div key={program.Id} class="program-card">
+
+                    <!-- STATUS BADGE -->
+                    <span class={program.statusClass}>
+                        {program.Status__c}
+                    </span>
+
+                    <!-- TITLE -->
+                    <h2 class="program-title">
+                        {program.Name}
+                    </h2>
+
+                    <!-- TYPE -->
+                    <p class="program-type">
+                        {program.Program_Type__c}
+                    </p>
+
+                    <!-- FUND INFO -->
+                    <div class="fund-info">
+                        <div>
+                            <span class="label">Max Amount</span>
+                            <span class="value">${program.Max_Amount__c}</span>
+                        </div>
+
+                        <div>
+                            <span class="label">Program Fund</span>
+                            <span class="value">${program.Program_Fund__c}</span>
+                        </div>
+                    </div>
+
+                    <!-- DESCRIPTION -->
+                    <div class="description">
+    <lightning-formatted-rich-text value={program.Overview__c}>
+    </lightning-formatted-rich-text>
+</div>
+
+                    <!-- ACTION -->
+                    <button
+                        class="apply-btn"
+                        data-id={program.Id}
+                        onclick={handleApply}>
+                        View Details
+                    </button>
+
+                </div>
+
+            </template>
+
+        </div>
+
+    </div>
+
+</template>

@@ -1,0 +1,256 @@
+<template>
+
+    <!-- ================= HERO SECTION ================= -->
+    <section class="hero">
+
+        <div class="hero-left">
+            <h1>
+                Find the Right Grants<br>
+                to Fuel Your Initiatives
+            </h1>
+
+            <p>
+                Discover funding opportunities tailored to your sector,
+                apply seamlessly, and track every stage of your grant journey.
+            </p>
+
+            <button class="primary-btn" onclick={scrollToPrograms}>
+                Explore Grant Programs →
+            </button>
+        </div>
+
+        <div class="hero-right">
+            <img src={heroImage} alt="Professional with laptop" class="hero-image">
+
+            <div class="approval-card">
+                <div class="approval-header">Application Approved</div>
+                <div class="approval-label">Amount Granted</div>
+                <div class="approval-amount">₹20L</div>
+                <div class="approval-check">
+                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                        <path d="M16.6667 5L7.50004 14.1667L3.33337 10" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </div>
+            </div>
+        </div>
+
+    </section>
+
+
+    <!-- ================= PROGRAM SECTION ================= -->
+    <section class="explore-section" data-section="programs">
+
+        <h2>Explore Grant Programs by Sectors</h2>
+
+        <div class="sector-tabs">
+            <span data-type="All" onclick={handleFilterClick} class={allClass}>All</span>
+            <span data-type="Social Welfare Program" onclick={handleFilterClick} class={socialClass}>Social Welfare</span>
+            <span data-type="Education Program" onclick={handleFilterClick} class={educationClass}>Education</span>
+            <span data-type="Healthcare Program" onclick={handleFilterClick} class={healthClass}>Healthcare</span>
+            <span data-type="Community Development" onclick={handleFilterClick} class={communityClass}>development</span>
+            <span data-type="Livelihood Support" onclick={handleFilterClick} class={livelihoodClass}>Support</span>
+            <span data-type="Emergency Assistance" onclick={handleFilterClick} class={emergencyClass}>Assistance</span>
+            <span data-type="Research Program" onclick={handleFilterClick} class={researchClass}>Research</span>
+        </div>
+
+        <div class="card-grid">
+            <template for:each={programs} for:item="program">
+
+                <div key={program.id} class="program-card">
+
+                    <div class="program-icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                            <path d="M14 2H6C5.46957 2 4.96086 2.21071 4.58579 2.58579C4.21071 2.96086 4 3.46957 4 4V20C4 20.5304 4.21071 21.0391 4.58579 21.4142C4.96086 21.7893 5.46957 22 6 22H18C18.5304 22 19.0391 21.7893 19.4142 21.4142C19.7893 21.0391 20 20.5304 20 20V8L14 2Z" stroke="#3B82F6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path d="M14 2V8H20" stroke="#3B82F6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </div>
+
+                    <div class="program-content">
+                        <span class="tag">{program.category}</span>
+                        <h3>{program.title}</h3>
+                        <div class="funding">
+                            <span class="funding-label">Funding Up To</span>
+                            <strong class="funding-amount">{program.amount}</strong>
+                        </div>
+                    </div>
+
+                </div>
+
+            </template>
+        </div>
+
+        <div class="view-all">
+            <button class="view-btn">View All →</button>
+        </div>
+
+    </section>
+
+
+    <!-- ================= ELIGIBILITY ================= -->
+    <section class="eligible-section">
+
+        <h2>Who is Eligible</h2>
+
+        <p class="subtitle">
+            Identify your applicant category to explore grants tailored to your organization type.
+        </p>
+
+        <div class="eligible-grid">
+
+            <div class="eligible-card">
+                <img src={academicImage} alt="Academic & Research Institutions" class="eligible-image">
+                <h3>Academic & Research Institutions</h3>
+                <p>Institutes and research centers seeking project-based or innovation grants.</p>
+            </div>
+
+            <div class="eligible-card">
+                <img src={ngoImage} alt="Non-Profit Organizations" class="eligible-image">
+                <h3>Non-Profit Organizations (NGOs)</h3>
+                <p>Registered organizations working on social, community, and development initiatives.</p>
+            </div>
+
+            <div class="eligible-card">
+                <img src={startupImage} alt="Startups & Innovation-Driven Enterprises" class="eligible-image">
+                <h3>Startups & Innovation-Driven Enterprises</h3>
+                <p>Startups and enterprises developing innovative solutions.</p>
+            </div>
+
+            <div class="eligible-card">
+                <img src={researcherImage} alt="Independent Researchers" class="eligible-image">
+                <h3>Independent Researchers</h3>
+                <p>Independent researchers working on eligible research or innovation projects.</p>
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- ================= BENEFITS ================= -->
+    <section class="benefits-section">
+
+        <h2>Key Benefits</h2>
+        <p class="benefits-subtitle">Everything you need to manage grants—clearly, quickly, and securely</p>
+
+        <div class="benefits-container">
+
+            <div class="benefits-grid">
+
+                <div class="benefit-card">
+                    <div class="benefit-card-icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                            <path d="M9 11L12 14L22 4" stroke="#3B82F6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path d="M21 12V19C21 19.5304 20.7893 20.0391 20.4142 20.4142C20.0391 20.7893 19.5304 21 19 21H5C4.46957 21 3.96086 20.7893 3.58579 20.4142C3.21071 20.0391 3 19.5304 3 19V5C3 4.46957 3.21071 3.96086 3.58579 3.58579C3.96086 3.21071 4.46957 3 5 3H16" stroke="#3B82F6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </div>
+                    <h3>Transparent Evaluation</h3>
+                    <p>A structured and fair review process with clear approval stages.</p>
+                </div>
+
+                <div class="benefit-card">
+                    <div class="benefit-card-icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                            <path d="M12 22C12 22 20 18 20 12V5L12 2L4 5V12C4 18 12 22 12 22Z" stroke="#3B82F6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </div>
+                    <h3>Secure Submissions</h3>
+                    <p>Applications and documents are securely stored & managed online.</p>
+                </div>
+
+                <div class="benefit-card">
+                    <div class="benefit-card-icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                            <path d="M22 12H18L15 21L9 3L6 12H2" stroke="#3B82F6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </div>
+                    <h3>Real Time Tracking</h3>
+                    <p>Track application status and receive timely notifications.</p>
+                </div>
+
+                <div class="benefit-card">
+                    <div class="benefit-card-icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                            <path d="M21 16V8C20.9996 7.64927 20.9071 7.30481 20.7315 7.00116C20.556 6.69751 20.3037 6.44536 20 6.27L13 2.27C12.696 2.09446 12.3511 2.00205 12 2.00205C11.6489 2.00205 11.304 2.09446 11 2.27L4 6.27C3.69626 6.44536 3.44398 6.69751 3.26846 7.00116C3.09294 7.30481 3.00036 7.64927 3 8V16C3.00036 16.3507 3.09294 16.6952 3.26846 16.9988C3.44398 17.3025 3.69626 17.5546 4 17.73L11 21.73C11.304 21.9055 11.6489 21.9979 12 21.9979C12.3511 21.9979 12.696 21.9055 13 21.73L20 17.73C20.3037 17.5546 20.556 17.3025 20.7315 16.9988C20.9071 16.6952 20.9996 16.3507 21 16Z" stroke="#3B82F6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </div>
+                    <h3>Centralized Management</h3>
+                    <p>Manage grants, awards, and invoices from a single dashboard.</p>
+                </div>
+
+            </div>
+
+            <div class="benefits-image-container">
+                <img src={benefitMainImage} alt="Grant Management" class="benefits-main-image">
+                <div class="benefits-image-overlay">
+                    <h3>Streamlined & Secure<br>Grant Management</h3>
+                    <p>A unified platform to manage grants, track compliance, secure submissions, real-time tracking, and centralized management.</p>
+                </div>
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- ================= HOW IT WORKS ================= -->
+    <section class="how-section">
+        <h2>How it Works</h2>
+        <p class="subtitle">
+            Understand the complete process from application to fund utilization and closure.
+        </p>
+
+        <div class="timeline-wrapper">
+
+            <img src={timelineImage} alt="Timeline" class="timeline-image">
+
+            <div class="timeline-steps">
+
+                <div class="timeline-step">
+                    <div class="step-number step1">1</div>
+                    <h4>Discover Grants</h4>
+                    <p>Explore relevant grant programs by sector, eligibility, and objectives.</p>
+                </div>
+
+                <div class="timeline-step">
+                    <div class="step-number step2">2</div>
+                    <h4>Apply Online</h4>
+                    <p>Complete the application form and submit required documents.</p>
+                </div>
+
+                <div class="timeline-step">
+                    <div class="step-number step3">3</div>
+                    <h4>Review & Approval</h4>
+                    <p>Applications undergo screening, evaluation, and committee approval.</p>
+                </div>
+
+                <div class="timeline-step">
+                    <div class="step-number step4">4</div>
+                    <h4>Fund Disbursement</h4>
+                    <p>Funds are disbursed to the applicant's registered account.</p>
+                </div>
+
+                <div class="timeline-step">
+                    <div class="step-number step5">5</div>
+                    <h4>Monitor & Close</h4>
+                    <p>Report progress, share utilization, and close the grant.</p>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+
+    <!-- ================= FOOTER ================= -->
+    <footer class="footer">
+
+        <div class="footer-links">
+            Security Policy &nbsp; | &nbsp;
+            Privacy Policy &nbsp; | &nbsp;
+            Terms & Conditions
+        </div>
+
+        <p>© 2026 Grant Management System. All Rights Reserved.</p>
+
+    </footer>
+
+</template>

@@ -1,0 +1,138 @@
+<apex:page standardController="InvoiceForAward__c"
+           renderAs="pdf"
+           showHeader="false"
+           sidebar="false"
+           applyHtmlTag="false"
+           applyBodyTag="false">
+
+<html>
+<head>
+    <style>
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 12px;
+            color: #000;
+        }
+
+        .header-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+
+        .header-table td {
+            border: 1px solid #c7c7c7;
+            padding: 12px;
+            vertical-align: middle;
+        }
+
+        .invoice-title {
+            font-size: 22px;
+            font-weight: bold;
+            color: #2c6fbb;
+        }
+
+        .logo {
+            width: 150px;
+        }
+
+        .section-title {
+            background-color: #2c6fbb;
+            color: #fff;
+            font-weight: bold;
+            padding: 6px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 15px;
+        }
+
+        td {
+            border: 1px solid #c7c7c7;
+            padding: 6px;
+        }
+
+        .label {
+            font-weight: bold;
+            width: 35%;
+            background-color: #f4f6f9;
+        }
+
+        .value {
+            width: 65%;
+        }
+
+        .amount {
+            text-align: right;
+        }
+    </style>
+</head>
+
+<body>
+
+<!-- HEADER -->
+<table class="header-table">
+    <tr>
+        <td style="width:70%;">
+            <div class="invoice-title">INVOICE</div>
+        </td>
+        <td style="width:30%; text-align:right;">
+            <img src="{!URLFOR($Resource.InvoiceLogo)}" class="logo"/>
+        </td>
+    </tr>
+</table>
+
+<!-- INVOICE DETAILS -->
+<table>
+    <tr>
+        <td colspan="2" class="section-title">Invoice Details</td>
+    </tr>
+    <tr>
+        <td class="label">Invoice Number</td>
+        <td class="value">{!InvoiceForAward__c.Name}</td>
+    </tr>
+    <tr>
+        <td class="label">Invoice Date</td>
+        <td class="value">{!InvoiceForAward__c.Invoice_Date__c}</td>
+    </tr>
+    <tr>
+        <td class="label">Invoice Status</td>
+        <td class="value">{!InvoiceForAward__c.Invoice_Status__c}</td>
+    </tr>
+    <tr>
+        <td class="label">Payment Date</td>
+        <td class="value">{!InvoiceForAward__c.Payment_Date__c}</td>
+    </tr>
+</table>
+
+<!-- FINANCIAL DETAILS -->
+<table>
+    <tr>
+        <td colspan="2" class="section-title">Financial Details</td>
+    </tr>
+    <tr>
+        <td class="label">Requested Amount</td>
+        <td class="value">
+            {!InvoiceForAward__c.Requested_Amount__c}
+        </td>
+    </tr>
+    <tr>
+        <td class="label">Finance Approved Amount</td>
+        <td class="value">
+            {!InvoiceForAward__c.Finance_Approved_Amount__c}
+        </td>
+    </tr>
+    <tr>
+        <td class="label">Budget Amendment</td>
+        <td class="value">
+            {!InvoiceForAward__c.Budget_Amendment__c}
+        </td>
+    </tr>
+</table>
+
+</body>
+</html>
+
+</apex:page>

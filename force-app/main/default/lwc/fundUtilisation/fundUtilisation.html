@@ -1,0 +1,45 @@
+<template>
+    <template if:true={hasDisbursement}>
+        <div class="container">
+
+            <div class="card">
+                <h2 class="title">Fund Utilization Form</h2>
+
+                <!-- Display Info -->
+                <lightning-input label="Disbursement" value={disbursementName} disabled>
+                </lightning-input>
+
+                <lightning-input label="Grant Application" value={applicationName} disabled>
+                </lightning-input>
+
+                <!-- Upload -->
+                <div class="upload-section">
+                    <h3>Upload Supporting Documents</h3>
+
+                    <lightning-file-upload 
+                        label="Upload Files" 
+                        multiple
+                        accept=".pdf,.jpg,.png,.docx"
+                        onuploadfinished={handleUploadFinished}>
+                    </lightning-file-upload>
+                </div>
+
+                <!-- Submit -->
+                <div class="button-container">
+                    <lightning-button 
+                        label="Submit" 
+                        variant="brand"
+                        onclick={handleSubmit}>
+                    </lightning-button>
+                </div>
+
+            </div>
+        </div>
+    </template>
+
+    <template if:false={hasDisbursement}>
+        <div class="no-data">
+            <p>No Disbursement found. Fund Utilization form is not available.</p>
+        </div>
+    </template>
+</template>

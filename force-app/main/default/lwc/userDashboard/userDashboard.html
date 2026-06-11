@@ -1,0 +1,28 @@
+<template>
+    <lightning-card title="User Dashboard" icon-name="standard:user">
+        <div class="slds-p-around_medium">
+            <p>
+                <strong>User Name:</strong> {userName}
+            </p>
+
+            <p class="slds-m-top_x-small">
+                <strong>Today:</strong> {today}
+            </p>
+
+            <div class="slds-m-top_medium">
+                <lightning-button
+                    label="Increase Count"
+                    variant="brand"
+                    onclick={increaseCount}>
+                </lightning-button>
+
+                <p class="slds-m-top_small">
+                    <strong>Count:</strong> {count}
+                </p>
+            </div>
+
+            
+        </div>
+    </lightning-card>
+    
+</template>

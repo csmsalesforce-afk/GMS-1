@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <label><!-- Institution Category --></label>
+    <name>Institution_Category__c</name>
+    <picklistValues>
+        <masterLabel>College</masterLabel>
+        <translation><!-- College --></translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Research Institute</masterLabel>
+        <translation><!-- Research Institute --></translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>University</masterLabel>
+        <translation><!-- University --></translation>
+    </picklistValues>
+</CustomFieldTranslation>

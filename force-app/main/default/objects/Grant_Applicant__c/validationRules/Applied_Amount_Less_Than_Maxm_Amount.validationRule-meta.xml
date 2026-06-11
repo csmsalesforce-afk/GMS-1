@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Applied_Amount_Less_Than_Maxm_Amount</fullName>
+    <active>true</active>
+    <description>Applied Amount Should be less than Maximum Applied Amount</description>
+    <errorConditionFormula>Requested_Amount__c &gt; Program__r.Max_Amount__c</errorConditionFormula>
+    <errorMessage>Requested amount should be less than the Maximum Amount for program.</errorMessage>
+</ValidationRule>

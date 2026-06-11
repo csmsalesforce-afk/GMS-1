@@ -1,0 +1,261 @@
+/* ================= HOST ================= */
+
+:host {
+    display: block;
+    width: 100%;
+}
+
+/* ================= PAGE WRAPPER ================= */
+
+.page-wrapper {
+    width: 100vw;
+    margin-left: calc(-50vw + 50%);
+    padding: 32px 60px;
+    background: #f4f6f9;
+    min-height: 100vh;
+    box-sizing: border-box;
+}
+
+/* ================= LOADING ================= */
+
+.loading-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 60px;
+}
+
+/* ================= APPROVAL BANNER ================= */
+
+.approval-banner {
+    background: #fff8e1;
+    border-left: 5px solid #f5b400;
+    padding: 12px 16px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 16px;
+    font-weight: 500;
+}
+
+/* ================= HEADER CARD ================= */
+
+.header-card {
+    background: white;
+    padding: 24px;
+    border-radius: 14px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 6px 25px rgba(0,0,0,0.05);
+    margin-bottom: 20px;
+}
+
+.app-title {
+    font-size: 24px;
+    font-weight: 700;
+    margin: 0;
+}
+
+.action-buttons lightning-button {
+    margin-left: 10px;
+}
+
+/* ================= STATUS BADGES ================= */
+
+.status-badge {
+    margin-top: 8px;
+    display: inline-block;
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.status-badge.draft {
+    background: #e3f2fd;
+    color: #1565c0;
+}
+
+.status-badge.submitted {
+    background: #e8f5e9;
+    color: #2e7d32;
+}
+
+.status-badge.internal-review {
+    background: #fff3e0;
+    color: #ef6c00;
+}
+
+.status-badge.external-review {
+    background: #f3e5f5;
+    color: #6a1b9a;
+}
+
+.status-badge.revision {
+    background: #fff8e1;
+    color: #f57f17;
+}
+
+.status-badge.withdrawn {
+    background: #eeeeee;
+    color: #616161;
+}
+
+.status-badge.approved {
+    background: #e8f5e9;
+    color: #1b5e20;
+}
+
+.status-badge.rejected {
+    background: #ffebee;
+    color: #c62828;
+}
+
+/* ================= MAIN LAYOUT ================= */
+
+.main-layout {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 24px;
+    width: 100%;
+}
+
+/* ================= LEFT + RIGHT PANELS ================= */
+
+.left-panel {
+    width: 100%;
+}
+
+.right-panel {
+    width: 100%;
+}
+
+/* ================= SECTION CARDS ================= */
+
+.section-card {
+    background: white;
+    padding: 22px;
+    border-radius: 14px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.04);
+    margin-bottom: 20px;
+}
+
+.section-card h2 {
+    font-size: 16px;
+    font-weight: 700;
+    margin-bottom: 18px;
+}
+
+/* ================= GRID ================= */
+
+.grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 18px;
+}
+
+.grid label {
+    font-size: 12px;
+    font-weight: 600;
+    color: #777;
+    text-transform: uppercase;
+}
+
+.grid p {
+    margin: 4px 0 0 0;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.full-width {
+    grid-column: span 2;
+}
+
+/* ================= FILE PANEL ================= */
+
+.files-card {
+    background: white;
+    padding: 20px;
+    border-radius: 14px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.04);
+}
+
+.files-card h2 {
+    font-size: 16px;
+    font-weight: 700;
+    margin-bottom: 15px;
+}
+
+.file-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 0;
+    border-bottom: 1px solid #eee;
+}
+
+.file-item:last-child {
+    border-bottom: none;
+}
+
+.file-info {
+    flex: 1;
+}
+
+.file-name {
+    font-weight: 600;
+    font-size: 14px;
+}
+
+.file-date {
+    font-size: 12px;
+    color: gray;
+}
+
+.no-files {
+    text-align: center;
+    color: gray;
+    padding: 20px 0;
+}
+
+/* ================= RESPONSIVE ================= */
+
+@media (max-width: 1100px) {
+
+    .main-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .grid {
+        grid-template-columns: 1fr;
+    }
+
+    .full-width {
+        grid-column: span 1;
+    }
+
+    .header-card {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px;
+    }
+
+    .page-wrapper {
+        padding: 24px;
+    }
+}
+
+/* ================= MOBILE ================= */
+
+@media (max-width: 600px) {
+
+    .page-wrapper {
+        padding: 20px;
+    }
+
+    .app-title {
+        font-size: 20px;
+    }
+
+}

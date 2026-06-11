@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <caseValues>
+        <plural>false</plural>
+        <value>InvoiceForAward</value>
+    </caseValues>
+    <caseValues>
+        <plural>true</plural>
+        <value>InvoiceForAwards</value>
+    </caseValues>
+    <layouts>
+        <layout>Invoice Layout</layout>
+        <sections>
+            <label><!-- Custom Links --></label>
+            <section>Custom Links</section>
+        </sections>
+        <sections>
+            <label><!-- Invoice Details --></label>
+            <section>Invoice Details</section>
+        </sections>
+        <sections>
+            <label><!-- Payment Confirmation --></label>
+            <section>Payment Confirmation</section>
+        </sections>
+        <sections>
+            <label><!-- Payment Processing --></label>
+            <section>Payment Processing</section>
+        </sections>
+    </layouts>
+    <startsWith>Vowel</startsWith>
+    <validationRules>
+        <errorMessage><!-- Block Invoice If Award is Not Active --></errorMessage>
+        <name>Block_Invoice_If_Award_Not_Active</name>
+    </validationRules>
+    <webLinks>
+        <label><!-- Download_Invoice_PDF --></label>
+        <name>Download_Invoice_PDF</name>
+    </webLinks>
+</CustomObjectTranslation>

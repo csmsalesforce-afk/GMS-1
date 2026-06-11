@@ -1,0 +1,161 @@
+/* ================= BACK BUTTON STYLES ================= */
+.back-btn {
+    background: transparent;
+    border: none;
+    color: #4b5563; /* Gray color */
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 20px;
+    padding: 0;
+    transition: color 0.3s ease;
+}
+
+.back-btn:hover {
+    color: #1e3a8a; /* Turns dark blue on hover */
+}
+
+/* Forces the back arrow icon to match the text color */
+.back-btn .back-icon {
+    --sds-c-icon-color-foreground-default: currentcolor;
+}
+
+/* ================= PAGE STRUCTURE ================= */
+.page-container {
+    padding: 40px 8%;
+    background: #fcfcfc;
+    min-height: 100vh;
+}
+
+.header-section { 
+    margin-bottom: 40px; 
+}
+
+.header-section h2 { 
+    font-size: 36px; 
+    font-weight: 700; 
+    color: #111827; 
+    margin-bottom: 8px;
+}
+
+.header-section .subtitle { 
+    font-size: 16px; 
+    color: #6b7280; 
+}
+
+.spinner-container { 
+    height: 200px; 
+    position: relative; 
+}
+
+/* ================= GRID & CARD BASE ================= */
+.card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 24px;
+}
+
+.program-card {
+    background: white;
+    border: 1px solid #f3f4f6;
+    border-radius: 12px;
+    padding: 24px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+    display: flex;
+    flex-direction: column;
+    min-height: 240px;
+    cursor: pointer;
+    transition: all 0.3s ease; /* Enables smooth color swap */
+}
+
+/* ================= CARD INNER ELEMENTS ================= */
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 20px;
+}
+
+.icon-container {
+    width: 45px;
+    height: 45px;
+    background-color: #eff6ff;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+}
+
+.icon-container lightning-icon {
+    --sds-c-icon-color-foreground-default: #2042a3; /* Deep blue default icon */
+}
+
+.program-card .tag {
+    background: #f3f4f6;
+    color: #6b7280;
+    font-size: 11px;
+    padding: 4px 12px;
+    border-radius: 20px;
+    transition: all 0.3s ease;
+}
+
+.program-card h3 {
+    font-size: 16px;
+    font-weight: 700;
+    margin-bottom: 20px;
+    color: #111827;
+    transition: all 0.3s ease;
+}
+
+.card-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    border-top: 1px dashed #d1d5db; /* The dashed line */
+    padding-top: 15px;
+    margin-top: auto; 
+}
+
+.card-footer p { 
+    font-size: 12px; 
+    color: #6b7280; 
+    margin: 0; 
+    transition: all 0.3s ease; 
+}
+
+.card-footer strong { 
+    font-size: 20px; 
+    color: #111827; 
+    font-weight: 700; 
+    transition: all 0.3s ease; 
+}
+
+/* ================= CARD HOVER EFFECT (Turns Blue) ================= */
+.program-card:hover {
+    background: #2042a3; /* Deep blue from design */
+    border-color: #2042a3;
+    box-shadow: 0 10px 25px rgba(32, 66, 163, 0.2);
+    transform: translateY(-4px); /* Slight lift */
+}
+
+.program-card:hover h3, 
+.program-card:hover .card-footer strong {
+    color: #ffffff; 
+}
+
+.program-card:hover .card-footer p {
+    color: #d1d5db; 
+}
+
+.program-card:hover .tag {
+    background: rgba(255, 255, 255, 0.15); /* Semi-transparent white tag */
+    color: #ffffff;
+}
+
+.program-card:hover .icon-container {
+    background: #ffffff; /* White icon box */
+}

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Validate_Program_Alignment_Score_Range</fullName>
+    <active>true</active>
+    <errorConditionFormula>AND(
+  NOT(ISBLANK(Program_Alignment_Score__c)),
+  OR(
+    Program_Alignment_Score__c &lt; 1,
+    Program_Alignment_Score__c &gt; 5
+  )
+)</errorConditionFormula>
+    <errorMessage>Program Alignment Score must be a number between 1 and 5.</errorMessage>
+</ValidationRule>

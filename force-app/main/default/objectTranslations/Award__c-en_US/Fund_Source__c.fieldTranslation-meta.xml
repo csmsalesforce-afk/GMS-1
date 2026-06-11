@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <label><!-- Fund Source --></label>
+    <name>Fund_Source__c</name>
+    <picklistValues>
+        <masterLabel>Donor Restricted Funds</masterLabel>
+        <translation><!-- Donor Restricted Funds --></translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>External Partner Funds</masterLabel>
+        <translation><!-- External Partner Funds --></translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Government Funds</masterLabel>
+        <translation><!-- Government Funds --></translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Internal Funds</masterLabel>
+        <translation><!-- Internal Funds --></translation>
+    </picklistValues>
+</CustomFieldTranslation>

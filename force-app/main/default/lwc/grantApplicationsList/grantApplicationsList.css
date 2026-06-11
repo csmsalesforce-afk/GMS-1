@@ -1,0 +1,51 @@
+.container{
+    padding:20px;
+}
+
+.page-title{
+    font-size:28px;
+    font-weight:700;
+    margin-bottom:20px;
+}
+
+.app-table{
+    width:100%;
+    border-collapse:collapse;
+}
+
+.app-table th{
+    background:#f4f6f9;
+    padding:12px;
+    text-align:left;
+}
+
+.app-table td{
+    padding:12px;
+    border-bottom:1px solid #eee;
+}
+
+.badge{
+    padding:5px 10px;
+    border-radius:10px;
+    font-size:12px;
+}
+
+.review{
+    background:#fff3cd;
+}
+
+.external{
+    background:#d1ecf1;
+}
+
+.revision{
+    background:#f8d7da;
+}
+
+.approved{
+    background:#d4edda;
+}
+
+.rejected{
+    background:#f5c6cb;
+}

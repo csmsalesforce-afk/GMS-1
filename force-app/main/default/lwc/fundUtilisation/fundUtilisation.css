@@ -1,0 +1,37 @@
+.container {
+    display: flex;
+    justify-content: center;
+    padding: 20px;
+}
+
+.card {
+    width: 100%;
+    max-width: 600px;
+    padding: 20px;
+    border-radius: 12px;
+    background: #ffffff;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.title {
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: 22px;
+    font-weight: bold;
+}
+
+.button-container {
+    margin-top: 20px;
+    text-align: center;
+}
+
+.upload-section {
+    margin-top: 25px;
+}
+
+.no-data {
+    text-align: center;
+    padding: 40px;
+    font-size: 16px;
+    color: #888;
+}

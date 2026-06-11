@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>PO_Must_Complete_Intelligence</fullName>
+    <active>true</active>
+    <errorConditionFormula>AND(
+  ISPICKVAL(Application_Status__c, &quot;Under External Review&quot;),
+  $Profile.Name = &quot;Program Officer&quot;,
+  OR(
+    ISBLANK(Program_Alignment_Score__c),
+    ISBLANK(TEXT(Funding_Priority__c))
+  )
+)</errorConditionFormula>
+    <errorMessage>Program Officer must complete alignment score, funding priority, and approval type before proceeding.</errorMessage>
+</ValidationRule>

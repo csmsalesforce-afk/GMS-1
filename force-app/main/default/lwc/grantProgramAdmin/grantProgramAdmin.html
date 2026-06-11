@@ -1,0 +1,180 @@
+<template>
+    <div class="page-wrapper">
+        <div class="container">
+            <!-- Header Section -->
+            <div class="header">
+                <div class="header-content">
+                    <lightning-icon 
+                        icon-name="standard:opportunity" 
+                        size="medium" 
+                        class="header-icon">
+                    </lightning-icon>
+                    <h1 class="page-title">Grant Programs</h1>
+                </div>
+                <lightning-button
+                    label="+ New Program"
+                    variant="brand"
+                    class="new-program-btn"
+                    onclick={createProgram}>
+                </lightning-button>
+            </div>
+
+            <!-- Search and View Controls -->
+            <div class="controls-bar">
+                <div class="search-container">
+                    <lightning-input
+                        type="search"
+                        placeholder="Search by 'Program name'"
+                        value={searchKey}
+                        onchange={handleSearch}
+                        class="search-input">
+                    </lightning-input>
+                </div>
+                <div class="view-controls">
+                    <div class="button-wrapper" style={filterButtonStyle}>
+                        <lightning-button-icon
+                            icon-name="utility:filterList"
+                            variant="border-filled"
+                            alternative-text="Filter"
+                            title="Filter"
+                            onclick={handleFilterClick}>
+                        </lightning-button-icon>
+                    </div>
+                    <div class="button-wrapper" style={tableButtonStyle}>
+                        <lightning-button-icon
+                            icon-name="utility:table"
+                            variant="border-filled"
+                            alternative-text="Table View"
+                            title="Table View"
+                            onclick={handleTableView}>
+                        </lightning-button-icon>
+                    </div>
+                    <div class="button-wrapper" style={gridButtonStyle}>
+                        <lightning-button-icon
+                            icon-name="utility:apps"
+                            variant="border-filled"
+                            alternative-text="Grid View"
+                            title="Grid View"
+                            onclick={handleGridView}>
+                        </lightning-button-icon>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Programs Table -->
+            <div class="table-container">
+                <table class="program-table">
+                    <thead>
+                        <tr>
+                            <th class="col-sl">
+                                <div class="th-content">SL No.</div>
+                            </th>
+                            <th class="col-program">
+                                <div class="th-content">
+                                    <span>Program Name / Program Type</span>
+                                </div>
+                            </th>
+                            <th class="col-budget">
+                                <div class="th-content">Total Budget</div>
+                            </th>
+                            <th class="col-applications">
+                                <div class="th-content">Total Applications</div>
+                            </th>
+                            <th class="col-pending">
+                                <div class="th-content">Pending</div>
+                            </th>
+                            <th class="col-approved">
+                                <div class="th-content">Approved</div>
+                            </th>
+                            <th class="col-rejected">
+                                <div class="th-content">Rejected</div>
+                            </th>
+                            <th class="col-status">
+                                <div class="th-content">Status</div>
+                            </th>
+                            <th class="col-action">
+                                <div class="th-content">Action</div>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <template if:true={filteredPrograms}>
+                            <template for:each={filteredPrograms} for:item="p">
+                                <tr key={p.programId} class="table-row">
+                                    <td class="col-sl">
+                                        <div class="cell-content">{p.slNo}</div>
+                                    </td>
+                                    <td class="col-program">
+                                        <div class="program-info">
+                                            <div class="program-name">{p.programName}</div>
+                                            <div class="program-type">{p.programType}</div>
+                                        </div>
+                                    </td>
+                                    <td class="col-budget">
+                                        <div class="cell-content budget-amount">{p.formattedBudget}</div>
+                                    </td>
+                                    <td class="col-applications">
+                                        <div class="cell-content">{p.totalApplications}</div>
+                                    </td>
+                                    <td class="col-pending">
+                                        <div class="cell-content">
+                                            <span class="count-badge pending-badge">{p.pending}</span>
+                                        </div>
+                                    </td>
+                                    <td class="col-approved">
+                                        <div class="cell-content">
+                                            <span class="count-badge approved-badge">{p.approved}</span>
+                                        </div>
+                                    </td>
+                                    <td class="col-rejected">
+                                        <div class="cell-content">
+                                            <span class="count-badge rejected-badge">{p.rejected}</span>
+                                        </div>
+                                    </td>
+                                    <td class="col-status">
+                                        <div class="cell-content">
+                                            <span class={p.statusClass}>{p.status}</span>
+                                        </div>
+                                    </td>
+                                    <td class="col-action">
+                                        <div class="action-buttons">
+                                            <lightning-button
+                                                label={p.actionLabel}
+                                                variant="neutral"
+                                                class="action-btn"
+                                                data-id={p.programId}
+                                                onclick={viewApplications}>
+                                            </lightning-button>
+                                            <lightning-button-icon
+                                                icon-name="utility:threedots_vertical"
+                                                variant="bare"
+                                                alternative-text="More Actions"
+                                                class="more-actions-btn"
+                                                data-id={p.programId}
+                                                onclick={handleMoreActions}>
+                                            </lightning-button-icon>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </template>
+                        </template>
+                        <template if:false={filteredPrograms}>
+                            <tr>
+                                <td colspan="9" class="empty-state">
+                                    <div class="empty-state-content">
+                                        <lightning-icon 
+                                            icon-name="utility:search" 
+                                            size="large" 
+                                            class="empty-icon">
+                                        </lightning-icon>
+                                        <p class="empty-message">No programs found</p>
+                                    </div>
+                                </td>
+                            </tr>
+                        </template>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</template>

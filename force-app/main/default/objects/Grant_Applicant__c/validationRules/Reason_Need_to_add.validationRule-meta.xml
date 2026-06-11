@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Reason_Need_to_add</fullName>
+    <active>true</active>
+    <errorConditionFormula>AND(
+  ISPICKVAL(Application_Status__c, &quot;Withdrawn&quot;),
+  ISBLANK(Reason_For_Withdrawn__c)
+)</errorConditionFormula>
+    <errorDisplayField>Reason_For_Withdrawn__c</errorDisplayField>
+    <errorMessage>Reason for Withdrawn is required when status is Withdrawn.</errorMessage>
+</ValidationRule>

@@ -1,0 +1,728 @@
+/* GLOBAL VARIABLES & RESET */
+.program-page {
+    font-family: 'Salesforce Sans', system-ui, -apple-system, sans-serif;
+    background-color: #f7f9fc;
+    /* FIX: Account for the 70px navbar so it doesn't overflow the height */
+    /* min-height: calc(100vh - 70px);  */
+    color: #333333;
+    padding-bottom: 60px;
+    width: 100%; 
+    box-sizing: border-box;
+}
+.dynamic-content p {
+    white-space: pre-line;
+}
+.doc-list {
+    list-style: none;
+    padding: 0;
+}
+
+.doc-list li {
+    display: flex;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
+.doc-icon {
+    width: 18px;
+    height: 18px;
+    margin-right: 10px;
+    color: #2563eb;  /* blue document icon */
+}
+
+h1, h2, h3, h4, p, ul {
+    margin: 0;
+    padding: 0;
+}
+
+ul {
+    list-style: none;
+}
+
+/* HEADER SECTION */
+.header-section {
+    background-color: #1a3673; 
+    color: white;
+    padding: 32px 0 24px 0;
+    width: 100%;
+    position: sticky;
+    /* Removed the negative margins so it aligns properly with your navbar layout */
+}
+
+.header-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 2rem; /* FIX: Matches the 2rem padding of your navbar */
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.back-btn {
+    background: none;
+    border: none;
+    color: #e2e8f0;
+    font-size: 14px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 0;
+    margin-bottom: 24px;
+}
+
+.back-btn:hover {
+    color: white;
+}
+
+.title-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+}
+
+.program-title {
+    font-size: 28px;
+    font-weight: 600;
+}
+
+.badge {
+    background-color: rgba(255, 255, 255, 0.15);
+    color: white;
+    padding: 4px 12px;
+    border-radius: 16px;
+    font-size: 12px;
+    font-weight: 500;
+}
+
+/* TABS NAVIGATION (NAVBAR) */
+.tabs-container {
+    background-color: white;
+    border-bottom: 1px solid #e5e7eb;
+    margin-bottom: 32px;
+    width: 100%;
+         position: sticky;
+    top: 0;              /* sticks to top */
+    z-index: 1000;       /* stays above content */
+    background: white;
+}
+
+.tabs-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 2rem; /* FIX: Matches navbar padding */
+    display: flex;
+    gap: 32px;
+    overflow-x: auto; 
+    white-space: nowrap;
+    box-sizing: border-box;
+
+}
+
+.tab {
+    text-decoration: none;
+    color: #6b7280;
+    padding: 16px 0;
+    font-size: 14px;
+    font-weight: 500;
+    border-bottom: 2px solid transparent;
+}
+
+.tab:hover {
+    color: #1a3673;
+}
+
+.tab.active {
+    color: #1a3673;
+    border-bottom: 2px solid #1a3673;
+    font-weight: 600;
+}
+
+/* MAIN BODY LAYOUT */
+.main-body {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 2rem; /* FIX: Matches navbar padding */
+    display: flex;
+    gap: 24px;
+    align-items: flex-start; 
+    width: 100%; 
+    box-sizing: border-box;
+}
+
+/* ... Keep all your existing code from .card downwards exactly the same ... */
+
+.back-btn {
+    background: none;
+    border: none;
+    color: #e2e8f0;
+    font-size: 14px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 0;
+    margin-bottom: 24px;
+}
+
+.back-btn:hover {
+    color: white;
+}
+
+.title-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+}
+
+.program-title {
+    font-size: 28px;
+    font-weight: 600;
+}
+
+.badge {
+    background-color: rgba(255, 255, 255, 0.15);
+    color: white;
+    padding: 4px 12px;
+    border-radius: 16px;
+    font-size: 12px;
+    font-weight: 500;
+}
+
+/* TABS NAVIGATION (NAVBAR) */
+.tabs-container {
+    background-color: white;
+    border-bottom: 1px solid #e5e7eb;
+    margin-bottom: 32px;
+    /* FIX: Ensure navbar stretches same as header */
+    margin-left: -15px;
+    margin-right: -15px;
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+.tabs-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 24px;
+    display: flex;
+    gap: 32px;
+    overflow-x: auto; /* FIX: Prevents tabs from breaking out on smaller screens */
+    white-space: nowrap;
+}
+
+.tab {
+    text-decoration: none;
+    color: #6b7280;
+    padding: 16px 0;
+    font-size: 14px;
+    font-weight: 500;
+    border-bottom: 2px solid transparent;
+}
+
+.tab:hover {
+    color: #1a3673;
+}
+
+.tab.active {
+    color: #1a3673;
+    border-bottom: 2px solid #1a3673;
+    font-weight: 600;
+}
+
+/* MAIN BODY LAYOUT */
+.main-body {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 24px;
+    display: flex;
+    gap: 24px;
+    align-items: flex-start; /* Crucial for sticky right bar to work properly */
+    width: 100%; /* FIX: Ensures it maps to container width */
+}
+
+.card {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    border: 1px solid #f0f0f0;
+}
+
+/* LEFT CONTENT */
+.left-content {
+    flex: 1;
+    min-width: 0; /* FIX: Prevents left section from being pushed out by large text */
+    padding: 32px;
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+}
+
+.content-section h2 {
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 16px;
+    color: #111827;
+}
+
+.content-section p {
+    font-size: 14px;
+    line-height: 1.6;
+    color: #4b5563;
+    margin-bottom: 16px;
+}
+
+/* Lists (Eligibility & Documents) */
+.check-list li, .doc-list li {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 14px;
+    color: #4b5563;
+    margin-bottom: 12px;
+}
+
+.check-icon {
+    width: 18px;
+    height: 18px;
+    color: #10b981; /* Green check */
+}
+
+.doc-icon {
+    width: 18px;
+    height: 18px;
+    color: #3b82f6; /* Blue document */
+}
+
+/* Funding Box */
+.funding-box {
+    background-color: #f8fafc;
+    border-radius: 8px;
+    padding: 24px;
+    display: flex;
+    gap: 32px;
+}
+
+.funding-col {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.border-right {
+    border-right: 1px solid #e2e8f0;
+    padding-right: 32px;
+}
+
+.fund-item {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.label {
+    font-size: 13px;
+    color: #64748b;
+    font-weight: 500;
+}
+
+.value {
+    font-size: 20px;
+    font-weight: 700;
+    color: #0f172a;
+}
+
+.disbursement-split {
+    display: flex;
+    gap: 24px;
+    margin-top: 8px;
+}
+
+.split-item {
+    display: flex;
+    flex-direction: column;
+}
+
+.percent {
+    font-size: 18px;
+    font-weight: 700;
+    color: #1e3a8a;
+    margin-bottom: 4px;
+}
+
+.phase {
+    font-size: 13px;
+    font-weight: 600;
+    color: #334155;
+    margin-bottom: 2px;
+}
+
+.desc {
+    font-size: 12px;
+    color: #64748b;
+}
+
+/* Selection Process Cards */
+.selection-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+}
+
+.step-card {
+    background: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    padding: 20px 16px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.step-num {
+    color: #dbeafe;
+    font-size: 24px;
+    font-weight: 700;
+    margin-bottom: 12px;
+}
+
+.step-card h4 {
+    font-size: 14px;
+    font-weight: 600;
+    color: #1e293b;
+    margin-bottom: 6px;
+}
+
+.step-card p {
+    font-size: 12px;
+    color: #64748b;
+    margin: 0;
+    line-height: 1.4;
+}
+
+/* RIGHT SIDEBAR (STICKY) */
+.right-sidebar {
+    width: 320px;
+    flex-shrink: 0;
+    position: sticky;
+    top: 24px; /* Makes it stick when scrolling past 24px from top */
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.apply-card {
+    padding: 24px;
+}
+
+.apply-card h3 {
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 20px;
+    color: #111827;
+}
+
+.sub-label {
+    font-size: 13px;
+    color: #6b7280;
+    margin-bottom: 4px;
+}
+
+.amount {
+    font-size: 28px;
+    font-weight: 700;
+    color: #111827;
+    margin-bottom: 4px;
+}
+
+.per-project {
+    font-size: 12px;
+    color: #9ca3af;
+    margin-bottom: 24px;
+}
+
+.btn-primary {
+    width: 100%;
+    background: linear-gradient(180deg, #3b82f6 0%, #1d4ed8 100%);
+    color: white;
+    border: none;
+    border-radius: 6px;
+    padding: 12px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    margin-bottom: 12px;
+    transition: opacity 0.2s;
+}
+
+.btn-primary:hover {
+    opacity: 0.9;
+}
+
+.time-hint {
+    text-align: center;
+    font-size: 12px;
+    color: #9ca3af;
+}
+
+/* Important Info Card */
+.info-card {
+    background-color: #f0f7ff;
+    padding: 24px;
+    border: none;
+}
+
+.info-card h3 {
+    font-size: 15px;
+    font-weight: 600;
+    color: #1e3a8a;
+    margin-bottom: 16px;
+}
+
+.info-list {
+    margin-bottom: 24px;
+}
+
+.info-list li {
+    font-size: 13px;
+    color: #475569;
+    margin-bottom: 10px;
+    padding-left: 16px;
+    position: relative;
+    line-height: 1.4;
+}
+
+.info-list li::before {
+    content: "•";
+    color: #94a3b8;
+    position: absolute;
+    left: 0;
+    top: 0;
+    font-size: 16px;
+}
+
+/* Assistance Box */
+.assistance-box {
+    background: #e0f2fe;
+    border-radius: 8px;
+    padding: 16px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+}
+
+.help-icon {
+    width: 20px;
+    height: 20px;
+    color: #64748b;
+}
+
+.help-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: #0f172a;
+}
+
+.help-link {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    color: #2563eb;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+/* APPLICATION PROCESS TIMELINE */
+.timeline {
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    margin-top: 8px;
+}
+
+.timeline-step {
+    display: flex;
+    gap: 16px;
+    position: relative;
+    padding-bottom: 32px; 
+}
+
+.timeline-step:last-child {
+    padding-bottom: 0;
+}
+
+.timeline-step:not(:last-child)::before {
+    content: '';
+    position: absolute;
+    left: 15px; 
+    top: 32px;  
+    bottom: 0;
+    width: 2px;
+    background-color: #e5e7eb; 
+}
+
+.timeline-icon {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    border: 1px solid #d1d5db; 
+    background-color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #3b82f6; 
+    z-index: 1; 
+    flex-shrink: 0;
+}
+
+.timeline-content {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding-top: 6px; 
+}
+
+.timeline-content h4 {
+    font-size: 14px;
+    font-weight: 600;
+    color: #111827;
+    margin: 0;
+}
+
+.timeline-content p {
+    font-size: 13px;
+    color: #6b7280;
+    margin: 0;
+    line-height: 1.4;
+}
+
+/* =========================================
+   RESPONSIVE LAYOUT FIXES
+   ========================================= */
+@media (max-width: 1024px) {
+    .main-body {
+        flex-direction: column; /* Stacks the sidebar below the main content on small screens */
+    }
+
+    .right-sidebar {
+        width: 100%;
+        position: static; /* Turns off sticky behavior when stacked */
+    }
+
+    .selection-grid {
+        grid-template-columns: repeat(2, 1fr); /* 2 columns instead of 4 */
+    }
+
+    .funding-box {
+        flex-direction: column;
+        gap: 24px;
+    }
+
+    .border-right {
+        border-right: none;
+        border-bottom: 1px solid #e2e8f0;
+        padding-right: 0;
+        padding-bottom: 24px;
+    }
+}
+
+@media (max-width: 600px) {
+    .selection-grid {
+        grid-template-columns: 1fr; /* 1 column on mobile */
+    }
+    
+    .left-content {
+        padding: 20px;
+    }
+}
+
+.apply-message {
+    color: #d9534f;
+    font-size: 13px;
+    margin-top: 8px;
+}
+
+.profile-btn {
+    margin-top: 10px;
+}
+
+.btn-primary {
+    width: 100%;
+    padding: 12px;
+    border-radius: 8px;
+    font-weight: 600;
+    background: linear-gradient(90deg, #2563eb, #1e40af);
+    color: white;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.btn-primary:hover:not(:disabled) {
+    transform: translateY(-1px);
+}
+
+.btn-primary:disabled {
+    background: #cbd5e1;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.btn-outline {
+    width: 100%;
+    padding: 10px;
+    margin-top: 10px;
+    border-radius: 8px;
+    font-weight: 500;
+    background: white;
+    color: #2563eb;
+    border: 1px solid #2563eb;
+    cursor: pointer;
+}
+
+.apply-message {
+    color: #dc2626;
+    font-size: 13px;
+    margin-top: 8px;
+}
+
+.status-box {
+    display: flex;
+    gap: 12px;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    padding: 14px;
+    margin: 16px 0;
+    align-items: flex-start;
+}
+
+.status-icon {
+    font-size: 18px;
+    margin-top: 2px;
+}
+
+.status-title {
+    font-weight: 600;
+    font-size: 14px;
+    margin: 0;
+    color: #1e293b;
+}
+
+.status-desc {
+    font-size: 13px;
+    margin: 4px 0 0 0;
+    color: #64748b;
+}
+
+.btn-primary:disabled {
+    background: #cbd5e1;
+    color: #ffffff;
+    cursor: not-allowed;
+}

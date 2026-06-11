@@ -1,0 +1,68 @@
+<template>
+    <!-- FIXED HEADER WRAPPER -->
+    <header class="navbar-wrapper">
+        <nav class="navbar">
+
+            <!-- LEFT : LOGO -->
+            <div class="nav-left" onclick={navigateHome}>
+                <img src={logoUrl} alt="CSM Logo" class="logo"/>
+            </div>
+
+        <!-- CENTER : MENU -->
+<div class="nav-center">
+
+    <!-- Home / Dashboard -->
+    <a class="nav-link" onclick={navigateHome}>
+        {homeLabel}
+    </a>
+
+    <template if:true={isLoggedIn}>
+        <a class="nav-link" onclick={navigatePrograms}>
+            Grant Programs
+        </a>
+
+        <a class="nav-link" onclick={navigateApplications}>
+            My Applications
+        </a>
+    </template>
+
+</div>
+
+            <!-- RIGHT : PROFILE -->
+            <div class="nav-right">
+
+                <template if:true={isLoggedIn}>
+                    <div class="profile-container" onclick={toggleDropdown}>
+                        <div class="profile-circle">
+                            {userInitials}
+                            <template if:true={isVerified}>
+                                <span class="verified-badge">✔</span>
+                            </template>
+                        </div>
+                    </div>
+
+                    <template if:true={showDropdown}>
+                        <div class="dropdown">
+                            <div class="dropdown-item" onclick={navigateProfile}>
+                                My Profile
+                            </div>
+                            <div class="dropdown-item logout" onclick={handleLogout}>
+                                Logout
+                            </div>
+                        </div>
+                    </template>
+                </template>
+
+                <template if:false={isLoggedIn}>
+                    <lightning-button 
+                        label="Login"
+                        variant="brand"
+                        onclick={navigateLogin}>
+                    </lightning-button>
+                </template>
+
+            </div>
+
+        </nav>
+    </header>
+</template>
