@@ -11,6 +11,12 @@
     </approvalPageFields>
     <approvalStep>
         <allowDelegate>false</allowDelegate>
+        <approvalActions>
+            <action>
+                <name>Status_Change_To_Approved</name>
+                <type>FieldUpdate</type>
+            </action>
+        </approvalActions>
         <assignedApprover>
             <approver>
                 <name>Financer__c</name>
@@ -20,6 +26,12 @@
         </assignedApprover>
         <label>Finance Approval</label>
         <name>Step_1</name>
+        <rejectionActions>
+            <action>
+                <name>Status_Change_To_Rejected</name>
+                <type>FieldUpdate</type>
+            </action>
+        </rejectionActions>
     </approvalStep>
     <enableMobileDeviceAccess>false</enableMobileDeviceAccess>
     <entryCriteria>

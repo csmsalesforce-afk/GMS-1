@@ -3,6 +3,11 @@
     <apiVersion>65.0</apiVersion>
     <areMetricsLoggedToDataCloud>false</areMetricsLoggedToDataCloud>
     <environments>Default</environments>
+    <formulas>
+        <name>MappedOrgType</name>
+        <dataType>String</dataType>
+        <expression>IF(TEXT({!$Record.Organization_Type__c}) == &apos;Private Organisation&apos;, &apos;Private Organization&apos;, TEXT({!$Record.Organization_Type__c}))</expression>
+    </formulas>
     <interviewLabel>Create Account Triggered FLow {!$Flow.CurrentDateTime}</interviewLabel>
     <label>Create Account Triggered FLow</label>
     <processMetadataValues>
@@ -47,13 +52,13 @@
         <inputAssignments>
             <field>Organization_Type__c</field>
             <value>
-                <elementReference>$Record.Organization_Type__c</elementReference>
+                <elementReference>MappedOrgType</elementReference>
             </value>
         </inputAssignments>
         <inputAssignments>
             <field>OwnerId</field>
             <value>
-                <stringValue>005fj00000ACAdlAAH</stringValue>
+                <elementReference>Get_User.Id</elementReference>
             </value>
         </inputAssignments>
         <inputAssignments>
@@ -78,8 +83,29 @@
         <storeOutputAutomatically>true</storeOutputAutomatically>
     </recordCreates>
     <recordLookups>
-        <name>Get_Records_1</name>
-        <label>Get Records 1</label>
+        <name>Get_Profile</name>
+        <label>Get Profile</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>Get_User</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>Name</field>
+            <operator>EqualTo</operator>
+            <value>
+                <stringValue>System Administrator</stringValue>
+            </value>
+        </filters>
+        <getFirstRecordOnly>true</getFirstRecordOnly>
+        <object>Profile</object>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordLookups>
+    <recordLookups>
+        <name>Get_User</name>
+        <label>Get User</label>
         <locationX>0</locationX>
         <locationY>0</locationY>
         <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
@@ -88,14 +114,14 @@
         </connector>
         <filterLogic>and</filterLogic>
         <filters>
-            <field>Id</field>
+            <field>ProfileId</field>
             <operator>EqualTo</operator>
             <value>
-                <elementReference>$Record.Id</elementReference>
+                <elementReference>Get_Profile.Id</elementReference>
             </value>
         </filters>
         <getFirstRecordOnly>true</getFirstRecordOnly>
-        <object>Grant_Program__c</object>
+        <object>User</object>
         <storeOutputAutomatically>true</storeOutputAutomatically>
     </recordLookups>
     <recordUpdates>
@@ -115,11 +141,11 @@
         <locationX>0</locationX>
         <locationY>0</locationY>
         <connector>
-            <targetReference>Get_Records_1</targetReference>
+            <targetReference>Get_Profile</targetReference>
         </connector>
         <object>Grant_Program__c</object>
         <recordTriggerType>Create</recordTriggerType>
         <triggerType>RecordAfterSave</triggerType>
     </start>
-    <status>Draft</status>
+    <status>Active</status>
 </Flow>

@@ -81,9 +81,15 @@ public static void withdrawApplicationWithNotification(Id recordId, String reaso
             WHERE OwnerId = :userId
             LIMIT 1
         ];
+        
+        User currentUser = [SELECT Name FROM User WHERE Id = :userId LIMIT 1];
 
         if (userProfile == null) {
             throw new AuraHandledException('No profile found for this user.');
+        }
+
+        if (String.isBlank(app.Applicant_Name__c)) {
+            app.Applicant_Name__c = currentUser.Name;
         }
 
         if (app.Id == null) {
@@ -263,7 +269,7 @@ public static void generatePdfAndSubmit(Id recordId) {
         cdl.Visibility = 'AllUsers';  // VERY IMPORTANT FOR EXPERIENCE CLOUD
         insert cdl;
 
-        // 5️⃣ Update Application (Triggers Approval)
+        // 5️⃣ Update Application
         Grant_Applicant__c app = new Grant_Applicant__c(
             Id = recordId,
             PDF_Generated__c = true,
@@ -272,6 +278,16 @@ public static void generatePdfAndSubmit(Id recordId) {
         );
 
         update app;
+
+        // 6️⃣ Enter Approval Process
+        try {
+            Approval.ProcessSubmitRequest req = new Approval.ProcessSubmitRequest();
+            req.setComments('Submitted from Applicant Portal.');
+            req.setObjectId(recordId);
+            Approval.process(req);
+        } catch(Exception e) {
+            System.debug('Approval Process Submission Error: ' + e.getMessage());
+        }
 
     } catch (Exception e) {
         throw new AuraHandledException(e.getMessage());
@@ -371,8 +387,24 @@ public static String getProfileStatus() {
     return profiles[0].Profile_Status__c;
 }
     
-@AuraEnabled(cacheable=true)
+@AuraEnabled
 public static List<Map<String, Object>> getApplicationFiles(Id recordId) {
+
+    // Get all ContentDocumentIds linked to this record
+    List<ContentDocumentLink> links = [
+        SELECT ContentDocumentId
+        FROM ContentDocumentLink
+        WHERE LinkedEntityId = :recordId
+    ];
+
+    Set<Id> docIds = new Set<Id>();
+    for (ContentDocumentLink cdl : links) {
+        docIds.add(cdl.ContentDocumentId);
+    }
+
+    if (docIds.isEmpty()) {
+        return new List<Map<String, Object>>();
+    }
 
     List<ContentVersion> versions = [
         SELECT Id,
@@ -381,7 +413,8 @@ public static List<Map<String, Object>> getApplicationFiles(Id recordId) {
                FileExtension,
                CreatedDate
         FROM ContentVersion
-        WHERE FirstPublishLocationId = :recordId
+        WHERE ContentDocumentId IN :docIds
+          AND IsLatest = true
         ORDER BY CreatedDate DESC
     ];
 
@@ -390,7 +423,7 @@ public static List<Map<String, Object>> getApplicationFiles(Id recordId) {
     for(ContentVersion cv : versions) {
 
         Map<String, Object> fileMap = new Map<String, Object>();
-        fileMap.put('versionId', cv.Id); // IMPORTANT
+        fileMap.put('versionId', cv.Id);
         fileMap.put('documentId', cv.ContentDocumentId);
         fileMap.put('title', cv.Title);
         fileMap.put('extension', cv.FileExtension);
@@ -445,4 +478,55 @@ public static void fixFileVisibility(Id documentId) {
 
     update links;
 }
+
+    // ============================================
+    // UPLOAD FILE (From React Portal)
+    // ============================================
+    @AuraEnabled
+    public static String uploadFile(String fileName, String base64Data, Id recordId) {
+        try {
+            // 1️⃣ Create ContentVersion (without FirstPublishLocationId for better compatibility)
+            ContentVersion cv = new ContentVersion();
+            cv.Title = fileName;
+            cv.PathOnClient = fileName;
+            cv.VersionData = EncodingUtil.base64Decode(base64Data);
+            insert cv;
+
+            // 2️⃣ Get ContentDocumentId
+            cv = [
+                SELECT Id, ContentDocumentId
+                FROM ContentVersion
+                WHERE Id = :cv.Id
+                LIMIT 1
+            ];
+
+            // 3️⃣ Link File to the Application record
+            ContentDocumentLink cdl = new ContentDocumentLink();
+            cdl.LinkedEntityId = recordId;
+            cdl.ContentDocumentId = cv.ContentDocumentId;
+            cdl.ShareType = 'V';
+            cdl.Visibility = 'AllUsers';
+            insert cdl;
+
+            return cv.ContentDocumentId;
+
+        } catch (Exception e) {
+            throw new AuraHandledException(e.getMessage());
+        }
+    }
+
+    // ============================================
+    // DELETE FILE (From React Portal)
+    // ============================================
+    @AuraEnabled
+    public static void deleteFile(Id documentId) {
+        try {
+            ContentDocument doc = [
+                SELECT Id FROM ContentDocument WHERE Id = :documentId LIMIT 1
+            ];
+            delete doc;
+        } catch (Exception e) {
+            throw new AuraHandledException(e.getMessage());
+        }
+    }
 }

@@ -17,6 +17,12 @@
     </approvalPageFields>
     <approvalStep>
         <allowDelegate>false</allowDelegate>
+        <approvalActions>
+            <action>
+                <name>Status_Change_To_Under_External_Review</name>
+                <type>FieldUpdate</type>
+            </action>
+        </approvalActions>
         <assignedApprover>
             <approver>
                 <name>Reviewer_Assigned__c</name>
@@ -26,6 +32,12 @@
         </assignedApprover>
         <label>Level 1 - Initial Review (Reviewer)</label>
         <name>Level_1_Initial_Review_Reviewer</name>
+        <rejectionActions>
+            <action>
+                <name>Status_Change_To_Rejected</name>
+                <type>FieldUpdate</type>
+            </action>
+        </rejectionActions>
     </approvalStep>
     <approvalStep>
         <allowDelegate>true</allowDelegate>
@@ -41,6 +53,12 @@
         <rejectBehavior>
             <type>RejectRequest</type>
         </rejectBehavior>
+        <rejectionActions>
+            <action>
+                <name>Status_Change_To_Rejected</name>
+                <type>FieldUpdate</type>
+            </action>
+        </rejectionActions>
     </approvalStep>
     <enableMobileDeviceAccess>false</enableMobileDeviceAccess>
     <entryCriteria>
@@ -57,6 +75,12 @@
     </entryCriteria>
     <finalApprovalRecordLock>true</finalApprovalRecordLock>
     <finalRejectionRecordLock>false</finalRejectionRecordLock>
+    <initialSubmissionActions>
+        <action>
+            <name>Status_Change_to_Under_Internal_Review</name>
+            <type>FieldUpdate</type>
+        </action>
+    </initialSubmissionActions>
     <label>Grant Applicant Approval Process1</label>
     <processOrder>2</processOrder>
     <recordEditability>AdminOrCurrentApprover</recordEditability>

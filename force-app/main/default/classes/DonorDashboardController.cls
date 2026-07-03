@@ -3,21 +3,7 @@ public without sharing class DonorDashboardController {
     // 🔷 GET AGREEMENTS
     @AuraEnabled(cacheable=true)
     public static List<Donor_Agreement__c> getDonorAgreements() {
-
         Id userId = UserInfo.getUserId();
-
-        List<Donor__c> donors = [
-            SELECT Id
-            FROM Donor__c
-            WHERE User__c = :userId
-            LIMIT 1
-        ];
-
-        if (donors.isEmpty()) {
-            return new List<Donor_Agreement__c>();
-        }
-
-        Id donorId = donors[0].Id;
 
         return [
             SELECT Id,
@@ -51,7 +37,7 @@ public without sharing class DonorDashboardController {
                    LastModifiedBy.Name,
                    CreatedDate
             FROM Donor_Agreement__c
-            WHERE Donor__c = :donorId
+            WHERE Donor__r.User__c = :userId
             ORDER BY CreatedDate DESC
         ];
     }
@@ -92,23 +78,10 @@ public without sharing class DonorDashboardController {
     }
 
     // 🔷 FUNDING REQUESTS
-@AuraEnabled(cacheable=true)
+    @AuraEnabled(cacheable=true)
     public static List<Funding_Request__c> getFundingRequests() {
         Id userId = UserInfo.getUserId();
-        
-        List<Donor__c> donors = [
-            SELECT Id 
-            FROM Donor__c 
-            WHERE User__c = :userId 
-            LIMIT 1
-        ];
-        
-        if (donors.isEmpty()) {
-            return new List<Funding_Request__c>();
-        }
-        
-        Id donorId = donors[0].Id;
-        
+
         return [
             SELECT Id,
                    Name,
@@ -122,7 +95,7 @@ public without sharing class DonorDashboardController {
                    LastModifiedBy.Name,
                    LastModifiedDate
             FROM Funding_Request__c
-            WHERE Donor__c = :donorId
+            WHERE Donor__r.User__c = :userId
             ORDER BY CreatedDate DESC
         ];
     }
@@ -130,12 +103,7 @@ public without sharing class DonorDashboardController {
     // 🔷 UPDATE FUNDING
     @AuraEnabled
     public static void updateFundingRequest(Id requestId, String action) {
-
-        Funding_Request__c fr = [
-            SELECT Id FROM Funding_Request__c WHERE Id = :requestId
-        ];
-
-        fr.Status__c = action;
-        update fr;
+        // Delegate business logic to shared handler class
+        FundingRequestAction.processFundingRequestAction((String)requestId, action);
     }
 }

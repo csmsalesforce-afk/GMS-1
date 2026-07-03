@@ -31,6 +31,14 @@
       "default": false,
       "package": "GMS-2",
       "versionDescription": ""
+    },
+    {
+    "versionName": "ver 0.1",
+    "versionNumber": "0.1.0.NEXT",
+    "path": "force-app",
+    "default": false,
+    "package": "GMS-Completed",
+    "versionDescription": ""
     }
   ],
   "name": "GMS",
@@ -45,6 +53,7 @@
     "GMS_Test1@0.1.0-3": "04tfj000000Jv4DAAS",
     "GMS-1": "0Hofj0000001xAvCAI",
     "GMS-2": "0Hofj0000001xdxCAA",
-    "GMS-2@0.1.0-1": "04tfj000000KRthAAG"
+    "GMS-2@0.1.0-1": "04tfj000000KRthAAG",
+    "GMS-Completed" : "0Hofj00000021xhCAA"
   }
 }

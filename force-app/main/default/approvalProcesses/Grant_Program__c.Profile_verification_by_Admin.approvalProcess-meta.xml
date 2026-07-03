@@ -18,7 +18,7 @@
         <allowDelegate>false</allowDelegate>
         <assignedApprover>
             <approver>
-                <name>Owner</name>
+                <name>User__c</name>
                 <type>relatedUserField</type>
             </approver>
             <whenMultipleApprovers>FirstResponse</whenMultipleApprovers>
@@ -27,8 +27,26 @@
         <name>Admin_level_verification</name>
     </approvalStep>
     <enableMobileDeviceAccess>true</enableMobileDeviceAccess>
+    <finalApprovalActions>
+        <action>
+            <name>status_changed_to_approved</name>
+            <type>FieldUpdate</type>
+        </action>
+    </finalApprovalActions>
     <finalApprovalRecordLock>true</finalApprovalRecordLock>
+    <finalRejectionActions>
+        <action>
+            <name>status_changed_to_not_eligible</name>
+            <type>FieldUpdate</type>
+        </action>
+    </finalRejectionActions>
     <finalRejectionRecordLock>false</finalRejectionRecordLock>
+    <initialSubmissionActions>
+        <action>
+            <name>status_change</name>
+            <type>FieldUpdate</type>
+        </action>
+    </initialSubmissionActions>
     <label>Profile verification by Admin</label>
     <processOrder>1</processOrder>
     <recordEditability>AdminOnly</recordEditability>
