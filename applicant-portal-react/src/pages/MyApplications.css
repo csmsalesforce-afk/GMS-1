@@ -1,0 +1,147 @@
+.my-applications-page {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+.page-header {
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+.page-header h1 {
+  font-size: 2.5rem;
+  color: #333;
+  margin-bottom: 0.5rem;
+}
+
+.page-header p {
+  color: #666;
+  font-size: 1.1rem;
+}
+
+.no-applications {
+  text-align: center;
+  padding: 4rem 2rem;
+}
+
+.no-applications p {
+  font-size: 1.2rem;
+  color: #666;
+  margin-bottom: 2rem;
+}
+
+.applications-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+  gap: 2rem;
+}
+
+.application-card {
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  overflow: hidden;
+  transition: transform 0.3s;
+}
+
+.application-card:hover {
+  transform: translateY(-5px);
+}
+
+.card-header {
+  background: #f8f9fa;
+  padding: 1.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 2px solid #eee;
+}
+
+.card-header h3 {
+  margin: 0;
+  font-size: 1.25rem;
+  color: #333;
+  flex: 1;
+}
+
+.status-badge.draft {
+  background: #f0f0f0;
+  color: #666;
+}
+
+.status-badge.submitted {
+  background: #fff3cd;
+  color: #856404;
+}
+
+.status-badge.review {
+  background: #cce5ff;
+  color: #004085;
+}
+
+.status-badge.approved {
+  background: #d4edda;
+  color: #155724;
+}
+
+.status-badge.rejected {
+  background: #f8d7da;
+  color: #721c24;
+}
+
+.status-badge.withdrawn {
+  background: #e2e3e5;
+  color: #383d41;
+}
+
+.card-body {
+  padding: 1.5rem;
+}
+
+.detail-row {
+  display: flex;
+  margin-bottom: 1rem;
+}
+
+.detail-row:last-child {
+  margin-bottom: 0;
+}
+
+.detail-row label {
+  font-weight: 600;
+  color: #333;
+  min-width: 140px;
+}
+
+.detail-row span {
+  color: #666;
+}
+
+.card-footer {
+  padding: 1rem 1.5rem;
+  background: #f8f9fa;
+  border-top: 1px solid #eee;
+}
+
+.btn-view {
+  width: 100%;
+  padding: 0.75rem;
+  background: #0176d3;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.btn-view:hover {
+  background: #014f8d;
+}
+
+@media (max-width: 768px) {
+  .applications-list {
+    grid-template-columns: 1fr;
+  }
+}
