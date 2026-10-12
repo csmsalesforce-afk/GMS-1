@@ -1,3 +1,4 @@
+
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
@@ -8,9 +9,11 @@ const ProgramDetails = () => {
   const { programId } = useParams();
   const { isLoggedIn } = useAuth();
   const navigate = useNavigate();
-  const [program, setProgram] = useState(null);
-  const [documents, setDocuments] = useState([]);
+  const [programData, setProgramData] = useState(null);
+  const [activeTab, setActiveTab] = useState('Overview');
   const [loading, setLoading] = useState(true);
+
+  const tabs = ['Overview', 'Eligibility', 'Funding', 'Required Documents'];
 
   useEffect(() => {
     loadProgramDetails();
@@ -19,12 +22,19 @@ const ProgramDetails = () => {
   const loadProgramDetails = async () => {
     try {
       setLoading(true);
-      const [programData, docsData] = await Promise.all([
-        salesforceService.getProgramById(programId),
-        salesforceService.getProgramDocuments(programId)
-      ]);
-      setProgram(programData);
-      setDocuments(docsData || []);
+      const data = await salesforceService.getProgramById(programId);
+      
+      if (data && data.program) {
+         setProgramData(data);
+      } else {
+         // Fallback if structure is different
+         const docsData = await salesforceService.getProgramDocuments(programId);
+         setProgramData({
+           program: data,
+           eligibilities: [],
+           documents: docsData || []
+         });
+      }
     } catch (err) {
       console.error('Failed to load program details', err);
     } finally {
@@ -44,105 +54,146 @@ const ProgramDetails = () => {
     return <div className="loading">Loading program details...</div>;
   }
 
-  if (!program) {
+  if (!programData || !programData.program) {
     return <div className="error">Program not found</div>;
   }
 
+  const { program, eligibilities, documents } = programData;
+
+  const renderTabContent = () => {
+    switch (activeTab) {
+      case 'Overview':
+        return (
+          <div className="tab-section">
+            <h2 className="program-section-title"><span className="title-marker">|</span> Overview</h2>
+            <div className="section-content text-content">
+              {program.Overview__c ? (
+                <div dangerouslySetInnerHTML={{ __html: program.Overview__c }} />
+              ) : program.Description__c ? (
+                <div dangerouslySetInnerHTML={{ __html: program.Description__c }} />
+              ) : (
+                <p>No overview available for this program.</p>
+              )}
+            </div>
+          </div>
+        );
+      case 'Eligibility':
+        return (
+          <div className="tab-section">
+            <h2 className="program-section-title"><span className="title-marker">|</span> Eligibility</h2>
+            <div className="section-content">
+              <p className="eligibility-intro">Organizations must meet the following requirements to be eligible:</p>
+              {eligibilities && eligibilities.length > 0 ? (
+                <ul className="check-list">
+                  {eligibilities.map((elig, idx) => (
+                    <li key={idx}><span className="check-icon">✓</span> {elig.Name}</li>
+                  ))}
+                </ul>
+              ) : (
+                <p className="fallback-text">General eligibility criteria apply.</p>
+              )}
+            </div>
+          </div>
+        );
+      case 'Funding':
+        return (
+          <div className="tab-section">
+            <h2 className="program-section-title"><span className="title-marker">|</span> Funding</h2>
+            <div className="section-content funding-grid">
+              <div className="funding-box">
+                <span className="funding-label">FUNDING UP TO</span>
+                <span className="funding-value">${program.Max_Amount__c?.toLocaleString() || '0'}</span>
+              </div>
+              <div className="funding-box">
+                <span className="funding-label">TOTAL PROGRAM BUDGET</span>
+                <span className="funding-value">${program.Program_Fund__c?.toLocaleString() || '0'}</span>
+              </div>
+            </div>
+          </div>
+        );
+      case 'Required Documents':
+        return (
+          <div className="tab-section">
+            <h2 className="program-section-title"><span className="title-marker">|</span> Required Documents</h2>
+            <div className="section-content">
+              {documents && documents.length > 0 ? (
+                <div className="documents-list">
+                  {documents.map((doc, idx) => (
+                    <div key={idx} className="document-item">
+                      <span className="doc-icon">📄</span> {doc.Name || doc.ContentDocument?.Title}
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <p className="fallback-text">No mandatory documents specified.</p>
+              )}
+            </div>
+          </div>
+        );
+      default:
+        return null;
+    }
+  };
+
   return (
     <div className="program-details-page">
-      <div className="program-header">
-        <button onClick={() => navigate('/programs')} className="btn-back">
-          ← Back to Programs
-        </button>
-        <div className="header-content">
-          <h1>{program.Name}</h1>
-          <span className={`status-badge ${program.Status__c?.toLowerCase()}`}>
-            {program.Status__c}
-          </span>
+      {/* Hero Header */}
+      <div className="program-hero">
+        <div className="program-hero-container">
+          <button onClick={() => navigate('/programs')} className="btn-back">
+            ← Back to Programs
+          </button>
+          <div className="program-hero-content">
+            <h1>{program.Name}</h1>
+            <span className="program-badge">
+              {program.Program_Type__c || program.Category__c || 'General'}
+            </span>
+          </div>
         </div>
       </div>
 
-      <div className="program-content">
-        <div className="program-main">
-          <section className="program-section">
-            <h2>Description</h2>
-            <p>{program.Description__c || 'No description available'}</p>
-          </section>
+      {/* Tabs Navigation */}
+      <div className="program-tabs-container">
+        <div className="program-tabs">
+          {tabs.map(tab => (
+            <button 
+              key={tab}
+              className={`tab-btn ${activeTab === tab ? 'active' : ''}`}
+              onClick={() => setActiveTab(tab)}
+            >
+              {tab}
+            </button>
+          ))}
+        </div>
+      </div>
 
-          <section className="program-section">
-            <h2>Program Details</h2>
-            <div className="details-grid">
-              <div className="detail-item">
-                <label>Total Budget</label>
-                <span>${program.Total_Budget__c?.toLocaleString() || '0'}</span>
-              </div>
-              <div className="detail-item">
-                <label>Available Budget</label>
-                <span>${program.Available_Budget__c?.toLocaleString() || '0'}</span>
-              </div>
-              <div className="detail-item">
-                <label>Start Date</label>
-                <span>{program.Start_Date__c || 'TBD'}</span>
-              </div>
-              <div className="detail-item">
-                <label>End Date</label>
-                <span>{program.End_Date__c || 'TBD'}</span>
-              </div>
-              <div className="detail-item">
-                <label>Application Deadline</label>
-                <span>{program.Application_Deadline__c || 'TBD'}</span>
-              </div>
-            </div>
-          </section>
-
-          {program.Eligibility_Criteria__c && (
-            <section className="program-section">
-              <h2>Eligibility Criteria</h2>
-              <p>{program.Eligibility_Criteria__c}</p>
-            </section>
-          )}
-
-          {program.Terms_and_Conditions__c && (
-            <section className="program-section">
-              <h2>Terms and Conditions</h2>
-              <p>{program.Terms_and_Conditions__c}</p>
-            </section>
-          )}
-
-          {documents.length > 0 && (
-            <section className="program-section">
-              <h2>Program Documents</h2>
-              <div className="documents-list">
-                {documents.map(doc => (
-                  <a 
-                    key={doc.Id} 
-                    href={doc.ContentDocument?.LatestPublishedVersion?.VersionData || '#'} 
-                    className="document-link"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    📄 {doc.ContentDocument?.Title || 'Document'}
-                  </a>
-                ))}
-              </div>
-            </section>
-          )}
+      {/* Main Content Area */}
+      <div className="program-content-wrapper">
+        <div className="program-main-content">
+          {renderTabContent()}
         </div>
 
+        {/* Sidebar */}
         <div className="program-sidebar">
           <div className="apply-card">
-            <h3>Ready to Apply?</h3>
-            {program.Status__c === 'Active' ? (
+            <h3>Apply for Funding</h3>
+            <div className="funding-highlight">
+               <span className="highlight-label">MAXIMUM FUNDING</span>
+               <span className="highlight-amount">${program.Max_Amount__c?.toLocaleString() || '0'}</span>
+               <span className="highlight-sub">Per Project</span>
+            </div>
+            
+            {program.Status__c === 'Active' || program.Status__c === 'Open' ? (
               <>
-                <p>Submit your application today</p>
                 <button onClick={handleApply} className="btn-apply-primary">
-                  {isLoggedIn ? 'Start Application' : 'Login to Apply'}
+                  Apply Now
                 </button>
+                <div className="time-estimate">⏱ Takes 10-15 minutes to complete</div>
               </>
             ) : (
-              <p className="closed-message">
-                This program is {program.Status__c?.toLowerCase()}
-              </p>
+              <button disabled className="btn-apply-disabled">
+                {program.Status__c || 'Closed'}
+              </button>
             )}
           </div>
         </div>

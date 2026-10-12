@@ -31,7 +31,7 @@ const Programs = () => {
 
   const filteredPrograms = programs.filter(program => {
     if (filter === 'All') return true;
-    return program.Category__c === filter;
+    return program.Program_Type__c === filter;
   });
 
   const handleProgramClick = (programId) => {
@@ -61,6 +61,12 @@ const Programs = () => {
       'Social Welfare': 'welfare'
     };
     return classes[category] || '';
+  };
+
+  const stripHtml = (html) => {
+    if (!html) return 'No description available';
+    const doc = new DOMParser().parseFromString(html, 'text/html');
+    return doc.body.textContent || '';
   };
 
   if (loading) {
@@ -102,8 +108,8 @@ const Programs = () => {
               onClick={() => handleProgramClick(program.Id)}
             >
               <div className="program-header-row">
-                <div className={`program-icon ${getProgramIconClass(program.Category__c)}`}>
-                  {getProgramIcon(program.Category__c)}
+                <div className={`program-icon ${getProgramIconClass(program.Program_Type__c)}`}>
+                  {getProgramIcon(program.Program_Type__c)}
                 </div>
                 <span className={`status-badge ${program.Status__c?.toLowerCase()}`}>
                   {program.Status__c || 'Open'}
@@ -111,35 +117,30 @@ const Programs = () => {
               </div>
               
               <h3>{program.Name}</h3>
-              <p className="program-category">{program.Category__c || 'General'}</p>
-              <p className="program-description">{program.Description__c || 'No description available'}</p>
+              <p className="program-category">{program.Program_Type__c || 'General'} Program</p>
               
               <div className="program-details">
                 <div className="detail-item">
-                  <span className="detail-label">MAX GRANT</span>
+                  <span className="detail-label">MAX AMOUNT</span>
                   <span className="detail-value amount">
-                    ${program.Max_Grant_Amount__c?.toLocaleString() || program.Total_Budget__c?.toLocaleString() || '0'}
+                    ${program.Max_Amount__c?.toLocaleString() || program.Program_Fund__c?.toLocaleString() || '0'}
                   </span>
                 </div>
                 <div className="detail-item">
-                  <span className="detail-label">FUND POOL</span>
+                  <span className="detail-label">PROGRAM FUND</span>
                   <span className="detail-value amount">
-                    ${program.Total_Budget__c?.toLocaleString() || '0'}
+                    ${program.Program_Fund__c?.toLocaleString() || '0'}
                   </span>
                 </div>
               </div>
+
+              <p className="program-description">{stripHtml(program.Overview__c)}</p>
               
               <button className="btn-view-program">View Details →</button>
             </div>
           ))
         )}
       </div>
-
-      {filteredPrograms.length > 0 && (
-        <div className="view-all-container">
-          <button className="btn-view-all">View All Programs →</button>
-        </div>
-      )}
     </div>
   );
 };

@@ -6,11 +6,14 @@ public with sharing class MyApplicationsController {
         return [
             SELECT Id,
                    Name,
+                   Program__c,
                    Program__r.Name,
+                   Program__r.Max_Amount__c,
                    Project_Title__c,
                    Approved_Amount__c,
                    Requested_Amount__c,
-                   Application_Status__c
+                   Application_Status__c,
+                   CreatedDate
             FROM Grant_Applicant__c
             WHERE OwnerId = :UserInfo.getUserId()
             ORDER BY CreatedDate DESC

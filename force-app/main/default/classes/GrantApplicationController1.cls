@@ -71,59 +71,84 @@ public static void withdrawApplicationWithNotification(Id recordId, String reaso
     // ============================================
     @AuraEnabled
     public static Id saveApplication(Grant_Applicant__c app) {
+        try {
+            Id userId = UserInfo.getUserId();
 
-        Id userId = UserInfo.getUserId();
+            // 🔹 Fetch user's Profile (Grant_Program__c)
+            List<Grant_Program__c> userProfiles = [
+                SELECT Id, Account__c
+                FROM Grant_Program__c
+                WHERE OwnerId = :userId
+                LIMIT 1
+            ];
 
-        // 🔹 Fetch user's Profile (Grant_Program__c)
-        Grant_Program__c userProfile = [
-            SELECT Id, Account__c
-            FROM Grant_Program__c
-            WHERE OwnerId = :userId
-            LIMIT 1
-        ];
-        
-        User currentUser = [SELECT Name FROM User WHERE Id = :userId LIMIT 1];
+            if (userProfiles.isEmpty()) {
+                throw new AuraHandledException('No profile found for this user. Please complete your profile first.');
+            }
+            Grant_Program__c userProfile = userProfiles[0];
+            
+            User currentUser = [SELECT Name FROM User WHERE Id = :userId LIMIT 1];
 
-        if (userProfile == null) {
-            throw new AuraHandledException('No profile found for this user.');
+            if (String.isBlank(app.Applicant_Name__c)) {
+                app.Applicant_Name__c = currentUser.Name;
+            }
+
+            if (app.Id == null) {
+                app.Application_Status__c = 'Draft';
+
+                // 🔹 Auto-assign profile
+                app.Grant_Program__c = userProfile.Id;
+
+                // 🔹 Auto-assign account
+                app.Account__c = userProfile.Account__c;
+
+                insert app;
+            } else {
+                update app;
+            }
+
+            return app.Id;
+        } catch (DmlException e) {
+            String errorMsg = e.getDmlMessage(0);
+            AuraHandledException auraEx = new AuraHandledException(errorMsg);
+            auraEx.setMessage(errorMsg);
+            throw auraEx;
+        } catch (Exception e) {
+            String errorMsg = e.getMessage();
+            AuraHandledException auraEx = new AuraHandledException(errorMsg);
+            auraEx.setMessage(errorMsg);
+            throw auraEx;
         }
-
-        if (String.isBlank(app.Applicant_Name__c)) {
-            app.Applicant_Name__c = currentUser.Name;
-        }
-
-        if (app.Id == null) {
-
-            app.Application_Status__c = 'Draft';
-
-            // 🔹 Auto-assign profile
-            app.Grant_Program__c = userProfile.Id;
-
-            // 🔹 Auto-assign account
-            app.Account__c = userProfile.Account__c;
-
-            insert app;
-
-        } else {
-            update app;
-        }
-
-        return app.Id;
     }
 
 
     @AuraEnabled
     public static void submitApplication(Id appId){
+        try {
+            Grant_Applicant__c app = [
+                SELECT Id, Start_Date__c FROM Grant_Applicant__c
+                WHERE Id = :appId
+            ];
 
-        Grant_Applicant__c app = [
-            SELECT Id FROM Grant_Applicant__c
-            WHERE Id = :appId
-        ];
-
-        app.Application_Status__c = 'Submitted';
-        app.Submission_Date__c = Date.today();
-        app.End_Date__c = Date.today() + 30;
-        update app;
+            app.Application_Status__c = 'Submitted';
+            app.Submission_Date__c = Date.today();
+            if (app.Start_Date__c != null) {
+                app.End_Date__c = app.Start_Date__c.addDays(30);
+            } else {
+                app.End_Date__c = Date.today().addDays(30);
+            }
+            update app;
+        } catch (DmlException e) {
+            String errorMsg = e.getDmlMessage(0);
+            AuraHandledException auraEx = new AuraHandledException(errorMsg);
+            auraEx.setMessage(errorMsg);
+            throw auraEx;
+        } catch (Exception e) {
+            String errorMsg = e.getMessage();
+            AuraHandledException auraEx = new AuraHandledException(errorMsg);
+            auraEx.setMessage(errorMsg);
+            throw auraEx;
+        }
     }
     @AuraEnabled(cacheable=true)
 public static User getApplicantInfo() {
@@ -197,8 +222,31 @@ Reviewer_Assigned__r.Name,
             Budget_Compliance_Score__c,
             Funding_Priority__c,
 
+            /* Program Officer */
+            Program_Officer__c,
+            Program_Officer__r.Name,
+
+            /* Financer & Finance Details */
+            Financer__c,
+            Financer__r.Name,
+            Invoice_Created__c,
+            Awards_Created__c,
+            Installment_Percentage__c,
+            Number_of_Installments__c,
+            Total_Contribution__c,
+            Total_Funding_Request__c,
+
+            /* Status & System */
+            PDF_Generated__c,
+            Reason_For_Withdrawn__c,
+            Reason_For_Rejected__c,
+            Withdraw_Date__c,
+            Technical_Feasibility__c,
+
             /* Lookup */
-            Program__r.Name
+            Program__r.Name,
+            Program__r.Max_Amount__c,
+            Program__r.Program_Type__c
 
         FROM Grant_Applicant__c
         WHERE Id = :recordId
