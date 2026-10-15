@@ -10,14 +10,10 @@
                             <value>FeedItem.TextPost</value>
                         </valueListItems>
                         <valueListItems>
+                            <value>Grant_Applicant__c.Generate_Application_PDF</value>
+                        </valueListItems>
+                        <valueListItems>
                             <value>CustomButton.Grant_Applicant__c.Generate_PDF</value>
-                            <visibilityRule>
-                                <criteria>
-                                    <leftValue>{!Record.Application_Status__c}</leftValue>
-                                    <operator>EQUAL</operator>
-                                    <rightValue>Submitted</rightValue>
-                                </criteria>
-                            </visibilityRule>
                         </valueListItems>
                         <valueListItems>
                             <value>Grant_Applicant__c.Choose_Donor</value>

@@ -32,6 +32,13 @@ import deleteFileApex from '@salesforce/apex/GrantApplicationController1.deleteF
 import createProfileApex from '@salesforce/apex/CreateProfileController.createProfile';
 import submitApplication from '@salesforce/apex/GrantApplicationController1.submitApplication';
 import getHomeStats from '@salesforce/apex/HomeStatsController.getHomeStats';
+import getInstallmentsAndDisbursements from '@salesforce/apex/FundUtilizationController.getInstallmentsAndDisbursements';
+import uploadUtilizationCertificate from '@salesforce/apex/FundUtilizationController.uploadUtilizationCertificate';
+import getProjectBudgets from '@salesforce/apex/GrantApplicationController1.getProjectBudgets';
+import saveProjectBudgets from '@salesforce/apex/GrantApplicationController1.saveProjectBudgets';
+import createStripeAccount from '@salesforce/apex/StripeConnectService.createStripeAccount';
+import createStripeOnboardingLink from '@salesforce/apex/StripeConnectService.createStripeOnboardingLink';
+import checkStripeOnboarding from '@salesforce/apex/StripeConnectService.checkStripeOnboarding';
 
 export default class ApplicantPortalReactNew extends LightningElement {
 
@@ -146,7 +153,15 @@ export default class ApplicantPortalReactNew extends LightningElement {
             uploadFile:               (fileName, base64Data, recordId) => uploadFileApex({ fileName, base64Data, recordId }),
             deleteFile:               (documentId) => deleteFileApex({ documentId }),
             createProfile:            (profileRec) => createProfileApex({ profileRec }),
-            getHomeStats:             () => getHomeStats()
+            getHomeStats:             () => getHomeStats(),
+            getInstallmentsAndDisbursements: (applicationId) => getInstallmentsAndDisbursements({ applicationId }),
+            uploadUtilizationCertificate: (applicationId, disbursementId, fileName, base64Data, description) =>
+                uploadUtilizationCertificate({ applicationId, disbursementId, fileName, base64Data, description }),
+            getProjectBudgets: (applicationId) => getProjectBudgets({ applicationId }),
+            saveProjectBudgets: (applicationId, budgetJson) => saveProjectBudgets({ applicationId, budgetJson }),
+            createStripeAccount: (grantProgramId) => createStripeAccount({ grantProgramId }),
+            createStripeOnboardingLink: (grantProgramId) => createStripeOnboardingLink({ grantProgramId }),
+            checkStripeOnboarding: (grantProgramId) => checkStripeOnboarding({ grantProgramId })
         };
     }
 

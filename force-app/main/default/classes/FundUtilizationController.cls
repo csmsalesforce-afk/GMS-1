@@ -127,36 +127,184 @@ public with sharing class FundUtilizationController {
     }
     
     
+    /* ================= GET ALL INSTALLMENTS, DISBURSEMENTS & MILESTONES ================= */
     @AuraEnabled
-public static Id createFundUtilization(
-    Id applicationId,
-    Id disbursementId,
-    List<Id> fileIds
-) {
-    // 1. Create Fund Utilization Record
-    Fund_Utilization__c fu = new Fund_Utilization__c();
-    fu.Grant_Applicant__c = applicationId;
-    fu.Disbursement__c = disbursementId;
+    public static Map<String, Object> getInstallmentsAndDisbursements(Id applicationId) {
+        Map<String, Object> result = new Map<String, Object>();
 
-    insert fu;
+        // 1. Query Disbursements
+        List<Disbursement__c> disbursements = [
+            SELECT Id, Name, Status__c, Total_Amount__c, Disbursement_Date__c,
+                   Payment_Type__c, Installment_Percentage__c, Months__c,
+                   Installment__c, Installment__r.Name, Installment__r.Amount__c,
+                   Installment__r.Percentage__c, Installment__r.Due_Date__c,
+                   Installment__r.Status__c
+            FROM Disbursement__c
+            WHERE Installment__r.Grant_Applicant__c = :applicationId
+               OR Installment__r.Funding_Allocation__r.Grant_Applicant__c = :applicationId
+            ORDER BY CreatedDate ASC
+        ];
 
-    // 2. Link Files
-    if (fileIds != null && !fileIds.isEmpty()) {
+        // 2. Query Installments
+        List<Installment__c> installments = [
+            SELECT Id, Name, Amount__c, Due_Date__c, Planned_Date__c,
+                   Percentage__c, Status__c
+            FROM Installment__c
+            WHERE Grant_Applicant__c = :applicationId
+               OR Funding_Allocation__r.Grant_Applicant__c = :applicationId
+            ORDER BY CreatedDate ASC
+        ];
 
-        List<ContentDocumentLink> links = new List<ContentDocumentLink>();
+        // 3. Query Fund Utilization (Milestones)
+        List<Fund_Utilization__c> milestones = [
+            SELECT Id, Name, Status__c, Disbursement__c, Disbursement__r.Name,
+                   Disbursement__r.Total_Amount__c, Grant_Applicant__c, CreatedDate
+            FROM Fund_Utilization__c
+            WHERE Grant_Applicant__c = :applicationId
+               OR Disbursement__r.Installment__r.Grant_Applicant__c = :applicationId
+               OR Disbursement__r.Installment__r.Funding_Allocation__r.Grant_Applicant__c = :applicationId
+            ORDER BY CreatedDate DESC
+        ];
 
-        for (Id fileId : fileIds) {
-            links.add(new ContentDocumentLink(
-                ContentDocumentId = fileId,
-                LinkedEntityId = fu.Id,
-                ShareType = 'V',
-                Visibility = 'AllUsers'
-            ));
+        // 4. Query files attached to Milestones
+        Set<Id> fuIds = new Set<Id>();
+        for (Fund_Utilization__c fu : milestones) {
+            fuIds.add(fu.Id);
         }
 
-        insert links;
+        Map<Id, List<Map<String, Object>>> filesByMilestone = new Map<Id, List<Map<String, Object>>>();
+        if (!fuIds.isEmpty()) {
+            List<ContentDocumentLink> links = [
+                SELECT ContentDocumentId,
+                       ContentDocument.Title,
+                       ContentDocument.FileExtension,
+                       ContentDocument.CreatedDate,
+                       LinkedEntityId
+                FROM ContentDocumentLink
+                WHERE LinkedEntityId IN :fuIds
+            ];
+
+            for (ContentDocumentLink link : links) {
+                if (!filesByMilestone.containsKey(link.LinkedEntityId)) {
+                    filesByMilestone.put(link.LinkedEntityId, new List<Map<String, Object>>());
+                }
+                Map<String, Object> f = new Map<String, Object>();
+                f.put('documentId', link.ContentDocumentId);
+                f.put('title', link.ContentDocument.Title);
+                f.put('extension', link.ContentDocument.FileExtension);
+                f.put('createdDate', link.ContentDocument.CreatedDate);
+                filesByMilestone.get(link.LinkedEntityId).add(f);
+            }
+        }
+
+        // 5. Structure milestones output
+        List<Map<String, Object>> milestoneList = new List<Map<String, Object>>();
+        for (Fund_Utilization__c fu : milestones) {
+            Map<String, Object> m = new Map<String, Object>();
+            m.put('id', fu.Id);
+            m.put('name', fu.Name);
+            m.put('status', fu.Status__c != null ? fu.Status__c : 'Pending');
+            m.put('disbursementId', fu.Disbursement__c);
+            m.put('disbursementName', fu.Disbursement__r != null ? fu.Disbursement__r.Name : '');
+            m.put('disbursementAmount', fu.Disbursement__r != null ? fu.Disbursement__r.Total_Amount__c : 0);
+            m.put('createdDate', fu.CreatedDate);
+            m.put('files', filesByMilestone.containsKey(fu.Id) ? filesByMilestone.get(fu.Id) : new List<Map<String, Object>>());
+            milestoneList.add(m);
+        }
+
+        result.put('disbursements', disbursements);
+        result.put('installments', installments);
+        result.put('milestones', milestoneList);
+        result.put('hasData', !disbursements.isEmpty() || !installments.isEmpty());
+
+        return result;
     }
 
-    return fu.Id;
-}
+    /* ================= UPLOAD UTILIZATION CERTIFICATE ================= */
+    @AuraEnabled
+    public static Map<String, Object> uploadUtilizationCertificate(
+        Id applicationId,
+        Id disbursementId,
+        String fileName,
+        String base64Data,
+        String description
+    ) {
+        // 1. Create Milestone (Fund_Utilization__c) record
+        Fund_Utilization__c fu = new Fund_Utilization__c();
+        fu.Grant_Applicant__c = applicationId;
+        fu.Disbursement__c = disbursementId;
+        fu.Submitted_By__c = applicationId;
+        fu.Status__c = 'Pending';
+        insert fu;
+
+        Id docId = null;
+
+        // 2. Upload file and link to Milestone
+        if (String.isNotBlank(base64Data) && String.isNotBlank(fileName)) {
+            ContentVersion cv = new ContentVersion();
+            cv.Title = fileName;
+            cv.PathOnClient = fileName;
+            cv.VersionData = EncodingUtil.base64Decode(base64Data);
+            cv.Description = String.isNotBlank(description) ? description : 'Fund Utilization Certificate';
+            insert cv;
+
+            docId = [SELECT ContentDocumentId FROM ContentVersion WHERE Id = :cv.Id].ContentDocumentId;
+
+            ContentDocumentLink link = new ContentDocumentLink();
+            link.ContentDocumentId = docId;
+            link.LinkedEntityId = fu.Id;
+            link.ShareType = 'V';
+            link.Visibility = 'AllUsers';
+            insert link;
+        }
+
+        Fund_Utilization__c created = [
+            SELECT Id, Name, Status__c, Disbursement__c, Disbursement__r.Name, CreatedDate
+            FROM Fund_Utilization__c
+            WHERE Id = :fu.Id
+        ];
+
+        Map<String, Object> res = new Map<String, Object>();
+        res.put('id', created.Id);
+        res.put('name', created.Name);
+        res.put('status', created.Status__c);
+        res.put('disbursementId', created.Disbursement__c);
+        res.put('disbursementName', created.Disbursement__r != null ? created.Disbursement__r.Name : '');
+        res.put('createdDate', created.CreatedDate);
+        res.put('documentId', docId);
+
+        return res;
+    }
+
+    @AuraEnabled
+    public static Id createFundUtilization(
+        Id applicationId,
+        Id disbursementId,
+        List<Id> fileIds
+    ) {
+        // 1. Create Fund Utilization Record with Status Pending
+        Fund_Utilization__c fu = new Fund_Utilization__c();
+        fu.Grant_Applicant__c = applicationId;
+        fu.Disbursement__c = disbursementId;
+        fu.Submitted_By__c = applicationId;
+        fu.Status__c = 'Pending';
+
+        insert fu;
+
+        // 2. Link Files
+        if (fileIds != null && !fileIds.isEmpty()) {
+            List<ContentDocumentLink> links = new List<ContentDocumentLink>();
+            for (Id fileId : fileIds) {
+                links.add(new ContentDocumentLink(
+                    ContentDocumentId = fileId,
+                    LinkedEntityId = fu.Id,
+                    ShareType = 'V',
+                    Visibility = 'AllUsers'
+                ));
+            }
+            insert links;
+        }
+
+        return fu.Id;
+    }
 }

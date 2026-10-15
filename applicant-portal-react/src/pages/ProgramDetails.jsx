@@ -7,7 +7,7 @@ import './ProgramDetails.css';
 
 const ProgramDetails = () => {
   const { programId } = useParams();
-  const { isLoggedIn } = useAuth();
+  const { isLoggedIn, profileStatus, refreshProfileStatus, isVerified } = useAuth();
   const navigate = useNavigate();
   const [programData, setProgramData] = useState(null);
   const [activeTab, setActiveTab] = useState('Overview');
@@ -17,7 +17,10 @@ const ProgramDetails = () => {
 
   useEffect(() => {
     loadProgramDetails();
-  }, [programId]);
+    if (isLoggedIn) {
+      refreshProfileStatus();
+    }
+  }, [programId, isLoggedIn]);
 
   const loadProgramDetails = async () => {
     try {
@@ -45,6 +48,10 @@ const ProgramDetails = () => {
   const handleApply = () => {
     if (!isLoggedIn) {
       window.location.href = salesforceService.loginUrl;
+      return;
+    }
+    if (!profileStatus || profileStatus === 'NO_PROFILE' || profileStatus !== 'Approved') {
+      navigate('/profile');
       return;
     }
     navigate(`/apply/${programId}`);
@@ -183,17 +190,92 @@ const ProgramDetails = () => {
                <span className="highlight-sub">Per Project</span>
             </div>
             
-            {program.Status__c === 'Active' || program.Status__c === 'Open' ? (
+            {program.Status__c !== 'Active' && program.Status__c !== 'Open' ? (
+              <button disabled className="btn-apply-disabled">
+                {program.Status__c || 'Closed'}
+              </button>
+            ) : !isLoggedIn ? (
+              <>
+                <button onClick={handleApply} className="btn-apply-primary">
+                  Apply Now
+                </button>
+                <div className="time-estimate">⏱ Login required to start application</div>
+              </>
+            ) : (!profileStatus || profileStatus === 'NO_PROFILE') ? (
+              <>
+                <button 
+                  onClick={() => navigate('/profile')} 
+                  className="btn-apply-locked"
+                  title="Create your organizational profile to apply"
+                >
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                    <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                  </svg>
+                  <span>Complete Profile to Apply</span>
+                </button>
+                
+                <div className="profile-lock-callout callout-warning">
+                  <div className="lock-callout-header">
+                    <span className="lock-callout-icon">🔒</span>
+                    <span className="lock-callout-title">Profile Required</span>
+                  </div>
+                  <p className="lock-callout-text">
+                    You must set up and verify your organizational profile before you can apply for this grant.
+                  </p>
+                  <button 
+                    type="button" 
+                    onClick={() => navigate('/profile')} 
+                    className="lock-callout-link"
+                  >
+                    Set Up Profile Now →
+                  </button>
+                </div>
+              </>
+            ) : (profileStatus !== 'Approved') ? (
+              <>
+                <button 
+                  disabled 
+                  className="btn-apply-locked"
+                  title="Profile verification required before applying"
+                >
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                    <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                  </svg>
+                  <span>Verification Pending</span>
+                </button>
+
+                <div className="profile-lock-callout callout-pending">
+                  <div className="lock-callout-header">
+                    <span className="lock-callout-icon">⏳</span>
+                    <span className="lock-callout-title">Verification Pending ({profileStatus})</span>
+                  </div>
+                  <p className="lock-callout-text">
+                    Your profile is currently under review. The Apply button unlocks automatically once your profile is verified and approved.
+                  </p>
+                  <button 
+                    type="button" 
+                    onClick={() => navigate('/profile')} 
+                    className="lock-callout-link"
+                  >
+                    View Profile Status →
+                  </button>
+                </div>
+              </>
+            ) : (
               <>
                 <button onClick={handleApply} className="btn-apply-primary">
                   Apply Now
                 </button>
                 <div className="time-estimate">⏱ Takes 10-15 minutes to complete</div>
+                <div className="verified-applicant-pill">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+                    <polyline points="20 6 9 17 4 12"></polyline>
+                  </svg>
+                  <span>Verified Applicant Profile</span>
+                </div>
               </>
-            ) : (
-              <button disabled className="btn-apply-disabled">
-                {program.Status__c || 'Closed'}
-              </button>
             )}
           </div>
         </div>

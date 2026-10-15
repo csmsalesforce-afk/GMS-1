@@ -6,23 +6,21 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const distPath = path.join(__dirname, '..', 'dist');
+// ONLY target applicantPortalAppNew to keep the old applicantPortalApp untouched
 const staticResourcePath = path.join(__dirname, '..', '..', 'force-app', 'main', 'default', 'staticresources', 'applicantPortalAppNew');
 
-console.log('🚀 Deploying to Salesforce Static Resources...');
+console.log('🚀 Deploying new React build to Salesforce Static Resource (applicantPortalAppNew)...');
 
-// Check if dist folder exists
 if (!fs.existsSync(distPath)) {
   console.error('❌ dist folder not found. Run "npm run build" first.');
   process.exit(1);
 }
 
-// Create static resource folder if it doesn't exist
 if (!fs.existsSync(staticResourcePath)) {
   fs.mkdirSync(staticResourcePath, { recursive: true });
   console.log('✅ Created staticresources/applicantPortalAppNew folder');
 }
 
-// Copy dist contents to static resource
 const copyRecursive = (src, dest) => {
   const exists = fs.existsSync(src);
   const stats = exists && fs.statSync(src);
@@ -43,7 +41,7 @@ const copyRecursive = (src, dest) => {
   }
 };
 
-// Clear existing files
+// Clear existing in applicantPortalAppNew
 if (fs.existsSync(staticResourcePath)) {
   fs.readdirSync(staticResourcePath).forEach((file) => {
     const filePath = path.join(staticResourcePath, file);
@@ -55,12 +53,10 @@ if (fs.existsSync(staticResourcePath)) {
   });
 }
 
-// Copy new build
+// Copy new build into applicantPortalAppNew ONLY
 copyRecursive(distPath, staticResourcePath);
-
 console.log('✅ Files copied to staticresources/applicantPortalAppNew');
 
-// Create/Update meta.xml file
 const metaXml = `<?xml version="1.0" encoding="UTF-8"?>
 <StaticResource xmlns="http://soap.sforce.com/2006/04/metadata">
     <cacheControl>Public</cacheControl>
@@ -70,9 +66,5 @@ const metaXml = `<?xml version="1.0" encoding="UTF-8"?>
 
 const metaXmlPath = path.join(__dirname, '..', '..', 'force-app', 'main', 'default', 'staticresources', 'applicantPortalAppNew.resource-meta.xml');
 fs.writeFileSync(metaXmlPath, metaXml);
-
 console.log('✅ Created/Updated applicantPortalAppNew.resource-meta.xml');
-console.log('🎉 Deployment complete!');
-console.log('📝 Next steps:');
-console.log('   1. Deploy to Salesforce: sfdx force:source:push');
-console.log('   2. Or commit and push to your repository');
+console.log('🎉 Deployment to static resources complete!');

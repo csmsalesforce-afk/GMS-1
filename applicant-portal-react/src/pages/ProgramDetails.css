@@ -308,6 +308,127 @@
   text-transform: uppercase;
 }
 
+/* Locked Apply Button */
+.btn-apply-locked {
+  width: 100%;
+  padding: 0.95rem 1.25rem;
+  background: #f1f5f9;
+  color: #475569;
+  border: 1.5px solid #cbd5e1;
+  border-radius: 10px;
+  font-size: 0.98rem;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.55rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  margin-bottom: 0.85rem;
+}
+
+.btn-apply-locked:hover:not(:disabled) {
+  background: #e2e8f0;
+  color: #0f172a;
+  border-color: #94a3b8;
+  transform: translateY(-1px);
+}
+
+.btn-apply-locked:disabled {
+  cursor: not-allowed;
+  opacity: 0.75;
+  background: #f8fafc;
+  color: #64748b;
+  border-color: #e2e8f0;
+}
+
+/* Profile Lock Callout */
+.profile-lock-callout {
+  border-radius: 12px;
+  padding: 1.1rem 1.25rem;
+  margin-top: 0.35rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+  text-align: left;
+}
+
+.profile-lock-callout.callout-warning {
+  background: #fffbeb;
+  border: 1.5px solid #fde68a;
+  color: #92400e;
+}
+
+.profile-lock-callout.callout-pending {
+  background: #eff6ff;
+  border: 1.5px solid #bfdbfe;
+  color: #1e40af;
+}
+
+.lock-callout-header {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+}
+
+.lock-callout-icon {
+  font-size: 1.05rem;
+  line-height: 1;
+}
+
+.lock-callout-title {
+  font-size: 0.88rem;
+  font-weight: 700;
+}
+
+.lock-callout-text {
+  font-size: 0.82rem;
+  line-height: 1.45;
+  margin: 0;
+  color: inherit;
+  opacity: 0.9;
+}
+
+.lock-callout-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  background: none;
+  border: none;
+  padding: 0.2rem 0;
+  color: inherit;
+  font-weight: 700;
+  font-size: 0.84rem;
+  cursor: pointer;
+  text-decoration: none;
+  text-align: left;
+  margin-top: 0.25rem;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.lock-callout-link:hover {
+  opacity: 0.85;
+  transform: translateX(2px);
+  text-decoration: none;
+}
+
+.verified-applicant-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  margin-top: 0.85rem;
+  padding: 0.4rem 0.85rem;
+  background: #ecfdf5;
+  color: #065f46;
+  border: 1px solid #a7f3d0;
+  border-radius: 9999px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  width: 100%;
+  box-sizing: border-box;
+}
+
 .time-estimate {
   text-align: center;
   font-size: 0.8rem;

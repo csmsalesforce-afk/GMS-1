@@ -170,9 +170,9 @@ public static Program__c getProgramInfo(Id programId) {
 }
     
 @AuraEnabled
-public static Grant_Applicant__c getApplication(Id recordId) {
+public static Map<String, Object> getApplication(Id recordId) {
 
-    return [
+    Grant_Applicant__c app = [
         SELECT 
             Id,
             Name,
@@ -233,7 +233,6 @@ Reviewer_Assigned__r.Name,
             Awards_Created__c,
             Installment_Percentage__c,
             Number_of_Installments__c,
-            Total_Contribution__c,
             Total_Funding_Request__c,
 
             /* Status & System */
@@ -246,12 +245,65 @@ Reviewer_Assigned__r.Name,
             /* Lookup */
             Program__r.Name,
             Program__r.Max_Amount__c,
-            Program__r.Program_Type__c
+            Program__r.Program_Type__c,
+
+            /* Project Budgets */
+            (
+                SELECT Id, Name, Expense_Category__c, Other_Category__c, Description__c, Estimated_Amount__c 
+                FROM Project_Budgets__r 
+                ORDER BY CreatedDate ASC
+            )
 
         FROM Grant_Applicant__c
         WHERE Id = :recordId
         LIMIT 1
     ];
+
+    Map<String, Object> appMap = (Map<String, Object>) JSON.deserializeUntyped(JSON.serialize(app));
+    appMap.put('projectBudgets', app.Project_Budgets__r);
+
+    // Resolve real User names (bypassing community nickname masking)
+    Set<Id> userIds = new Set<Id>();
+    if (app.Reviewer_Assigned__c != null) userIds.add(app.Reviewer_Assigned__c);
+    if (app.Program_Officer__c != null) userIds.add(app.Program_Officer__c);
+    if (app.Financer__c != null) userIds.add(app.Financer__c);
+
+    Map<Id, String> nameMap = UserResolver.getUserFullNames(userIds);
+
+    if (app.Reviewer_Assigned__c != null && nameMap.containsKey(app.Reviewer_Assigned__c)) {
+        String rName = nameMap.get(app.Reviewer_Assigned__c);
+        appMap.put('reviewerName', rName);
+        Map<String, Object> rObj = (Map<String, Object>) appMap.get('Reviewer_Assigned__r');
+        if (rObj == null) {
+            rObj = new Map<String, Object>();
+            appMap.put('Reviewer_Assigned__r', rObj);
+        }
+        rObj.put('Name', rName);
+    }
+
+    if (app.Program_Officer__c != null && nameMap.containsKey(app.Program_Officer__c)) {
+        String poName = nameMap.get(app.Program_Officer__c);
+        appMap.put('programOfficerName', poName);
+        Map<String, Object> poObj = (Map<String, Object>) appMap.get('Program_Officer__r');
+        if (poObj == null) {
+            poObj = new Map<String, Object>();
+            appMap.put('Program_Officer__r', poObj);
+        }
+        poObj.put('Name', poName);
+    }
+
+    if (app.Financer__c != null && nameMap.containsKey(app.Financer__c)) {
+        String fName = nameMap.get(app.Financer__c);
+        appMap.put('financerName', fName);
+        Map<String, Object> fObj = (Map<String, Object>) appMap.get('Financer__r');
+        if (fObj == null) {
+            fObj = new Map<String, Object>();
+            appMap.put('Financer__r', fObj);
+        }
+        fObj.put('Name', fName);
+    }
+
+    return appMap;
 }
 
 @AuraEnabled
@@ -341,8 +393,74 @@ public static void generatePdfAndSubmit(Id recordId) {
         throw new AuraHandledException(e.getMessage());
     }
 }
+
+@AuraEnabled
+public static String generateApplicantPdf(Id recordId) {
+    try {
+        if (recordId == null) {
+            throw new AuraHandledException('Record ID is required.');
+        }
+
+        PageReference pdfPage = Page.GrantApplication;
+        pdfPage.getParameters().put('id', recordId);
+        Blob pdfBlob;
+        if (Test.isRunningTest()) {
+            pdfBlob = Blob.valueOf('Fake Test PDF Body');
+        } else {
+            pdfBlob = pdfPage.getContentAsPDF();
+        }
+
+        Grant_Applicant__c app = [
+            SELECT Id, Name, Applicant_Name__c 
+            FROM Grant_Applicant__c 
+            WHERE Id = :recordId 
+            LIMIT 1
+        ];
+
+        String fileTitle = 'Grant_Application_' + (String.isNotBlank(app.Name) ? app.Name : String.valueOf(recordId));
+
+        ContentVersion cv = new ContentVersion();
+        cv.Title = fileTitle;
+        cv.PathOnClient = 'GrantApplication.pdf';
+        cv.VersionData = pdfBlob;
+        insert cv;
+
+        cv = [
+            SELECT Id, ContentDocumentId 
+            FROM ContentVersion 
+            WHERE Id = :cv.Id 
+            LIMIT 1
+        ];
+
+        List<ContentDocumentLink> existingLinks = [
+            SELECT Id 
+            FROM ContentDocumentLink 
+            WHERE LinkedEntityId = :recordId 
+              AND ContentDocumentId = :cv.ContentDocumentId 
+            LIMIT 1
+        ];
+
+        if (existingLinks.isEmpty()) {
+            ContentDocumentLink cdl = new ContentDocumentLink();
+            cdl.LinkedEntityId = recordId;
+            cdl.ContentDocumentId = cv.ContentDocumentId;
+            cdl.ShareType = 'V';
+            cdl.Visibility = 'AllUsers';
+            insert cdl;
+        }
+
+        update new Grant_Applicant__c(
+            Id = recordId,
+            PDF_Generated__c = true
+        );
+
+        return cv.ContentDocumentId;
+    } catch (Exception e) {
+        throw new AuraHandledException('Error generating PDF: ' + e.getMessage());
+    }
+}
     
-    @AuraEnabled
+@AuraEnabled
 public static void withdrawApplicationWithReason(Id recordId, String reason) {
 
     try {
@@ -573,6 +691,95 @@ public static void fixFileVisibility(Id documentId) {
                 SELECT Id FROM ContentDocument WHERE Id = :documentId LIMIT 1
             ];
             delete doc;
+        } catch (Exception e) {
+            throw new AuraHandledException(e.getMessage());
+        }
+    }
+
+    // ============================================
+    // PROJECT BUDGET METHODS
+    // ============================================
+    @AuraEnabled
+    public static List<Project_Budget__c> getProjectBudgets(Id applicationId) {
+        try {
+            return [
+                SELECT Id, Name, Expense_Category__c, Other_Category__c, Description__c, Estimated_Amount__c
+                FROM Project_Budget__c
+                WHERE Grant_Applicant__c = :applicationId
+                ORDER BY CreatedDate ASC
+            ];
+        } catch (Exception e) {
+            throw new AuraHandledException(e.getMessage());
+        }
+    }
+
+    @AuraEnabled
+    public static List<Project_Budget__c> saveProjectBudgets(Id applicationId, String budgetJson) {
+        try {
+            if (applicationId == null) {
+                throw new AuraHandledException('Application ID is required to save budget items.');
+            }
+
+            List<Object> rawList = String.isNotBlank(budgetJson) 
+                ? (List<Object>) JSON.deserializeUntyped(budgetJson) 
+                : new List<Object>();
+
+            List<Project_Budget__c> existingBudgets = [
+                SELECT Id 
+                FROM Project_Budget__c 
+                WHERE Grant_Applicant__c = :applicationId
+            ];
+            Set<Id> existingIds = new Map<Id, Project_Budget__c>(existingBudgets).keySet();
+            Set<Id> retainedIds = new Set<Id>();
+
+            List<Project_Budget__c> toUpsert = new List<Project_Budget__c>();
+
+            for (Object obj : rawList) {
+                Map<String, Object> row = (Map<String, Object>) obj;
+                Project_Budget__c pb = new Project_Budget__c();
+
+                if (row.containsKey('Id') && row.get('Id') != null && String.isNotBlank(String.valueOf(row.get('Id')))) {
+                    pb.Id = (Id) String.valueOf(row.get('Id'));
+                    retainedIds.add(pb.Id);
+                }
+                pb.Grant_Applicant__c = applicationId;
+                pb.Expense_Category__c = row.containsKey('Expense_Category__c') && row.get('Expense_Category__c') != null 
+                    ? String.valueOf(row.get('Expense_Category__c')) : null;
+                pb.Other_Category__c = row.containsKey('Other_Category__c') && row.get('Other_Category__c') != null 
+                    ? String.valueOf(row.get('Other_Category__c')) : null;
+                pb.Description__c = row.containsKey('Description__c') && row.get('Description__c') != null 
+                    ? String.valueOf(row.get('Description__c')) : null;
+
+                if (row.containsKey('Estimated_Amount__c') && row.get('Estimated_Amount__c') != null) {
+                    String amtStr = String.valueOf(row.get('Estimated_Amount__c'));
+                    if (String.isNotBlank(amtStr)) {
+                        pb.Estimated_Amount__c = Decimal.valueOf(amtStr);
+                    }
+                }
+                toUpsert.add(pb);
+            }
+
+            // Remove deleted items
+            List<Project_Budget__c> toDelete = new List<Project_Budget__c>();
+            for (Id oldId : existingIds) {
+                if (!retainedIds.contains(oldId)) {
+                    toDelete.add(new Project_Budget__c(Id = oldId));
+                }
+            }
+            if (!toDelete.isEmpty()) {
+                delete toDelete;
+            }
+
+            if (!toUpsert.isEmpty()) {
+                upsert toUpsert;
+            }
+
+            return [
+                SELECT Id, Name, Expense_Category__c, Other_Category__c, Description__c, Estimated_Amount__c
+                FROM Project_Budget__c
+                WHERE Grant_Applicant__c = :applicationId
+                ORDER BY CreatedDate ASC
+            ];
         } catch (Exception e) {
             throw new AuraHandledException(e.getMessage());
         }

@@ -21,7 +21,7 @@ window.__APPLICANT_PORTAL_RENDER__ = (data) => {
       root.render(
         <StrictMode>
           <MemoryRouter>
-            <AuthProvider>
+            <AuthProvider initialData={data}>
               <App />
             </AuthProvider>
           </MemoryRouter>

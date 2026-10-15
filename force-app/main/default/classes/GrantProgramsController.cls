@@ -2,20 +2,24 @@ public with sharing class GrantProgramsController {
 
     @AuraEnabled(cacheable=true)
     public static List<Program__c> getPrograms() {
-
-        return [
-            SELECT Id,
-                   Name,
-                   Program_Type__c,
-                   Max_Amount__c,
-                   Program_Fund__c,
-                   Status__c,
-                   Requirements__c,
-                   Overview__c
-            FROM Program__c
-            WHERE Status__c = 'Open'
-            ORDER BY CreatedDate DESC
-        ];
+        try {
+            return [
+                SELECT Id,
+                       Name,
+                       Program_Type__c,
+                       Max_Amount__c,
+                       Program_Fund__c,
+                       Status__c,
+                       Requirements__c,
+                       Overview__c
+                FROM Program__c
+                WHERE Status__c = 'Open'
+                ORDER BY CreatedDate DESC
+            ];
+        } catch (Exception e) {
+            System.debug('Error fetching open programs: ' + e.getMessage());
+            return new List<Program__c>();
+        }
     }
 
 

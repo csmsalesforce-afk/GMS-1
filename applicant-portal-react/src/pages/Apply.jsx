@@ -1,13 +1,26 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
+import { useAuth } from '../contexts/AuthContext';
 import salesforceService from '../services/salesforceService';
 import './Apply.css';
+
+const EXPENSE_CATEGORIES = [
+  'Personnel & Staffing',
+  'Equipment & Infrastructure',
+  'Materials & Supplies',
+  'Travel & Fieldwork',
+  'Training & Workshops',
+  'Consultancy & Subcontracting',
+  'Administrative & Overheads',
+  'Other Direct Costs'
+];
 
 const Apply = () => {
   const { programId } = useParams();
   const [searchParams] = useSearchParams();
   const urlAppId = searchParams.get('appId');
   const navigate = useNavigate();
+  const { isLoggedIn, profileStatus, refreshProfileStatus } = useAuth();
   const [currentStep, setCurrentStep] = useState(1);
   const [loading, setLoading] = useState(true);
   const [programInfo, setProgramInfo] = useState(null);
@@ -21,6 +34,17 @@ const Apply = () => {
   const [uploadingDoc, setUploadingDoc] = useState(null);
   const [consentGiven, setConsentGiven] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  // Project Budget Line Items
+  const [budgetItems, setBudgetItems] = useState([
+    {
+      id: 'budget-init-1',
+      Expense_Category__c: '',
+      Other_Category__c: '',
+      Description__c: '',
+      Estimated_Amount__c: ''
+    }
+  ]);
 
   const [formData, setFormData] = useState({
     projectTitle: '',
@@ -74,6 +98,23 @@ const Apply = () => {
               startDate: existingApp.Start_Date__c || ''
             });
             await fetchApplicationFiles(urlAppId);
+
+            // Fetch and populate project budget breakdown
+            try {
+              const existingBudgets = existingApp.projectBudgets || await salesforceService.getProjectBudgets(urlAppId);
+              if (existingBudgets && existingBudgets.length > 0) {
+                setBudgetItems(existingBudgets.map((b, idx) => ({
+                  id: b.Id || `budget-${idx}`,
+                  Id: b.Id || null,
+                  Expense_Category__c: b.Expense_Category__c || '',
+                  Other_Category__c: b.Other_Category__c || '',
+                  Description__c: b.Description__c || '',
+                  Estimated_Amount__c: b.Estimated_Amount__c != null ? String(b.Estimated_Amount__c) : ''
+                })));
+              }
+            } catch (bErr) {
+              console.error('Failed to load project budgets:', bErr);
+            }
           }
         }
       } catch (err) {
@@ -103,13 +144,18 @@ const Apply = () => {
   };
 
   const mapFormDataToSalesforce = () => {
+    // Requested Amount is automatically calculated from the budget items sum
+    const calculatedRequestedAmount = totalBudgetAmount > 0 
+      ? totalBudgetAmount 
+      : (formData.requestedAmount ? parseFloat(formData.requestedAmount) : null);
+
     return {
       sobjectType: 'Grant_Applicant__c',
       Id: applicationId || null,
       Program__c: programId,
       Applicant_Name__c: applicantInfo?.Name || 'Salesforce - CSM',
       Project_Title__c: formData.projectTitle,
-      Requested_Amount__c: formData.requestedAmount ? parseFloat(formData.requestedAmount) : null,
+      Requested_Amount__c: calculatedRequestedAmount,
       Project_Description__c: formData.projectDescription,
       Budget_Details__c: formData.budgetDetails,
       Bank_Name_applicant__c: formData.bankName,
@@ -141,6 +187,81 @@ const Apply = () => {
     return 'Validation failed in Salesforce. Please check required fields.';
   };
 
+  // Budget row actions
+  const handleAddBudgetRow = () => {
+    setBudgetItems(prev => [
+      ...prev,
+      {
+        id: `budget-${Date.now()}-${Math.random()}`,
+        Expense_Category__c: '',
+        Other_Category__c: '',
+        Description__c: '',
+        Estimated_Amount__c: ''
+      }
+    ]);
+  };
+
+  const handleRemoveBudgetRow = (index) => {
+    setBudgetItems(prev => {
+      if (prev.length <= 1) {
+        return [{
+          id: `budget-${Date.now()}`,
+          Expense_Category__c: '',
+          Other_Category__c: '',
+          Description__c: '',
+          Estimated_Amount__c: ''
+        }];
+      }
+      return prev.filter((_, i) => i !== index);
+    });
+  };
+
+  const handleBudgetFieldChange = (index, field, value) => {
+    setBudgetItems(prev => {
+      const next = [...prev];
+      next[index] = { ...next[index], [field]: value };
+      if (field === 'Expense_Category__c' && value !== 'Other Direct Costs') {
+        next[index].Other_Category__c = '';
+      }
+      return next;
+    });
+  };
+
+  const totalBudgetAmount = budgetItems.reduce((sum, item) => {
+    const val = parseFloat(item.Estimated_Amount__c);
+    return sum + (isNaN(val) ? 0 : val);
+  }, 0);
+
+  const saveCurrentBudgets = async (appId) => {
+    try {
+      const validBudgets = budgetItems
+        .filter(b => b.Expense_Category__c || b.Estimated_Amount__c || b.Description__c)
+        .map(b => ({
+          Id: b.Id && !String(b.Id).startsWith('budget-') ? b.Id : null,
+          Expense_Category__c: b.Expense_Category__c || null,
+          Other_Category__c: b.Expense_Category__c === 'Other Direct Costs' ? (b.Other_Category__c || null) : null,
+          Description__c: b.Description__c || null,
+          Estimated_Amount__c: b.Estimated_Amount__c ? parseFloat(b.Estimated_Amount__c) : 0
+        }));
+
+      if (validBudgets.length > 0) {
+        const saved = await salesforceService.saveProjectBudgets(appId, validBudgets);
+        if (saved && saved.length > 0) {
+          setBudgetItems(saved.map((b, idx) => ({
+            id: b.Id || `budget-${idx}`,
+            Id: b.Id || null,
+            Expense_Category__c: b.Expense_Category__c || '',
+            Other_Category__c: b.Other_Category__c || '',
+            Description__c: b.Description__c || '',
+            Estimated_Amount__c: b.Estimated_Amount__c != null ? String(b.Estimated_Amount__c) : ''
+          })));
+        }
+      }
+    } catch (bErr) {
+      console.error('Error saving budget items:', bErr);
+    }
+  };
+
   const handleNext = async () => {
     if (currentStep === 1) {
       try {
@@ -151,6 +272,7 @@ const Apply = () => {
           return;
         }
         setApplicationId(newId);
+        await saveCurrentBudgets(newId);
         setCurrentStep(2);
       } catch (err) {
         console.error('Salesforce validation error:', err);
@@ -167,7 +289,8 @@ const Apply = () => {
       const newId = await salesforceService.saveApplication(appRecord);
       if (newId) {
         setApplicationId(newId);
-        showToast('success', 'Draft saved successfully!');
+        await saveCurrentBudgets(newId);
+        showToast('success', 'Draft and budget items saved successfully!');
       } else {
         showToast('error', 'Salesforce did not return a valid record ID for draft.');
       }
@@ -266,6 +389,45 @@ const Apply = () => {
     return <div className="apply-loading">Loading application form...</div>;
   }
 
+  // Profile Verification Security Gate
+  if (!loading && (!profileStatus || profileStatus === 'NO_PROFILE' || profileStatus !== 'Approved')) {
+    return (
+      <div className="apply-page">
+        <div className="apply-locked-container">
+          <div className="apply-locked-card">
+            <div className="apply-locked-icon-wrap">🔒</div>
+            <h2 className="apply-locked-title">
+              {!profileStatus || profileStatus === 'NO_PROFILE' 
+                ? 'Profile Setup Required' 
+                : 'Profile Verification Required'}
+            </h2>
+            <p className="apply-locked-desc">
+              {!profileStatus || profileStatus === 'NO_PROFILE'
+                ? 'You must set up and submit your organizational profile before applying for this grant program.'
+                : `Your profile is currently in "${profileStatus}" status. Grant applications remain locked until your profile is verified and approved by the grant committee.`}
+            </p>
+            <div className="apply-locked-actions">
+              <button 
+                type="button" 
+                onClick={() => navigate('/profile')} 
+                className="btn-locked-go-profile"
+              >
+                {!profileStatus || profileStatus === 'NO_PROFILE' ? 'Set Up Profile Now' : 'Check Profile Status'}
+              </button>
+              <button 
+                type="button" 
+                onClick={() => navigate(`/program/${programId}`)} 
+                className="btn-locked-back-program"
+              >
+                Back to Program Details
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="apply-page">
       <div className="apply-hero">
@@ -333,14 +495,12 @@ const Apply = () => {
                 />
               </div>
               <div className="form-group">
-                <label>Requested Amount ($) <span className="required">*</span></label>
+                <label>Project Start Date</label>
                 <input 
-                  type="number" 
-                  name="requestedAmount"
-                  value={formData.requestedAmount}
+                  type="date" 
+                  name="startDate"
+                  value={formData.startDate}
                   onChange={handleInputChange}
-                  placeholder="0.00" 
-                  className={formErrors.requestedAmount ? 'input-error' : ''}
                 />
               </div>
             </div>
@@ -357,19 +517,119 @@ const Apply = () => {
               ></textarea>
             </div>
 
-            <div className="form-group">
-              <label>Budget Details</label>
-              <textarea 
-                name="budgetDetails"
-                value={formData.budgetDetails}
-                onChange={handleInputChange}
-                placeholder="Provide a breakdown of your budget..."
-                rows="3"
-              ></textarea>
+            {/* Dynamic Project Budget Breakdown Section */}
+            <div className="budget-section-card">
+              <div className="budget-section-header">
+                <div>
+                  <h3 className="budget-section-title">
+                    Project Budget Breakdown
+                  </h3>
+                  <p className="budget-section-subtitle">
+                    Add estimated line items. Click <strong>+ Add Line Item</strong> to add more expense items.
+                  </p>
+                </div>
+                <button 
+                  type="button" 
+                  className="btn-add-budget-row"
+                  onClick={handleAddBudgetRow}
+                >
+                  <span className="plus-symbol">+</span> Add Line Item
+                </button>
+              </div>
+
+              <div className="budget-items-list">
+                {budgetItems.map((item, index) => {
+                  const isOther = item.Expense_Category__c === 'Other Direct Costs';
+                  return (
+                    <div key={item.id || index} className="budget-item-card">
+                      <div className="budget-item-header">
+                        <span className="budget-item-num">Item #{index + 1}</span>
+                        <button
+                          type="button"
+                          className="btn-remove-row"
+                          onClick={() => handleRemoveBudgetRow(index)}
+                          title="Remove item"
+                        >
+                          ✕ Remove
+                        </button>
+                      </div>
+
+                      <div className="budget-item-grid">
+                        <div className="form-group mb-0">
+                          <label>Expense Category <span className="required">*</span></label>
+                          <select
+                            value={item.Expense_Category__c}
+                            onChange={(e) => handleBudgetFieldChange(index, 'Expense_Category__c', e.target.value)}
+                            className="budget-select-input"
+                          >
+                            <option value="">-- Select Expense Category --</option>
+                            {EXPENSE_CATEGORIES.map(cat => (
+                              <option key={cat} value={cat}>{cat}</option>
+                            ))}
+                          </select>
+                        </div>
+
+                        <div className="form-group mb-0">
+                          <label>Estimated Amount ($) <span className="required">*</span></label>
+                          <div className="budget-currency-wrapper">
+                            <span className="budget-currency-prefix">$</span>
+                            <input
+                              type="number"
+                              min="0"
+                              step="0.01"
+                              value={item.Estimated_Amount__c}
+                              onChange={(e) => handleBudgetFieldChange(index, 'Estimated_Amount__c', e.target.value)}
+                              placeholder="0.00"
+                              className="budget-amount-input"
+                            />
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Dynamic textbox if 'Other Direct Costs' is selected */}
+                      {isOther && (
+                        <div className="other-category-field animate-fade-in">
+                          <label>
+                            Specify Other Category <span className="required">*</span>
+                          </label>
+                          <input
+                            type="text"
+                            value={item.Other_Category__c || ''}
+                            onChange={(e) => handleBudgetFieldChange(index, 'Other_Category__c', e.target.value)}
+                            placeholder="e.g. Audit Fees, IP Protection, Environmental Clearance..."
+                            className="other-category-textbox"
+                          />
+                        </div>
+                      )}
+
+                      <div className="form-group mb-0 mt-2">
+                        <label>Description & Justification</label>
+                        <textarea
+                          rows="2"
+                          value={item.Description__c}
+                          onChange={(e) => handleBudgetFieldChange(index, 'Description__c', e.target.value)}
+                          placeholder="Provide details on how this amount will be utilized..."
+                          className="budget-desc-textarea"
+                        />
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+
+              {/* Budget Total Bar */}
+              <div className="budget-total-bar">
+                <div className="budget-total-info">
+                  <span className="budget-total-label">Total Estimated Budget:</span>
+                  <span className="budget-total-figure">
+                    ${totalBudgetAmount.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                  </span>
+                </div>
+              </div>
             </div>
 
             <div className="sub-section">
-              <h3 className="sub-section-title">🏦 BANK INFORMATION</h3>
+              <h3 className="sub-section-title">BANK INFORMATION</h3>
               
               <div className="form-row">
                 <div className="form-group">
@@ -418,19 +678,9 @@ const Apply = () => {
               </div>
             </div>
 
-            <div className="form-group" style={{ maxWidth: '300px' }}>
-              <label>Project Start Date</label>
-              <input 
-                type="date" 
-                name="startDate"
-                value={formData.startDate}
-                onChange={handleInputChange}
-              />
-            </div>
-
             <div className="form-actions">
               <button className="btn-save-draft" onClick={handleSaveDraft}>
-                <span className="save-icon">💾</span> Save Draft
+                Save Draft
               </button>
               <button className="btn-next" onClick={handleNext}>
                 Next →
@@ -515,7 +765,7 @@ const Apply = () => {
               {/* Project & Applicant Summary */}
               <div className="review-card">
                 <h3 className="review-card-title">
-                  <span>📋</span> Project & Applicant Details
+                  Project & Applicant Details
                 </h3>
                 <div className="review-grid">
                   <div className="review-item">
@@ -531,9 +781,9 @@ const Apply = () => {
                     <span className="review-value">{formData.projectTitle || '-'}</span>
                   </div>
                   <div className="review-item">
-                    <span className="review-label">Requested Amount</span>
+                    <span className="review-label">Total Requested Amount</span>
                     <span className="review-value" style={{ color: '#2563eb' }}>
-                      {formData.requestedAmount ? `$${parseFloat(formData.requestedAmount).toLocaleString()}` : '$0'}
+                      ${(totalBudgetAmount > 0 ? totalBudgetAmount : (parseFloat(formData.requestedAmount) || 0)).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                     </span>
                   </div>
                   <div className="review-item">
@@ -550,17 +800,71 @@ const Apply = () => {
 
                   {formData.budgetDetails && (
                     <div className="review-desc-item">
-                      <span className="review-label">Budget Details</span>
+                      <span className="review-label">General Budget Notes</span>
                       <div className="review-desc-box">{formData.budgetDetails}</div>
                     </div>
                   )}
                 </div>
               </div>
 
+              {/* Project Budget Breakdown Summary Card */}
+              <div className="review-card">
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.25rem', borderBottom: '1px solid #f1f5f9', paddingBottom: '0.75rem' }}>
+                  <h3 className="review-card-title" style={{ margin: 0, border: 'none', padding: 0 }}>
+                    Project Budget Breakdown
+                  </h3>
+                  <span className="review-budget-total-badge">
+                    Total: ${totalBudgetAmount.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                  </span>
+                </div>
+
+                {budgetItems.filter(b => b.Expense_Category__c || b.Estimated_Amount__c).length > 0 ? (
+                  <div className="review-budget-table-wrap">
+                    <table className="review-budget-table">
+                      <thead>
+                        <tr>
+                          <th>Expense Category</th>
+                          <th>Description</th>
+                          <th style={{ textAlign: 'right' }}>Amount ($)</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {budgetItems
+                          .filter(b => b.Expense_Category__c || b.Estimated_Amount__c)
+                          .map((item, bIdx) => (
+                            <tr key={bIdx}>
+                              <td>
+                                <strong style={{ color: '#1e293b' }}>
+                                  {item.Expense_Category__c || 'Uncategorized'}
+                                </strong>
+                                {item.Expense_Category__c === 'Other Direct Costs' && item.Other_Category__c && (
+                                  <div className="review-other-pill">
+                                    Specified: <em>{item.Other_Category__c}</em>
+                                  </div>
+                                )}
+                              </td>
+                              <td style={{ color: '#475569', fontSize: '0.875rem' }}>
+                                {item.Description__c || '-'}
+                              </td>
+                              <td style={{ textAlign: 'right', fontWeight: 600, color: '#2563eb' }}>
+                                ${parseFloat(item.Estimated_Amount__c || 0).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                              </td>
+                            </tr>
+                          ))}
+                      </tbody>
+                    </table>
+                  </div>
+                ) : (
+                  <p style={{ color: '#94a3b8', fontStyle: 'italic', margin: 0 }}>
+                    No specific budget line items provided.
+                  </p>
+                )}
+              </div>
+
               {/* Bank Information Summary */}
               <div className="review-card">
                 <h3 className="review-card-title">
-                  <span>🏦</span> Bank Information
+                  Bank Information
                 </h3>
                 <div className="review-grid">
                   <div className="review-item">
@@ -585,7 +889,7 @@ const Apply = () => {
               {/* Uploaded Documents Summary */}
               <div className="review-card">
                 <h3 className="review-card-title">
-                  <span>📁</span> Uploaded Documents
+                  Uploaded Documents
                 </h3>
                 <div className="review-docs-list">
                   {programDocuments && programDocuments.length > 0 ? (
@@ -595,7 +899,7 @@ const Apply = () => {
                       return (
                         <div key={doc.Id || docName} className="review-doc-item">
                           <span className="review-doc-name">
-                            <span>📄</span> {docName}
+                            {docName}
                           </span>
                           <span className={`review-doc-status ${isUploaded ? 'uploaded' : 'missing'}`}>
                             {isUploaded ? '✓ Uploaded' : 'Not Uploaded'}

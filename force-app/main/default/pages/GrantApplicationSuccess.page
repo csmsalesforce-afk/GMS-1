@@ -1,6 +1,15 @@
 <apex:page standardController="Grant_Applicant__c" extensions="GrantAppPDFSaver" action="{!savePDF}">
-    <apex:sectionHeader title="Generating PDF..." subtitle="Please wait"/>
-    <div style="text-align: center; font-size: 16px; padding: 20px;">
-        Saving PDF to related files...
+    <apex:sectionHeader title="Generating Application PDF..." subtitle="Please wait"/>
+    <div style="text-align: center; font-size: 16px; padding: 25px; font-family: sans-serif; color: #1e293b;">
+        Generating and attaching Application PDF to record...
+        <br/><br/>
+        <small style="color: #64748b;">If you are not redirected automatically, <a href="/{!Grant_Applicant__c.Id}">click here to return to record</a>.</small>
     </div>
+    <script>
+        if (typeof sforce !== 'undefined' && sforce.one) {
+            sforce.one.navigateToSObject('{!Grant_Applicant__c.Id}');
+        } else {
+            window.location.href = '/{!Grant_Applicant__c.Id}';
+        }
+    </script>
 </apex:page>

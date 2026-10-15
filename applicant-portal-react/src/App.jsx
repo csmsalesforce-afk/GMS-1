@@ -15,7 +15,9 @@ function App() {
       <Navbar />
       <main className="main-content">
         <Routes>
-          <Route path="/" element={<Home />} />
+          <Route path="/" element={<Home forceLanding={true} />} />
+          <Route path="/landing" element={<Home forceLanding={true} />} />
+          <Route path="/dashboard" element={<Home forceDashboard={true} />} />
           <Route path="/programs" element={<Programs />} />
           <Route path="/program/:programId" element={<ProgramDetails />} />
           <Route path="/apply/:programId" element={<Apply />} />

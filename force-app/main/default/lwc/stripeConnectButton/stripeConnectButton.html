@@ -1,0 +1,57 @@
+<template>
+
+    <lightning-quick-action-panel
+        header="Connect Stripe">
+
+        <div
+            class="slds-p-around_medium
+                   slds-align_absolute-center">
+
+            <template if:false={onboardingUrl}>
+
+                <lightning-button
+                    variant="brand"
+                    label="Connect Stripe"
+                    onclick={handleConnect}
+                    disabled={isLoading}>
+                </lightning-button>
+
+            </template>
+
+
+            <template if:true={onboardingUrl}>
+
+                <!--
+                    Use a real anchor so the browser handles
+                    the external Stripe navigation directly.
+                -->
+                <a
+                    href={onboardingUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="slds-button slds-button_brand">
+
+                    Open Stripe Onboarding
+
+                </a>
+
+            </template>
+
+        </div>
+
+
+        <template if:true={isLoading}>
+
+            <div
+                class="slds-p-around_medium
+                       slds-text-align_center">
+
+                Creating Stripe onboarding link...
+
+            </div>
+
+        </template>
+
+    </lightning-quick-action-panel>
+
+</template>

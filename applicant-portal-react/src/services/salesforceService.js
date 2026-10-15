@@ -41,6 +41,11 @@ class SalesforceService {
   logout() {
     if (this.actions?.logout) {
       this.actions.logout();
+    } else {
+      const sitePrefix = this.sitePrefix || window.__APPLICANT_PORTAL_SITE_PREFIX__ || '';
+      const loginUrl = this.loginUrl || (window.location.origin + sitePrefix + '/LoginCustom');
+      window.location.href = window.location.origin + sitePrefix
+        + '/secur/logout.jsp?retURL=' + encodeURIComponent(loginUrl);
     }
   }
 
@@ -54,7 +59,7 @@ class SalesforceService {
     if (this.actions?.getUserName) {
       return await this.actions.getUserName();
     }
-    return null;
+    return this.userName || '';
   }
 
   async getProfileStatus() {
@@ -73,9 +78,15 @@ class SalesforceService {
 
   async getFieldSetMetadata(fieldSetName) {
     if (this.actions?.getFieldSetMetadata) {
-      return await this.actions.getFieldSetMetadata(fieldSetName);
+      try {
+        const res = await this.actions.getFieldSetMetadata(fieldSetName);
+        return Array.isArray(res) ? res : [];
+      } catch (e) {
+        console.warn('[salesforceService] Error fetching field set metadata:', e);
+        return [];
+      }
     }
-    return null;
+    return [];
   }
 
   async submitProfileForApproval(recordId) {
@@ -88,6 +99,28 @@ class SalesforceService {
   async createProfile(profileRec) {
     if (this.actions?.createProfile) {
       return await this.actions.createProfile(profileRec);
+    }
+    return null;
+  }
+
+  // Stripe APIs
+  async createStripeAccount(grantProgramId) {
+    if (this.actions?.createStripeAccount) {
+      return await this.actions.createStripeAccount(grantProgramId);
+    }
+    return null;
+  }
+
+  async createStripeOnboardingLink(grantProgramId) {
+    if (this.actions?.createStripeOnboardingLink) {
+      return await this.actions.createStripeOnboardingLink(grantProgramId);
+    }
+    return null;
+  }
+
+  async checkStripeOnboarding(grantProgramId) {
+    if (this.actions?.checkStripeOnboarding) {
+      return await this.actions.checkStripeOnboarding(grantProgramId);
     }
     return null;
   }
@@ -197,6 +230,65 @@ class SalesforceService {
   async fixFileVisibility(documentId) {
     if (this.actions?.fixFileVisibility) {
       return await this.actions.fixFileVisibility(documentId);
+    }
+    return null;
+  }
+
+  // Installments & Fund Utilization (Milestones)
+  async getInstallmentsAndDisbursements(applicationId) {
+    if (this.actions?.getInstallmentsAndDisbursements) {
+      return await this.actions.getInstallmentsAndDisbursements(applicationId);
+    }
+    return { disbursements: [], installments: [], milestones: [], hasData: false };
+  }
+
+  async uploadUtilizationCertificate(applicationId, disbursementId, fileName, base64Data, description) {
+    if (this.actions?.uploadUtilizationCertificate) {
+      return await this.actions.uploadUtilizationCertificate(
+        applicationId,
+        disbursementId,
+        fileName,
+        base64Data,
+        description
+      );
+    }
+    return null;
+  }
+
+  // Project Budget APIs
+  async getProjectBudgets(applicationId) {
+    if (this.actions?.getProjectBudgets) {
+      return await this.actions.getProjectBudgets(applicationId);
+    }
+    return [];
+  }
+
+  async saveProjectBudgets(applicationId, budgets) {
+    if (this.actions?.saveProjectBudgets) {
+      const budgetJson = typeof budgets === 'string' ? budgets : JSON.stringify(budgets);
+      return await this.actions.saveProjectBudgets(applicationId, budgetJson);
+    }
+    return [];
+  }
+
+  // Stripe Integration APIs
+  async createStripeAccount(grantProgramId) {
+    if (this.actions?.createStripeAccount) {
+      return await this.actions.createStripeAccount(grantProgramId);
+    }
+    return null;
+  }
+
+  async createStripeOnboardingLink(grantProgramId) {
+    if (this.actions?.createStripeOnboardingLink) {
+      return await this.actions.createStripeOnboardingLink(grantProgramId);
+    }
+    return null;
+  }
+
+  async checkStripeOnboarding(grantProgramId) {
+    if (this.actions?.checkStripeOnboarding) {
+      return await this.actions.checkStripeOnboarding(grantProgramId);
     }
     return null;
   }

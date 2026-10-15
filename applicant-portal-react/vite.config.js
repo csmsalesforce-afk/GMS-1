@@ -8,12 +8,18 @@ export default defineConfig({
     modulePreload: false,
     outDir: 'dist',
     assetsDir: 'assets',
+    cssCodeSplit: false,
     rollupOptions: {
       output: {
         format: 'iife',
         entryFileNames: 'assets/index.js',
         chunkFileNames: 'assets/[name].js',
-        assetFileNames: 'assets/index.[ext]'
+        assetFileNames: (assetInfo) => {
+          if (assetInfo.name && assetInfo.name.endsWith('.css')) {
+            return 'assets/index.css';
+          }
+          return 'assets/[name].[ext]';
+        }
       }
     }
   },

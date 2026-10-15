@@ -20,6 +20,48 @@ code {
     monospace;
 }
 
+/* Experience Cloud Aura & Community Theme Layout Resets */
+html,
+body,
+.siteforceContentArea,
+.cCenterPanel,
+.cHeaderPanel,
+.siteforceServiceNotif,
+.siteforceThemeLayoutContentArea,
+.comm-page-content,
+.comm-layout-column,
+div[data-region-name="content"],
+div[data-region-name="header"],
+.uiContainerManager,
+.slds-col,
+c-applicant-portal-react-new,
+.react-root {
+  margin-top: 0 !important;
+  padding-top: 0 !important;
+}
+
+body .cCenterPanel,
+body .siteforceContentArea,
+body .comm-page-content,
+body .siteforceThemeLayoutContentArea,
+body .cHeaderPanel {
+  padding-top: 0 !important;
+  margin-top: 0 !important;
+}
+
+/* Eliminate height of empty theme header or notification areas */
+.siteforceServiceNotif:empty,
+.cHeaderPanel:empty,
+.header-container:empty,
+header.siteforceServiceNotif,
+div[data-region-name="header"]:empty {
+  display: none !important;
+  height: 0 !important;
+  min-height: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
 .app {
   min-height: 100vh;
   display: flex;
@@ -30,7 +72,9 @@ code {
   right: 50%;
   margin-left: -50vw;
   margin-right: -50vw;
-  overflow-x: hidden;
+  margin-top: 0;
+  padding-top: 0;
+  overflow-x: clip;
 }
 
 .main-content {
