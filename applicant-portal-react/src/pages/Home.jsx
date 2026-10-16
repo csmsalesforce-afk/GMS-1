@@ -13,10 +13,13 @@ export default function Home({ forceLanding = false, forceDashboard = false }) {
   const isDashboardRoute = forceDashboard || location.pathname === '/dashboard';
   const showDashboard = isLoggedIn && isDashboardRoute && !forceLanding;
 
-  const [stats, setStats] = useState({
-    applications: 0,
-    programs: 0,
-    distributed: '$0'
+  const [stats, setStats] = useState(() => {
+    const initial = salesforceService.data?.homeStats;
+    return {
+      applications: initial?.totalApplications || 0,
+      programs: initial?.activePrograms || 0,
+      distributed: initial?.totalFunded || '$0'
+    };
   });
   const [profile, setProfile] = useState(null);
   const [myApplications, setMyApplications] = useState([]);

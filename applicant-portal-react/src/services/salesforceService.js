@@ -128,9 +128,14 @@ class SalesforceService {
   // Stats APIs
   async getHomeStats() {
     if (this.actions?.getHomeStats) {
-      return await this.actions.getHomeStats();
+      try {
+        const stats = await this.actions.getHomeStats();
+        if (stats) return stats;
+      } catch (e) {
+        console.warn('Error fetching home stats from action:', e);
+      }
     }
-    return null;
+    return this.data?.homeStats || null;
   }
 
   // Program APIs

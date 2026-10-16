@@ -1,4 +1,4 @@
-public with sharing class HomeStatsController {
+public without sharing class HomeStatsController {
     
     @AuraEnabled(cacheable=true)
     public static Map<String, Object> getHomeStats() {
@@ -12,9 +12,9 @@ public with sharing class HomeStatsController {
             
             // 3. Funded Amount & Total Distributed
             AggregateResult[] ar = [SELECT SUM(Approved_Amount__c) totalFunded FROM Grant_Applicant__c WHERE Application_Status__c = 'Approved' OR Application_Status__c = 'Closed'];
-            Decimal totalFunded = (Decimal)ar[0].get('totalFunded');
-            if (totalFunded == null) {
-                totalFunded = 0;
+            Decimal totalFunded = 0;
+            if (ar != null && !ar.isEmpty() && ar[0].get('totalFunded') != null) {
+                totalFunded = (Decimal)ar[0].get('totalFunded');
             }
         
         // Format the amount nicely (e.g. $2.4B, $1.2M, etc.)
