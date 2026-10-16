@@ -35,3 +35,12 @@ window.__APPLICANT_PORTAL_RENDER__ = (data) => {
     console.error('MOUNT NODE IS NULL');
   }
 };
+
+// Automatically auto-mount in standalone local browser development (Vite dev server)
+if (document.getElementById('root') && !window.__APPLICANT_PORTAL_MOUNT__) {
+  window.__APPLICANT_PORTAL_RENDER__({
+    isLoggedIn: false,
+    userName: '',
+    profileStatus: null
+  });
+}

@@ -121,6 +121,353 @@
   box-shadow: 0 8px 20px rgba(91, 123, 246, 0.4);
 }
 
+/* Donate Now Button — always visible in navbar */
+.navbar-donate-btn {
+  padding: 0.55rem 1.25rem;
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  color: #ffffff;
+  border: none;
+  border-radius: 50px;
+  font-weight: 700;
+  font-size: 0.88rem;
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+  letter-spacing: 0.02em;
+}
+
+.navbar-donate-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(16, 185, 129, 0.35);
+}
+
+/* =====================================================
+   INLINE DONOR AUTH PANEL (Login / Register Modal)
+   Shown when "Donate Now" clicked while not logged in
+   ===================================================== */
+.donor-auth-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.55);
+  backdrop-filter: blur(4px);
+  z-index: 2000;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding-right: 5vw;
+  animation: fadeOverlay 0.2s ease;
+}
+
+@keyframes fadeOverlay {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+.donor-auth-panel {
+  background: linear-gradient(145deg, #1e3a8a 0%, #2563eb 60%, #3b82f6 100%);
+  border-radius: 20px;
+  padding: 2.2rem 2rem;
+  width: 100%;
+  max-width: 400px;
+  color: #ffffff;
+  position: relative;
+  animation: slideAuthIn 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.35);
+}
+
+@keyframes slideAuthIn {
+  from { opacity: 0; transform: translateY(-20px) scale(0.97); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.auth-panel-close {
+  position: absolute;
+  top: 12px;
+  right: 16px;
+  background: rgba(255,255,255,0.15);
+  border: none;
+  color: #fff;
+  font-size: 16px;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s;
+}
+
+.auth-panel-close:hover {
+  background: rgba(255,255,255,0.3);
+}
+
+.auth-panel-title {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: #ffffff;
+  margin: 0 0 4px 0;
+}
+
+.auth-panel-subtitle {
+  font-size: 0.85rem;
+  color: rgba(255,255,255,0.72);
+  margin: 0 0 1.4rem 0;
+}
+
+.auth-panel-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+}
+
+.auth-row-two {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
+}
+
+.auth-field-group {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.auth-field-group label {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: rgba(255,255,255,0.85);
+  letter-spacing: 0.01em;
+}
+
+.auth-input {
+  background: rgba(255,255,255,0.15);
+  border: 1px solid rgba(255,255,255,0.25);
+  border-radius: 8px;
+  padding: 0.6rem 0.85rem;
+  color: #ffffff;
+  font-size: 0.88rem;
+  outline: none;
+  transition: border-color 0.2s, background 0.2s;
+  font-family: inherit;
+}
+
+.auth-input::placeholder {
+  color: rgba(255,255,255,0.45);
+}
+
+.auth-input:focus {
+  border-color: rgba(255,255,255,0.6);
+  background: rgba(255,255,255,0.22);
+}
+
+.auth-forgot-link {
+  font-size: 0.78rem;
+  color: rgba(255,255,255,0.75);
+  text-align: right;
+  text-decoration: underline;
+  cursor: pointer;
+  margin-top: -4px;
+}
+
+.auth-submit-btn {
+  background: #ffffff;
+  color: #1e40af;
+  border: none;
+  border-radius: 8px;
+  padding: 0.75rem;
+  font-size: 0.95rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s;
+  margin-top: 4px;
+  font-family: inherit;
+}
+
+.auth-submit-btn:hover {
+  background: #f0f4ff;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 14px rgba(0,0,0,0.15);
+}
+
+.auth-submit-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.auth-panel-divider {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 1rem 0 0.5rem;
+  color: rgba(255,255,255,0.5);
+  font-size: 0.82rem;
+}
+
+.auth-panel-divider::before,
+.auth-panel-divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: rgba(255,255,255,0.25);
+}
+
+.auth-panel-switch {
+  text-align: center;
+  font-size: 0.83rem;
+  color: rgba(255,255,255,0.75);
+}
+
+.auth-switch-btn {
+  background: none;
+  border: none;
+  color: #ffffff;
+  font-weight: 700;
+  font-size: 0.83rem;
+  cursor: pointer;
+  text-decoration: underline;
+  font-family: inherit;
+  padding: 0;
+}
+
+.auth-switch-btn:hover {
+  color: #bfdbfe;
+}
+
+/* User Profile Circle & Dropdown (Image 3 Parity) */
+
+.nav-profile-wrapper {
+  position: relative;
+}
+
+.nav-user-circle {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #1e40af, #3b82f6);
+  color: #ffffff;
+  font-weight: 700;
+  font-size: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  position: relative;
+  box-shadow: 0 2px 10px rgba(37, 99, 235, 0.25);
+  user-select: none;
+  transition: transform 0.2s;
+}
+
+.nav-user-circle:hover {
+  transform: scale(1.06);
+}
+
+.nav-verified-dot {
+  position: absolute;
+  bottom: -2px;
+  right: -2px;
+  background: #10b981;
+  color: #ffffff;
+  font-size: 10px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid #ffffff;
+  font-weight: bold;
+}
+
+.nav-profile-dropdown {
+  position: absolute;
+  top: calc(100% + 12px);
+  right: 0;
+  width: 220px;
+  background: #ffffff;
+  border-radius: 14px;
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.15);
+  border: 1px solid #e2e8f0;
+  padding: 12px;
+  z-index: 1000;
+  animation: slideIn 0.2s ease-out;
+}
+
+.dropdown-identity {
+  padding: 6px 8px 10px 8px;
+}
+
+.dropdown-name {
+  font-weight: 700;
+  font-size: 14px;
+  color: #0f172a;
+  margin-bottom: 4px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.dropdown-status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 3px 8px;
+  border-radius: 20px;
+}
+
+.dropdown-status-badge.verified {
+  background: #dcfce7;
+  color: #15803d;
+}
+
+.dropdown-status-badge.pending {
+  background: #fef3c7;
+  color: #b45309;
+}
+
+.dropdown-divider-line {
+  height: 1px;
+  background: #f1f5f9;
+  margin: 6px 0;
+}
+
+.dropdown-nav-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 10px;
+  border-radius: 8px;
+  color: #334155;
+  font-size: 13px;
+  font-weight: 500;
+  text-decoration: none;
+  cursor: pointer;
+  background: none;
+  border: none;
+  width: 100%;
+  text-align: left;
+  transition: all 0.15s;
+  font-family: inherit;
+}
+
+.dropdown-nav-row:hover {
+  background: #f8fafc;
+  color: #2563eb;
+}
+
+.dropdown-nav-row.logout-row {
+  color: #dc2626;
+  font-weight: 600;
+}
+
+.dropdown-nav-row.logout-row:hover {
+  background: #fef2f2;
+  color: #b91c1c;
+}
+
 /* Animation for smooth transition */
 @keyframes slideIn {
   from {

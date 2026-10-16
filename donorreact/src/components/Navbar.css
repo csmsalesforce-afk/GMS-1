@@ -1,0 +1,50 @@
+.donor-navbar {
+  background: #0f172a;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 1rem 2rem;
+  color: #ffffff;
+}
+
+.navbar-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.navbar-logo {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.logo-img {
+  height: 40px;
+  object-fit: contain;
+}
+
+.logo-text {
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: #ffffff;
+}
+
+.logo-text span {
+  color: #38bdf8;
+  font-weight: 500;
+  font-size: 0.95rem;
+  margin-left: 0.35rem;
+}
+
+.portal-badge {
+  background: rgba(56, 189, 248, 0.15);
+  color: #38bdf8;
+  border: 1px solid rgba(56, 189, 248, 0.3);
+  padding: 0.35rem 0.85rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}

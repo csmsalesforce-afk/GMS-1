@@ -7,6 +7,7 @@ import MyApplications from './pages/MyApplications';
 import Profile from './pages/Profile';
 import Apply from './pages/Apply';
 import ApplicationDetails from './pages/ApplicationDetails';
+import DonorPortal from './pages/DonorPortal';
 import './App.css';
 
 function App() {
@@ -22,6 +23,8 @@ function App() {
           <Route path="/my-applications" element={<MyApplications />} />
           <Route path="/application/:applicationId" element={<ApplicationDetails />} />
           <Route path="/profile" element={<Profile />} />
+          <Route path="/donor" element={<DonorPortal />} />
+          <Route path="/donor-portal" element={<DonorPortal />} />
         </Routes>
       </main>
     </div>
