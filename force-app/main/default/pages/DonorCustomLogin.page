@@ -1,0 +1,666 @@
+<apex:page controller="DonorLoginController"
+           showHeader="false"
+           sidebar="false"
+           standardStylesheets="false"
+           docType="html-5.0">
+
+<head>
+    <title>Donor Portal | GEMS Philanthropic Giving</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, system-ui, sans-serif;
+            background: #f0f4f9;
+            color: #1e293b;
+            min-height: 100vh;
+        }
+
+        /* ================= HEADER ================= */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 18px 50px;
+            background: #ffffff;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .header-left img {
+            height: 40px;
+            object-fit: contain;
+        }
+
+        .brand-badge {
+            background: #e0f2fe;
+            color: #0284c7;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            padding: 4px 10px;
+            border-radius: 9999px;
+            letter-spacing: 0.05em;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 22px;
+        }
+
+        .header-right a {
+            text-decoration: none;
+            color: #475569;
+            font-size: 14px;
+            font-weight: 600;
+            transition: color 0.2s;
+            padding: 6px 10px;
+        }
+
+        .header-right a:hover {
+            color: #0284c7;
+        }
+
+        .header-donate-btn {
+            background: #54d2f0;
+            color: #0c4a6e !important;
+            padding: 9px 24px;
+            border-radius: 30px;
+            font-weight: 700 !important;
+            font-size: 14px;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 4px 14px rgba(84, 210, 240, 0.35);
+            transition: all 0.2s ease;
+            font-family: inherit;
+        }
+
+        .header-donate-btn:hover {
+            background: #38bdf8;
+            transform: translateY(-1px);
+            box-shadow: 0 6px 18px rgba(84, 210, 240, 0.45);
+        }
+
+        /* ================= ALERT BANNER ================= */
+        .donate-verification-alert {
+            display: none;
+            background: #fffbeb;
+            border-bottom: 1px solid #fde68a;
+            color: #92400e;
+            padding: 12px 30px;
+            text-align: center;
+            font-size: 14px;
+            font-weight: 500;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .donate-verification-alert strong {
+            font-weight: 700;
+            color: #78350f;
+        }
+
+        .donate-verification-alert button.close-alert {
+            background: none;
+            border: none;
+            font-size: 18px;
+            margin-left: 15px;
+            cursor: pointer;
+            color: #92400e;
+            vertical-align: middle;
+        }
+
+        /* ================= CONTAINER ================= */
+        .container {
+            display: flex;
+            min-height: calc(100vh - 80px);
+            align-items: center;
+        }
+
+        /* ================= LEFT ================= */
+        .left-section {
+            flex: 1.1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding-left: 90px;
+            padding-right: 50px;
+        }
+
+        .title-small {
+            font-size: 14px;
+            font-weight: 700;
+            color: #0284c7;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 12px;
+        }
+
+        .title-main {
+            font-size: 42px;
+            font-weight: 800;
+            color: #0f172a;
+            line-height: 1.2;
+            margin-bottom: 20px;
+            letter-spacing: -0.02em;
+        }
+
+        .desc-text {
+            color: #64748b;
+            font-size: 16px;
+            line-height: 1.6;
+            margin-bottom: 30px;
+            max-width: 500px;
+        }
+
+        .features {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            color: #334155;
+            font-size: 15px;
+        }
+
+        .features li {
+            margin-bottom: 14px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .feature-icon {
+            color: #10b981;
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        /* ================= RIGHT CARD ================= */
+        .right-section {
+            flex: 0.9;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px;
+        }
+
+        /* Card styled matching Image 4 and Image 5 */
+        .form-card {
+            width: 100%;
+            max-width: 440px;
+            padding: 40px;
+            border-radius: 20px;
+            background: linear-gradient(145deg, #0f172a 0%, #1e3a8a 60%, #0369a1 100%);
+            box-shadow: 0 25px 60px -15px rgba(15, 23, 42, 0.4);
+            color: white;
+            transition: all 0.3s ease;
+        }
+
+        .form-card h2 {
+            margin: 0 0 6px 0;
+            font-size: 26px;
+            font-weight: 700;
+        }
+
+        .form-sub {
+            color: #94a3b8;
+            font-size: 13px;
+            margin-bottom: 24px;
+        }
+
+        .form-row {
+            display: flex;
+            gap: 12px;
+        }
+
+        .form-row .field-col {
+            flex: 1;
+        }
+
+        label {
+            font-size: 12px;
+            font-weight: 500;
+            margin-bottom: 6px;
+            display: block;
+            color: #e2e8f0;
+        }
+
+        .custom-input {
+            width: 100% !important;
+            padding: 12px 14px;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            background: rgba(255, 255, 255, 0.12);
+            color: white;
+            margin-bottom: 16px;
+            font-size: 14px;
+            box-sizing: border-box;
+            outline: none;
+            transition: all 0.2s;
+            font-family: inherit;
+        }
+
+        .custom-input:focus {
+            border-color: #38bdf8;
+            background: rgba(255, 255, 255, 0.18);
+            box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.25);
+        }
+
+        .custom-input::placeholder {
+            color: rgba(255, 255, 255, 0.55);
+        }
+
+        .forgot {
+            text-align: right;
+            margin-top: -8px;
+            margin-bottom: 20px;
+            font-size: 13px;
+        }
+
+        .forgot a {
+            color: #93c5fd;
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        .forgot a:hover {
+            color: #ffffff;
+            text-decoration: underline;
+        }
+
+        .primary-action-btn {
+            width: 100%;
+            background: #ffffff;
+            color: #0f172a;
+            padding: 13px;
+            border-radius: 8px;
+            border: none;
+            font-weight: 700;
+            font-size: 15px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: inherit;
+        }
+
+        .primary-action-btn:hover {
+            background: #f1f5f9;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.2);
+        }
+
+        /* ================= SOCIAL LOGIN ================= */
+        .or-divider {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin: 22px 0;
+            color: rgba(255, 255, 255, 0.65);
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 0.05em;
+        }
+
+        .or-divider::before,
+        .or-divider::after {
+            content: "";
+            flex: 1;
+            height: 1px;
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .social-login-icons {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .social-icon-btn {
+            width: 44px;
+            height: 44px;
+            border-radius: 10px;
+            background: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            transition: all 0.2s ease;
+            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15);
+        }
+
+        .social-icon-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 14px rgba(0, 0, 0, 0.25);
+            background: #f8fafc;
+        }
+
+        .social-icon {
+            width: 22px;
+            height: 22px;
+        }
+
+        /* ================= SWITCH LINK ================= */
+        .switch-mode-box {
+            margin-top: 22px;
+            text-align: center;
+            font-size: 13px;
+            color: #cbd5e1;
+        }
+
+        .switch-mode-box button {
+            background: none;
+            border: none;
+            color: #38bdf8;
+            font-weight: 600;
+            margin-left: 6px;
+            text-decoration: none;
+            cursor: pointer;
+            font-size: 13px;
+            font-family: inherit;
+        }
+
+        .switch-mode-box button:hover {
+            text-decoration: underline;
+        }
+
+        /* ================= NOTICES ================= */
+        .message, .apex-messages {
+            background: rgba(239, 68, 68, 0.2);
+            border: 1px solid rgba(239, 68, 68, 0.5);
+            color: #fee2e2;
+            padding: 10px 14px;
+            border-radius: 8px;
+            margin-bottom: 18px;
+            font-size: 13px;
+        }
+
+        .notice-registered {
+            background: rgba(16, 185, 129, 0.2);
+            border: 1px solid rgba(16, 185, 129, 0.5);
+            color: #d1fae5;
+            padding: 12px 14px;
+            border-radius: 8px;
+            margin-bottom: 18px;
+            font-size: 13px;
+            line-height: 1.5;
+        }
+
+        .card-view {
+            display: none;
+        }
+        .card-view.active {
+            display: block;
+            animation: fadeIn 0.25s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(6px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @media (max-width: 900px) {
+            .container {
+                flex-direction: column;
+            }
+            .left-section {
+                padding: 40px 20px;
+                text-align: center;
+                align-items: center;
+            }
+            .title-main {
+                font-size: 32px;
+            }
+            .right-section {
+                padding: 20px 20px 50px 20px;
+            }
+            .header {
+                padding: 15px 25px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<!-- HEADER (MATCHING IMAGE 4) -->
+<div class="header">
+    <div class="header-left">
+        <a href="/donor/s/" style="text-decoration:none; display:flex; align-items:center; gap:15px; color:inherit;">
+            <apex:image value="{!URLFOR($Resource.InvoiceLogo)}" alt="GEMS Logo"/>
+            <span class="brand-badge">DONOR PORTAL</span>
+        </a>
+    </div>
+
+    <div class="header-right">
+        <a href="/donor/s/">Home</a>
+        <a href="/donor/s/#campaigns">Campaigns</a>
+        <button type="button" onclick="handleDonateClick()" class="header-donate-btn">
+            Donate
+        </button>
+    </div>
+</div>
+
+<!-- DONATE VERIFICATION REQUIRED ALERT -->
+<div id="donate-alert" class="donate-verification-alert">
+    <strong>Verification Required:</strong> To donate to active campaigns, please sign in or create your verified donor account below. Campaign donations unlock automatically upon administrator approval.
+    <button type="button" class="close-alert" onclick="dismissDonateAlert()">&#215;</button>
+</div>
+
+<!-- MAIN -->
+<div class="container">
+
+    <!-- LEFT SECTION (IMAGE 4 and 5 LEFT CONTENT) -->
+    <div class="left-section">
+        <div id="left-title-small" class="title-small">PHILANTHROPIC GIVING &amp; IMPACT</div>
+        <div id="left-title-main" class="title-main">Empowering Communities Through Transparent Giving</div>
+        <div id="left-desc" class="desc-text">
+            Log in to your verified donor account to fund transformative campaigns, review audited grant impact reports, and download your charitable tax receipts.
+        </div>
+
+        <ul class="features">
+            <li>
+                <span class="feature-icon">✓</span>
+                <span id="feat-1">Direct, secure donations to approved grant campaigns</span>
+            </li>
+            <li>
+                <span class="feature-icon">✓</span>
+                <span id="feat-2">Real-time impact milestones and fund utilization tracking</span>
+            </li>
+            <li>
+                <span class="feature-icon">✓</span>
+                <span id="feat-3">Automated tax receipts and multi-year commitment schedules</span>
+            </li>
+        </ul>
+    </div>
+
+    <!-- RIGHT SECTION: ONE SINGLE CARD THAT SWAPS BETWEEN LOGIN AND REGISTER IN PLACE -->
+    <div class="right-section">
+
+        <!-- ================= CARD 1: DONOR LOGIN (IMAGE 4) ================= -->
+        <div id="login-view" class="form-card card-view active">
+            <h2>Donor Login</h2>
+            <div class="form-sub">Access your philanthropic dashboard</div>
+
+            <apex:outputPanel rendered="{!$CurrentPage.parameters.registered == 'true'}">
+                <div class="notice-registered">
+                    ✔ Account created successfully! Your donor profile is under review by administrator. Please log in to check your status.
+                </div>
+            </apex:outputPanel>
+
+            <apex:form id="loginForm">
+                <apex:pageMessages />
+
+                <label>Email Address</label>
+                <apex:inputText value="{!username}"
+                    html-placeholder="donor@organization.org"
+                    styleClass="custom-input"
+                    id="loginEmail"/>
+
+                <label>Password</label>
+                <apex:inputSecret value="{!password}"
+                    html-placeholder="Enter your password"
+                    styleClass="custom-input"/>
+
+                <div class="forgot">
+                    <apex:commandLink action="{!forwardToForgot}"
+                        value="Forgot Password?"
+                        immediate="true"/>
+                </div>
+
+                <apex:commandButton action="{!login}"
+                    value="Sign In to Dashboard"
+                    styleClass="primary-action-btn"/>
+
+                <div class="or-divider">OR CONTINUE WITH</div>
+
+                <div class="social-login-icons">
+                    <a class="social-icon-btn"
+                       href="https://orgfarm-4e9caeff63-dev-ed.develop.my.site.com/donor/services/auth/sso/GEMS_Google"
+                       title="Sign In with Google">
+                        <svg class="social-icon" viewBox="0 0 24 24">
+                            <path fill="#4285F4" d="M21.35 12.27c0-.79-.07-1.55-.22-2.27H12v4.3h5.24a4.48 4.48 0 0 1-1.94 2.94v2.45h3.14c1.84-1.69 2.91-4.18 2.91-7.42z"/>
+                            <path fill="#34A853" d="M12 21.96c2.63 0 4.84-.87 6.45-2.35l-3.14-2.45c-.87.58-1.98.93-3.31.93-2.54 0-4.69-1.72-5.46-4.03H3.3v2.53A9.74 9.74 0 0 0 12 21.96z"/>
+                            <path fill="#FBBC05" d="M6.54 14.06a5.85 5.85 0 0 1 0-3.72V7.81H3.3a9.99 9.99 0 0 0 0 8.78l3.24-2.53z"/>
+                            <path fill="#EA4335" d="M12 6.31c1.43 0 2.72.49 3.73 1.46l2.8-2.8C16.84 3.4 14.63 2.5 12 2.5a9.74 9.74 0 0 0-8.7 5.31l3.24 2.53C7.31 8.03 9.46 6.31 12 6.31z"/>
+                        </svg>
+                    </a>
+                    <a class="social-icon-btn"
+                       href="https://orgfarm-4e9caeff63-dev-ed.develop.my.site.com/donor/services/auth/sso/GEMS_Slack"
+                       title="Sign In with Slack">
+                        <svg class="social-icon" viewBox="0 0 24 24">
+                            <path fill="#E01E5A" d="M6 15a2 2 0 0 1-2-2 2 2 0 0 1 2-2h2v2a2 2 0 0 1-2 2zm1 0a2 2 0 0 1 2-2 2 2 0 0 1 2 2v5a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-5z"/>
+                            <path fill="#36C5F0" d="M9 6a2 2 0 0 1 2-2 2 2 0 0 1 2 2v2H9V6zm0 1a2 2 0 0 1 2 2 2 2 0 0 1-2 2H4a2 2 0 0 1-2-2 2 2 0 0 1 2-2h5z"/>
+                            <path fill="#2EB67D" d="M18 9a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-2V9h2zm-1 0a2 2 0 0 1-2 2 2 2 0 0 1-2-2V4a2 2 0 0 1 2-2 2 2 0 0 1 2 2v5z"/>
+                            <path fill="#ECB22E" d="M15 18a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-2h2v2zm0-1a2 2 0 0 1-2-2 2 2 0 0 1 2-2h5a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-5z"/>
+                        </svg>
+                    </a>
+                </div>
+
+                <!-- SWAP IN PLACE TO CREATE ACCOUNT (NO REDIRECT, NO #REGISTER) -->
+                <div class="switch-mode-box">
+                    New philanthropic partner?
+                    <button type="button" onclick="swapToCreateAccount()">Register as a Donor</button>
+                </div>
+            </apex:form>
+        </div>
+
+        <!-- ================= CARD 2: CREATE ACCOUNT (IMAGE 5) ================= -->
+        <div id="register-view" class="form-card card-view">
+            <h2>Create Account</h2>
+            <div class="form-sub" style="margin-bottom: 18px;">Register to start supporting causes</div>
+
+            <apex:form id="registerForm">
+                <apex:pageMessages />
+
+                <div class="form-row">
+                    <div class="field-col">
+                        <label>First Name</label>
+                        <apex:inputText value="{!firstName}"
+                            html-placeholder="eg: Rahul"
+                            styleClass="custom-input"/>
+                    </div>
+                    <div class="field-col">
+                        <label>Last Name</label>
+                        <apex:inputText value="{!lastName}"
+                            html-placeholder="eg: Sharma"
+                            styleClass="custom-input"/>
+                    </div>
+                </div>
+
+                <label>Email</label>
+                <apex:inputText value="{!email}"
+                    html-placeholder="eg: rahulsharma@gmail.com"
+                    styleClass="custom-input"/>
+
+                <label>New Password</label>
+                <apex:inputSecret value="{!password}"
+                    html-placeholder="Enter Password"
+                    styleClass="custom-input"/>
+
+                <label>Confirm Password</label>
+                <apex:inputSecret value="{!confirmPassword}"
+                    html-placeholder="Confirm Password"
+                    styleClass="custom-input"/>
+
+                <apex:commandButton action="{!registerDonorUser}"
+                    value="Create Account"
+                    styleClass="primary-action-btn"/>
+
+                <!-- SWAP IN PLACE BACK TO LOGIN (NO REDIRECT) -->
+                <div class="switch-mode-box">
+                    Already have an account?
+                    <button type="button" onclick="swapToLogin()">Login</button>
+                </div>
+            </apex:form>
+        </div>
+
+    </div>
+</div>
+
+<script>
+    function swapToCreateAccount() {
+        document.getElementById('login-view').classList.remove('active');
+        document.getElementById('register-view').classList.add('active');
+
+        // Update left text in place
+        document.getElementById('left-title-small').innerText = 'JOIN OUR COMMUNITY';
+        document.getElementById('left-title-main').innerText = 'Create your account to start donating';
+        document.getElementById('left-desc').innerText = 'Register your philanthropic partner credentials to access verified campaigns, submit compliance profiles, and track charitable impact.';
+        document.getElementById('feat-1').innerText = 'Access all Grant Programs and Campaigns';
+        document.getElementById('feat-2').innerText = 'Track your Donor verification status in real time';
+        document.getElementById('feat-3').innerText = 'Instant donation certificates and audited receipts';
+    }
+
+    function swapToLogin() {
+        document.getElementById('register-view').classList.remove('active');
+        document.getElementById('login-view').classList.add('active');
+
+        // Restore left text in place
+        document.getElementById('left-title-small').innerText = 'PHILANTHROPIC GIVING AND IMPACT';
+        document.getElementById('left-title-main').innerText = 'Empowering Communities Through Transparent Giving';
+        document.getElementById('left-desc').innerText = 'Log in to your verified donor account to fund transformative campaigns, review audited grant impact reports, and download your charitable tax receipts.';
+        document.getElementById('feat-1').innerText = 'Direct, secure donations to approved grant campaigns';
+        document.getElementById('feat-2').innerText = 'Real-time impact milestones and fund utilization tracking';
+        document.getElementById('feat-3').innerText = 'Automated tax receipts and multi-year commitment schedules';
+    }
+
+    function handleDonateClick() {
+        var alertEl = document.getElementById('donate-alert');
+        if (alertEl) {
+            alertEl.style.display = 'block';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+        var emailInput = document.querySelector('.custom-input');
+        if (emailInput) {
+            emailInput.focus();
+        }
+    }
+
+    function dismissDonateAlert() {
+        var alertEl = document.getElementById('donate-alert');
+        if (alertEl) {
+            alertEl.style.display = 'none';
+        }
+    }
+
+    window.addEventListener('DOMContentLoaded', function() {
+        var currentMode = '{!mode}';
+        if (currentMode === 'register') {
+            swapToCreateAccount();
+        }
+    });
+</script>
+
+</body>
+</apex:page>

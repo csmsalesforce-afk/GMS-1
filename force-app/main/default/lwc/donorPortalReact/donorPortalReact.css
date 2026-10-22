@@ -1,0 +1,15 @@
+:host {
+    display: block;
+    width: 100%;
+    min-height: 100vh;
+}
+
+.donor-portal-container {
+    width: 100%;
+    min-height: 100vh;
+}
+
+.donor-react-mount {
+    width: 100%;
+    min-height: 100vh;
+}
