@@ -453,7 +453,7 @@
 
 <!-- DONATE VERIFICATION REQUIRED ALERT -->
 <div id="donate-alert" class="donate-verification-alert">
-    <strong>Verification Required:</strong> To donate to active campaigns, please sign in or create your verified donor account below. Campaign donations unlock automatically upon administrator approval.
+    <strong>Verification Required:</strong> To donate to active campaigns, please sign in with your verified donor account or submit a partner inquiry to become an approved donor.
     <button type="button" class="close-alert" onclick="dismissDonateAlert()">&#215;</button>
 </div>
 
@@ -484,10 +484,10 @@
         </ul>
     </div>
 
-    <!-- RIGHT SECTION: ONE SINGLE CARD THAT SWAPS BETWEEN LOGIN AND REGISTER IN PLACE -->
+    <!-- RIGHT SECTION: DONOR LOGIN CARD -->
     <div class="right-section">
 
-        <!-- ================= CARD 1: DONOR LOGIN (IMAGE 4) ================= -->
+        <!-- ================= DONOR LOGIN CARD ================= -->
         <div id="login-view" class="form-card card-view active">
             <h2>Donor Login</h2>
             <div class="form-sub">Access your philanthropic dashboard</div>
@@ -547,60 +547,11 @@
                     </a>
                 </div>
 
-                <!-- SWAP IN PLACE TO CREATE ACCOUNT (NO REDIRECT, NO #REGISTER) -->
-                <div class="switch-mode-box">
-                    New philanthropic partner?
-                    <button type="button" onclick="swapToCreateAccount()">Register as a Donor</button>
-                </div>
-            </apex:form>
-        </div>
-
-        <!-- ================= CARD 2: CREATE ACCOUNT (IMAGE 5) ================= -->
-        <div id="register-view" class="form-card card-view">
-            <h2>Create Account</h2>
-            <div class="form-sub" style="margin-bottom: 18px;">Register to start supporting causes</div>
-
-            <apex:form id="registerForm">
-                <apex:pageMessages />
-
-                <div class="form-row">
-                    <div class="field-col">
-                        <label>First Name</label>
-                        <apex:inputText value="{!firstName}"
-                            html-placeholder="eg: Rahul"
-                            styleClass="custom-input"/>
-                    </div>
-                    <div class="field-col">
-                        <label>Last Name</label>
-                        <apex:inputText value="{!lastName}"
-                            html-placeholder="eg: Sharma"
-                            styleClass="custom-input"/>
-                    </div>
-                </div>
-
-                <label>Email</label>
-                <apex:inputText value="{!email}"
-                    html-placeholder="eg: rahulsharma@gmail.com"
-                    styleClass="custom-input"/>
-
-                <label>New Password</label>
-                <apex:inputSecret value="{!password}"
-                    html-placeholder="Enter Password"
-                    styleClass="custom-input"/>
-
-                <label>Confirm Password</label>
-                <apex:inputSecret value="{!confirmPassword}"
-                    html-placeholder="Confirm Password"
-                    styleClass="custom-input"/>
-
-                <apex:commandButton action="{!registerDonorUser}"
-                    value="Create Account"
-                    styleClass="primary-action-btn"/>
-
-                <!-- SWAP IN PLACE BACK TO LOGIN (NO REDIRECT) -->
-                <div class="switch-mode-box">
-                    Already have an account?
-                    <button type="button" onclick="swapToLogin()">Login</button>
+                <!-- DIRECTS PROSPECTIVE DONORS TO PARTNER CONTACT FORM -->
+                <div class="switch-mode-box" style="margin-top: 24px; padding-top: 18px; border-top: 1px solid rgba(255, 255, 255, 0.12);">
+                    Interested in becoming a donor partner?
+                    <br/>
+                    <a href="/donor/s/?inquiry=true#contact" style="display: inline-block; margin-top: 8px; color: #38bdf8; font-weight: 600; text-decoration: none;">Submit a Partner Inquiry &rarr;</a>
                 </div>
             </apex:form>
         </div>
@@ -609,32 +560,6 @@
 </div>
 
 <script>
-    function swapToCreateAccount() {
-        document.getElementById('login-view').classList.remove('active');
-        document.getElementById('register-view').classList.add('active');
-
-        // Update left text in place
-        document.getElementById('left-title-small').innerText = 'JOIN OUR COMMUNITY';
-        document.getElementById('left-title-main').innerText = 'Create your account to start donating';
-        document.getElementById('left-desc').innerText = 'Register your philanthropic partner credentials to access verified campaigns, submit compliance profiles, and track charitable impact.';
-        document.getElementById('feat-1').innerText = 'Access all Grant Programs and Campaigns';
-        document.getElementById('feat-2').innerText = 'Track your Donor verification status in real time';
-        document.getElementById('feat-3').innerText = 'Instant donation certificates and audited receipts';
-    }
-
-    function swapToLogin() {
-        document.getElementById('register-view').classList.remove('active');
-        document.getElementById('login-view').classList.add('active');
-
-        // Restore left text in place
-        document.getElementById('left-title-small').innerText = 'PHILANTHROPIC GIVING AND IMPACT';
-        document.getElementById('left-title-main').innerText = 'Empowering Communities Through Transparent Giving';
-        document.getElementById('left-desc').innerText = 'Log in to your verified donor account to fund transformative campaigns, review audited grant impact reports, and download your charitable tax receipts.';
-        document.getElementById('feat-1').innerText = 'Direct, secure donations to approved grant campaigns';
-        document.getElementById('feat-2').innerText = 'Real-time impact milestones and fund utilization tracking';
-        document.getElementById('feat-3').innerText = 'Automated tax receipts and multi-year commitment schedules';
-    }
-
     function handleDonateClick() {
         var alertEl = document.getElementById('donate-alert');
         if (alertEl) {
@@ -653,13 +578,6 @@
             alertEl.style.display = 'none';
         }
     }
-
-    window.addEventListener('DOMContentLoaded', function() {
-        var currentMode = '{!mode}';
-        if (currentMode === 'register') {
-            swapToCreateAccount();
-        }
-    });
 </script>
 
 </body>

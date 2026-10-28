@@ -1,4 +1,9 @@
+.receipt-modal-backdrop {
+  z-index: 2000 !important;
+}
+
 .receipt-modal-card {
+  position: relative;
   background: #ffffff;
   border-radius: var(--radius-lg);
   width: 100%;
@@ -8,6 +13,32 @@
   box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
   display: flex;
   flex-direction: column;
+}
+
+.receipt-close-btn {
+  position: absolute;
+  top: 1rem;
+  right: 1.2rem;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 1px solid #cbd5e1;
+  background: #ffffff;
+  color: #64748b;
+  font-size: 0.95rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+  transition: all 0.15s ease;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+}
+
+.receipt-close-btn:hover {
+  background: #f1f5f9;
+  color: #0f172a;
+  border-color: #94a3b8;
 }
 
 .receipt-header-banner {
@@ -190,19 +221,89 @@
 }
 
 @media print {
-  body * {
-    visibility: hidden;
+  @page {
+    size: portrait;
+    margin: 12mm 15mm;
   }
-  #printable-tax-receipt, #printable-tax-receipt * {
-    visibility: visible;
+
+  html, body {
+    margin: 0 !important;
+    padding: 0 !important;
+    height: auto !important;
+    min-height: 0 !important;
+    overflow: visible !important;
+    background: #ffffff !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
   }
-  #printable-tax-receipt {
-    position: absolute;
-    left: 0;
-    top: 0;
-    width: 100%;
-    margin: 0;
-    border: none;
-    box-shadow: none;
+
+  /* Completely remove the rest of the application from print */
+  .donor-app > *:not(.receipt-modal-backdrop),
+  .navbar,
+  main,
+  .main-viewport,
+  footer,
+  .footer,
+  header,
+  .siteforceGlobalNavigation,
+  .cHeader,
+  .cFooter,
+  .modal-backdrop:not(.receipt-modal-backdrop) {
+    display: none !important;
+    height: 0 !important;
+    max-height: 0 !important;
+    overflow: hidden !important;
+  }
+
+  /* Ensure receipt backdrop is a clean, static, non-overlay container */
+  .receipt-modal-backdrop {
+    display: block !important;
+    position: static !important;
+    width: 100% !important;
+    height: auto !important;
+    min-height: 0 !important;
+    background: transparent !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    overflow: visible !important;
+    box-shadow: none !important;
+  }
+
+  .receipt-modal-card {
+    display: block !important;
+    position: static !important;
+    width: 100% !important;
+    max-width: 680px !important;
+    height: auto !important;
+    min-height: 0 !important;
+    max-height: none !important;
+    margin: 0 auto !important;
+    padding: 0 !important;
+    box-shadow: none !important;
+    border: none !important;
+    background: transparent !important;
+    overflow: visible !important;
+  }
+
+  /* Hide close button, green banner, and action buttons */
+  .receipt-close-btn,
+  .receipt-header-banner,
+  .receipt-actions {
+    display: none !important;
+  }
+
+  /* Printable receipt paper formatted to fit cleanly on 1 sheet */
+  .receipt-paper {
+    display: block !important;
+    width: 100% !important;
+    max-width: 660px !important;
+    margin: 0 auto !important;
+    padding: 22px !important;
+    border: 1px solid #cbd5e1 !important;
+    border-radius: 12px !important;
+    background: #ffffff !important;
+    box-shadow: none !important;
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
   }
 }

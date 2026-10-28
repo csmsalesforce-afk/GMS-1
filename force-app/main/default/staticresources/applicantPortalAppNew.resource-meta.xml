@@ -2,5 +2,5 @@
 <StaticResource xmlns="http://soap.sforce.com/2006/04/metadata">
     <cacheControl>Public</cacheControl>
     <contentType>application/zip</contentType>
-    <description>Applicant Portal React Application (New)</description>
+    <description>Applicant Portal React Application</description>
 </StaticResource>

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import salesforceService from '../services/salesforceService';
+import TiltCard from '../components/TiltCard';
 import './Campaigns.css';
 
 const CAUSE_FILTERS = [
@@ -13,11 +14,13 @@ const CAUSE_FILTERS = [
   { id: 'health', label: 'Healthcare & Medical Research' }
 ];
 
-export default function Campaigns({ onOpenDonate }) {
+export default function Campaigns({ onOpenDonate, onOpenInquiry, isLoggedIn }) {
   const [campaigns, setCampaigns] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedFilter, setSelectedFilter] = useState('all');
   const [loading, setLoading] = useState(true);
+  const [requestingMap, setRequestingMap] = useState({});
+  const [actionFeedback, setActionFeedback] = useState(null);
 
   useEffect(() => {
     async function loadCampaigns() {
@@ -33,6 +36,92 @@ export default function Campaigns({ onOpenDonate }) {
     }
     loadCampaigns();
   }, []);
+
+  const handleRequestAccess = async (c) => {
+    if (!isLoggedIn) {
+      if (onOpenInquiry) onOpenInquiry(c);
+      return;
+    }
+    setRequestingMap(prev => ({ ...prev, [c.id]: true }));
+    try {
+      const res = await salesforceService.requestCampaignAccess(c.id);
+      if (res && res.success) {
+        setCampaigns(prev => prev.map(item => item.id === c.id ? { ...item, userStatus: res.status || 'PENDING' } : item));
+        setActionFeedback({ type: 'success', text: `Authorization request submitted for "${c.name}". It is pending compliance review.` });
+      } else {
+        setActionFeedback({ type: 'error', text: res?.error || 'Failed to submit request.' });
+      }
+    } catch (err) {
+      setActionFeedback({ type: 'error', text: err.message || 'Error communicating with Salesforce.' });
+    } finally {
+      setRequestingMap(prev => ({ ...prev, [c.id]: false }));
+      setTimeout(() => setActionFeedback(null), 6000);
+    }
+  };
+
+  const renderActionButton = (c) => {
+    const isRequesting = requestingMap[c.id];
+    const uStatus = c.userStatus || (!isLoggedIn ? 'GUEST' : 'NOT_REQUESTED');
+
+    if (uStatus === 'COMPLETED') {
+      return (
+        <button
+          onClick={() => handleRequestAccess(c)}
+          disabled={isRequesting}
+          className="btn btn-outline-success btn-sm card-donate-btn"
+          title="Donation completed. Click to request authorization to contribute again."
+        >
+          {isRequesting ? 'Requesting...' : '✓ Donated • Request Again'}
+        </button>
+      );
+    }
+
+    if (uStatus === 'AUTHORIZED') {
+      return (
+        <button
+          onClick={() => onOpenDonate(c)}
+          className="btn btn-accent btn-sm card-donate-btn"
+        >
+          Donate Now
+        </button>
+      );
+    }
+
+    if (uStatus === 'COMPLETED') {
+      return (
+        <button
+          onClick={() => onOpenInquiry && onOpenInquiry(c)}
+          className="btn btn-outline-success btn-sm card-donate-btn"
+          title="Donation completed. Click to submit inquiry or request to donate again."
+        >
+          ✓ Donated • Request Again
+        </button>
+      );
+    }
+
+    if (uStatus === 'PENDING') {
+      return (
+        <button
+          onClick={() => onOpenInquiry && onOpenInquiry(c)}
+          className="btn btn-secondary btn-sm card-donate-btn"
+          style={{ background: '#fef3c7', color: '#92400e', borderColor: '#fde68a' }}
+          title="Inquiry / authorization pending review. Click to view or edit request."
+        >
+          ⏳ Pending Review
+        </button>
+      );
+    }
+
+    // Default NOT_REQUESTED or GUEST -> opens the lead generation form for that campaign
+    return (
+      <button
+        onClick={() => onOpenInquiry && onOpenInquiry(c)}
+        className="btn btn-primary btn-sm card-donate-btn"
+      >
+        Request to Donate
+      </button>
+    );
+  };
 
   const getCampaignCategory = (c) => {
     const text = ((c.name || '') + ' ' + (c.programType || '') + ' ' + (c.programName || '') + ' ' + (c.description || '')).toLowerCase();
@@ -170,6 +259,13 @@ export default function Campaigns({ onOpenDonate }) {
           )}
         </div>
 
+        {actionFeedback && (
+          <div style={{ marginBottom: '1.5rem', padding: '1rem 1.4rem', borderRadius: '10px', background: actionFeedback.type === 'success' ? '#ecfdf5' : '#fef2f2', border: `1px solid ${actionFeedback.type === 'success' ? '#a7f3d0' : '#fecaca'}`, color: actionFeedback.type === 'success' ? '#065f46' : '#991b1b', display: 'flex', alignItems: 'center', gap: '0.8rem', fontWeight: 500 }}>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+            <span>{actionFeedback.text}</span>
+          </div>
+        )}
+
         {loading ? (
           <div className="loading-state">
             <div className="spinner-large"></div>
@@ -190,74 +286,73 @@ export default function Campaigns({ onOpenDonate }) {
               const percent = Math.min(100, Math.round(c.progressPercent || 0));
 
               return (
-                <div key={c.id} className="campaign-card">
-                  {/* Colored Header Banner */}
-                  <div className="campaign-visual-bar" style={{ background: theme.headerBg }}>
-                    <div className="category-tag">
-                      {theme.icon}
-                      <span style={{ color: theme.accentColor }}>{theme.label}</span>
+                <TiltCard key={c.id} className="campaign-card-tilt" maxTilt={6}>
+                  <div className="campaign-card-inner">
+                    {/* Colored Header Banner */}
+                    <div className="campaign-visual-bar" style={{ background: theme.headerBg }}>
+                      <div className="category-tag">
+                        {theme.icon}
+                        <span style={{ color: theme.accentColor }}>{theme.label}</span>
+                      </div>
+                      <span className="live-status-pill">Active</span>
                     </div>
-                    <span className="live-status-pill">Active</span>
+
+                    <div className="campaign-body">
+                      <h3 className="campaign-title">
+                        <Link to={`/campaign/${c.id}`}>{c.name}</Link>
+                      </h3>
+
+                      <div className="campaign-program-tag">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                        <span>Grant Fund: <strong>{c.programName}</strong></span>
+                      </div>
+
+                      <p className="campaign-desc">
+                        {c.description ? (c.description.length > 140 ? c.description.slice(0, 140) + '...' : c.description) : 'Vital funding for vetted grant applicants.'}
+                      </p>
+
+                      <div className="progress-block">
+                        <div className="progress-labels">
+                          <span className="amount-raised">
+                            <strong>${(c.raisedAmount || 0).toLocaleString()}</strong>
+                          </span>
+                          <span className="goal-amount">Goal: ${(c.goalAmount || 0).toLocaleString()}</span>
+                        </div>
+                        <div className="progress-container">
+                          <div className="progress-bar-fill" style={{ width: `${Math.max(percent, 4)}%` }}></div>
+                        </div>
+                        <div className="progress-sub">
+                          <span>{percent}% Funded</span>
+                          <span>{c.donorCount || 0} Supporters</span>
+                        </div>
+                      </div>
+
+                      {/* Quick Gift Row (Only for authorized campaigns) */}
+                      {c.userStatus === 'AUTHORIZED' && (
+                        <div className="quick-gift-row">
+                          <span className="quick-gift-lbl">Quick Gift:</span>
+                          {[25, 50, 100, 250].map(val => (
+                            <button
+                              key={val}
+                              type="button"
+                              onClick={() => onOpenDonate(c, val)}
+                              className="quick-chip"
+                            >
+                              ${val}
+                            </button>
+                          ))}
+                        </div>
+                      )}
+
+                      <div className="campaign-card-footer">
+                        {renderActionButton(c)}
+                        <Link to={`/campaign/${c.id}`} className="btn btn-secondary btn-sm">
+                          Details & Wall
+                        </Link>
+                      </div>
+                    </div>
                   </div>
-
-                  <div className="campaign-body">
-                    <h3 className="campaign-title">
-                      <Link to={`/campaign/${c.id}`}>{c.name}</Link>
-                    </h3>
-
-                    <div className="campaign-program-tag">
-                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-                      <span>Grant Fund: <strong>{c.programName}</strong></span>
-                    </div>
-
-                    <p className="campaign-desc">
-                      {c.description ? (c.description.length > 140 ? c.description.slice(0, 140) + '...' : c.description) : 'Vital funding for vetted grant applicants.'}
-                    </p>
-
-                    <div className="progress-block">
-                      <div className="progress-labels">
-                        <span className="amount-raised">
-                          <strong>${(c.raisedAmount || 0).toLocaleString()}</strong>
-                        </span>
-                        <span className="goal-amount">Goal: ${(c.goalAmount || 0).toLocaleString()}</span>
-                      </div>
-                      <div className="progress-container">
-                        <div className="progress-bar-fill" style={{ width: `${Math.max(percent, 4)}%` }}></div>
-                      </div>
-                      <div className="progress-sub">
-                        <span>{percent}% Funded</span>
-                        <span>{c.donorCount || 0} Supporters</span>
-                      </div>
-                    </div>
-
-                    {/* Quick Gift Row */}
-                    <div className="quick-gift-row">
-                      <span className="quick-gift-lbl">Quick Gift:</span>
-                      {[25, 50, 100, 250].map(val => (
-                        <button
-                          key={val}
-                          type="button"
-                          onClick={() => onOpenDonate(c, val)}
-                          className="quick-chip"
-                        >
-                          ${val}
-                        </button>
-                      ))}
-                    </div>
-
-                    <div className="campaign-card-footer">
-                      <button
-                        onClick={() => onOpenDonate(c)}
-                        className="btn btn-accent btn-sm card-donate-btn"
-                      >
-                        Donate Now
-                      </button>
-                      <Link to={`/campaign/${c.id}`} className="btn btn-secondary btn-sm">
-                        Details & Wall
-                      </Link>
-                    </div>
-                  </div>
-                </div>
+                </TiltCard>
               );
             })}
           </div>

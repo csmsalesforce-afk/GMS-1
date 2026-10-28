@@ -109,11 +109,11 @@ const ProgramDetails = () => {
             <div className="section-content funding-grid">
               <div className="funding-box">
                 <span className="funding-label">FUNDING UP TO</span>
-                <span className="funding-value">${program.Max_Amount__c?.toLocaleString() || '0'}</span>
+                <span className="funding-value">${(Number(program.Max_Amount__c) || 0).toLocaleString()}</span>
               </div>
               <div className="funding-box">
-                <span className="funding-label">TOTAL PROGRAM BUDGET</span>
-                <span className="funding-value">${program.Program_Fund__c?.toLocaleString() || '0'}</span>
+                <span className="funding-label">TOTAL FUNDED</span>
+                <span className="funding-value">${(Number(program.Total_Funded__c) || 0).toLocaleString()}</span>
               </div>
             </div>
           </div>

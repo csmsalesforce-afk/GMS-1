@@ -1,0 +1,653 @@
+/* MyGivingModal.css */
+.modal-backdrop {
+  position: fixed !important;
+  inset: 0 !important;
+  z-index: 9999 !important;
+  background: rgba(15, 23, 42, 0.72) !important;
+  backdrop-filter: blur(8px) !important;
+  -webkit-backdrop-filter: blur(8px) !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 1.25rem !important;
+  animation: modalFadeIn 0.22s ease-out forwards;
+}
+
+@keyframes modalFadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes modal3DEntrance {
+  from {
+    opacity: 0;
+    transform: perspective(1000px) rotateX(5deg) translateY(20px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: perspective(1000px) rotateX(0deg) translateY(0) scale(1);
+  }
+}
+
+.close-btn {
+  background: none;
+  border: none;
+  color: #64748b;
+  cursor: pointer;
+  padding: 0.4rem;
+  border-radius: var(--radius-sm, 8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all var(--transition-fast, 0.15s ease);
+}
+
+.close-btn:hover {
+  background: #f1f5f9;
+  color: #0f172a;
+}
+
+.spinner {
+  width: 22px;
+  height: 22px;
+  border: 2.5px solid #e2e8f0;
+  border-top-color: #059669;
+  border-radius: 50%;
+  animation: spin 0.75s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.giving-modal-card {
+  background: #ffffff;
+  border-radius: var(--radius-lg, 18px);
+  width: 100%;
+  max-width: 680px;
+  max-height: 88vh;
+  box-shadow: 0 25px 60px -12px rgba(15, 23, 42, 0.35),
+              0 0 0 1px rgba(226, 232, 240, 0.8);
+  border: 1.5px solid rgba(226, 232, 240, 0.9);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  position: relative;
+  animation: modal3DEntrance 0.28s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.giving-modal-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  padding: 1.25rem 1.6rem;
+  border-bottom: 1px solid var(--border-subtle);
+  background: #ffffff;
+  flex-shrink: 0;
+}
+
+.giving-badge {
+  font-size: 0.72rem;
+  padding: 0.25rem 0.65rem;
+  background: #ecfdf5;
+  color: #047857;
+  border: 1px solid #a7f3d0;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  border-radius: 9999px;
+  font-weight: 700;
+}
+
+.giving-modal-title {
+  font-size: 1.35rem;
+  font-weight: 800;
+  color: #0f172a;
+  margin-top: 0.25rem;
+  letter-spacing: -0.02em;
+}
+
+.giving-modal-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 1.25rem 1.6rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+}
+
+/* KPI Summary Cards */
+.giving-kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.85rem;
+}
+
+.giving-kpi-card {
+  background: #f8fafc;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 0.9rem 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.giving-kpi-card.highlight-card {
+  background: linear-gradient(135deg, #f0fdf4 0%, #ecfdf5 100%);
+  border-color: #a7f3d0;
+}
+
+.kpi-label {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+}
+
+.kpi-value-row {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.kpi-value {
+  font-size: 1.45rem;
+  font-weight: 800;
+  color: #0f172a;
+  letter-spacing: -0.02em;
+}
+
+.highlight-card .kpi-value {
+  color: #047857;
+}
+
+.active-pulse-pill {
+  font-size: 0.68rem;
+  font-weight: 700;
+  color: #047857;
+  background: #d1fae5;
+  border: 1px solid #6ee7b7;
+  border-radius: 9999px;
+  padding: 2px 7px;
+  display: inline-flex;
+  align-items: center;
+}
+
+.kpi-subtext {
+  font-size: 0.72rem;
+  color: #64748b;
+}
+
+/* Tab Bar */
+.giving-tab-bar {
+  display: flex;
+  gap: 0.5rem;
+  border-bottom: 1.5px solid #e2e8f0;
+  padding-bottom: 0.5rem;
+}
+
+.giving-tab-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.55rem 0.9rem;
+  border: none;
+  background: none;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #64748b;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.giving-tab-btn:hover {
+  background: #f1f5f9;
+  color: #0f172a;
+}
+
+.giving-tab-btn.active {
+  background: #ecfdf5;
+  color: #047857;
+  border: 1px solid #a7f3d0;
+  font-weight: 700;
+}
+
+/* Tab Content */
+.giving-tab-content {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+}
+
+/* Recurring Cards */
+.recurring-pledges-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.recurring-pledge-card {
+  border: 1.5px solid #a7f3d0;
+  background: linear-gradient(135deg, #ffffff 0%, #f0fdf4 100%);
+  border-radius: 12px;
+  padding: 1rem 1.2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+  box-shadow: 0 2px 6px rgba(16, 185, 129, 0.05);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.recurring-pledge-card:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.1);
+}
+
+.pledge-card-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.pledge-campaign-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.pledge-cadence-pill {
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: #047857;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.pledge-title {
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: #0f172a;
+  margin: 0;
+}
+
+.pledge-program {
+  font-size: 0.8rem;
+  color: #475569;
+}
+
+.pledge-amount-col {
+  text-align: right;
+  flex-shrink: 0;
+}
+
+.pledge-amount {
+  display: block;
+  font-size: 1.35rem;
+  font-weight: 800;
+  color: #047857;
+}
+
+.pledge-frequency-sub {
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: #64748b;
+  text-transform: uppercase;
+}
+
+.pledge-card-bottom {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 0.65rem;
+  border-top: 1px solid rgba(167, 243, 208, 0.6);
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.pledge-meta-row {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  flex-wrap: wrap;
+}
+
+.status-badge-active {
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: #047857;
+  background: #d1fae5;
+  padding: 2.5px 8px;
+  border-radius: 9999px;
+  border: 1px solid #6ee7b7;
+}
+
+.meta-text {
+  font-size: 0.75rem;
+  color: #64748b;
+}
+
+.meta-text strong {
+  color: #334155;
+}
+
+.view-receipt-btn {
+  font-size: 0.75rem;
+  padding: 0.35rem 0.65rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+/* Empty State */
+.giving-empty-state {
+  text-align: center;
+  padding: 2.5rem 1.5rem;
+  background: #f8fafc;
+  border: 1.5px dashed #cbd5e1;
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.empty-icon-wrap {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: #ecfdf5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 0.25rem;
+}
+
+.giving-empty-state h3 {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #0f172a;
+  margin: 0;
+}
+
+.giving-empty-state p {
+  font-size: 0.85rem;
+  color: #64748b;
+  max-width: 420px;
+  margin: 0;
+  line-height: 1.45;
+}
+
+/* History Table */
+.history-table-container {
+  overflow-x: auto;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 10px;
+}
+
+.giving-history-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.82rem;
+  text-align: left;
+}
+
+.giving-history-table th {
+  background: #f8fafc;
+  padding: 0.65rem 0.85rem;
+  font-weight: 700;
+  color: #475569;
+  border-bottom: 1.5px solid #e2e8f0;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+}
+
+.giving-history-table td {
+  padding: 0.75rem 0.85rem;
+  border-bottom: 1px solid #f1f5f9;
+  vertical-align: middle;
+}
+
+.giving-history-table tr:hover {
+  background: #f8fafc;
+}
+
+.table-date {
+  white-space: nowrap;
+  color: #64748b;
+  font-weight: 500;
+}
+
+.table-receipt-code {
+  font-family: monospace;
+  font-weight: 700;
+  color: #2563eb;
+  white-space: nowrap;
+}
+
+.table-campaign-name {
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.table-program-name {
+  font-size: 0.74rem;
+  color: #64748b;
+}
+
+.table-amount {
+  font-weight: 700;
+  color: #0f172a;
+  white-space: nowrap;
+}
+
+.giving-loading-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem 1rem;
+  gap: 0.8rem;
+  color: #64748b;
+  font-size: 0.85rem;
+}
+
+.giving-error-box {
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  color: #991b1b;
+  padding: 0.85rem 1rem;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.giving-modal-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 1.6rem;
+  border-top: 1px solid var(--border-subtle);
+  background: #f8fafc;
+  flex-shrink: 0;
+}
+
+.footer-compliance-note {
+  font-size: 0.75rem;
+  color: #64748b;
+}
+
+@media (max-width: 640px) {
+  .giving-kpi-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Auto-Pay & Cancellation Enhancements */
+.recurring-pledge-card.card-cancelled {
+  border-color: #fca5a5;
+  background: linear-gradient(135deg, #ffffff 0%, #fff1f2 100%);
+  opacity: 0.9;
+}
+
+.pledge-pill-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.pledge-duration-badge {
+  font-size: 0.68rem;
+  font-weight: 700;
+  color: #1e40af;
+  background: #dbeafe;
+  padding: 2px 7px;
+  border-radius: 9999px;
+  border: 1px solid #bfdbfe;
+}
+
+.status-badge-cancelled {
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: #991b1b;
+  background: #fee2e2;
+  padding: 2.5px 8px;
+  border-radius: 9999px;
+  border: 1px solid #fca5a5;
+}
+
+.pledge-action-buttons {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.btn-outline-danger {
+  background: transparent;
+  color: #dc2626;
+  border: 1px solid #fca5a5;
+  font-size: 0.75rem;
+  padding: 0.35rem 0.65rem;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.15s ease;
+}
+
+.btn-outline-danger:hover {
+  background: #dc2626;
+  color: #ffffff;
+  border-color: #dc2626;
+}
+
+.cancel-success-alert {
+  background: #ecfdf5;
+  border: 1px solid #a7f3d0;
+  color: #065f46;
+  padding: 0.65rem 0.9rem;
+  border-radius: 8px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+/* Confirmation Modal Backdrop */
+.cancel-confirm-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.65);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+  z-index: 50;
+  animation: fadeIn 0.15s ease;
+}
+
+.cancel-confirm-card {
+  background: #ffffff;
+  border-radius: 14px;
+  width: 100%;
+  max-width: 440px;
+  padding: 1.5rem 1.6rem;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2), 0 10px 10px -5px rgba(0, 0, 0, 0.08);
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+  border: 1px solid #e2e8f0;
+}
+
+.cancel-warn-icon {
+  font-size: 2rem;
+  line-height: 1;
+}
+
+.cancel-confirm-title {
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: #0f172a;
+  margin: 0;
+}
+
+.cancel-confirm-desc {
+  font-size: 0.88rem;
+  color: #475569;
+  margin: 0;
+  line-height: 1.45;
+}
+
+.cancel-warning-box {
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  border-radius: 8px;
+  padding: 0.75rem 0.9rem;
+  font-size: 0.8rem;
+  color: #7f1d1d;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  line-height: 1.4;
+}
+
+.cancel-error-alert {
+  background: #fee2e2;
+  border: 1px solid #f87171;
+  color: #b91c1c;
+  padding: 0.5rem 0.75rem;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.cancel-action-row {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.65rem;
+  margin-top: 0.4rem;
+}
+
+.btn-danger {
+  background: #dc2626;
+  color: #ffffff;
+  border: 1px solid #dc2626;
+  font-weight: 600;
+  border-radius: 6px;
+  padding: 0.5rem 0.9rem;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.btn-danger:hover {
+  background: #b91c1c;
+}
+

@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import TiltCard from '../components/TiltCard';
 import './ImpactStory.css';
 
 export default function ImpactStory({ campaigns = [], onOpenDonate, onOpenInquiry, isLoggedIn }) {
@@ -53,81 +54,87 @@ export default function ImpactStory({ campaigns = [], onOpenDonate, onOpenInquir
 
           <div className="pillars-grid">
             {/* Pillar 1 */}
-            <div className="pillar-card">
-              <div className="pillar-icon bg-blue-subtle">
-                <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#2563eb" strokeWidth="2.5">
-                  <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
-                </svg>
+            <TiltCard className="pillar-card-tilt" maxTilt={7}>
+              <div className="pillar-card">
+                <div className="pillar-icon bg-blue-subtle">
+                  <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#2563eb" strokeWidth="2.5">
+                    <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+                  </svg>
+                </div>
+                <span className="pillar-step">Stage 01</span>
+                <h3>Direct Program Treasury Allocation</h3>
+                <p>
+                  When you make a donation, 100% of your gift is credited directly to the designated Grant Program treasury. Platform operational costs are privately underwritten by our philanthropic board, ensuring zero deduction from public gifts.
+                </p>
+                <ul className="pillar-features">
+                  <li>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#10b981" strokeWidth="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                    Instant allocation to chosen cause
+                  </li>
+                  <li>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#10b981" strokeWidth="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                    Zero platform or administrative fees deducted
+                  </li>
+                </ul>
               </div>
-              <span className="pillar-step">Stage 01</span>
-              <h3>Direct Program Treasury Allocation</h3>
-              <p>
-                When you make a donation, 100% of your gift is credited directly to the designated Grant Program treasury. Platform operational costs are privately underwritten by our philanthropic board, ensuring zero deduction from public gifts.
-              </p>
-              <ul className="pillar-features">
-                <li>
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#10b981" strokeWidth="2.5"><polyline points="20 6 9 17 4 12"/></svg>
-                  Instant allocation to chosen cause
-                </li>
-                <li>
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#10b981" strokeWidth="2.5"><polyline points="20 6 9 17 4 12"/></svg>
-                  Zero platform or administrative fees deducted
-                </li>
-              </ul>
-            </div>
+            </TiltCard>
 
             {/* Pillar 2 */}
-            <div className="pillar-card">
-              <div className="pillar-icon bg-emerald-subtle">
-                <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#059669" strokeWidth="2.5">
-                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
-                  <polyline points="14 2 14 8 20 8"/>
-                  <line x1="16" y1="13" x2="8" y2="13"/>
-                  <line x1="16" y1="17" x2="8" y2="17"/>
-                  <polyline points="10 9 9 9 8 9"/>
-                </svg>
+            <TiltCard className="pillar-card-tilt" maxTilt={7}>
+              <div className="pillar-card">
+                <div className="pillar-icon bg-emerald-subtle">
+                  <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#059669" strokeWidth="2.5">
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                    <polyline points="14 2 14 8 20 8"/>
+                    <line x1="16" y1="13" x2="8" y2="13"/>
+                    <line x1="16" y1="17" x2="8" y2="17"/>
+                    <polyline points="10 9 9 9 8 9"/>
+                  </svg>
+                </div>
+                <span className="pillar-step">Stage 02</span>
+                <h3>Rigorous Due Diligence & Vetting</h3>
+                <p>
+                  Every grant applicant undergoes thorough vetting. Community proposals, educational credentials, contractor estimates, and medical diagnoses are independently validated by specialist review committees before any award is committed.
+                </p>
+                <ul className="pillar-features">
+                  <li>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#10b981" strokeWidth="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                    Institutional & legal verification
+                  </li>
+                  <li>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#10b981" strokeWidth="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                    Multi-member review board approval
+                  </li>
+                </ul>
               </div>
-              <span className="pillar-step">Stage 02</span>
-              <h3>Rigorous Due Diligence & Vetting</h3>
-              <p>
-                Every grant applicant undergoes thorough vetting. Community proposals, educational credentials, contractor estimates, and medical diagnoses are independently validated by specialist review committees before any award is committed.
-              </p>
-              <ul className="pillar-features">
-                <li>
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#10b981" strokeWidth="2.5"><polyline points="20 6 9 17 4 12"/></svg>
-                  Institutional & legal verification
-                </li>
-                <li>
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#10b981" strokeWidth="2.5"><polyline points="20 6 9 17 4 12"/></svg>
-                  Multi-member review board approval
-                </li>
-              </ul>
-            </div>
+            </TiltCard>
 
             {/* Pillar 3 */}
-            <div className="pillar-card">
-              <div className="pillar-icon bg-amber-subtle">
-                <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#d97706" strokeWidth="2.5">
-                  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
-                  <polyline points="9 12 11 14 15 10"/>
-                </svg>
+            <TiltCard className="pillar-card-tilt" maxTilt={7}>
+              <div className="pillar-card">
+                <div className="pillar-icon bg-amber-subtle">
+                  <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#d97706" strokeWidth="2.5">
+                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                    <polyline points="9 12 11 14 15 10"/>
+                  </svg>
+                </div>
+                <span className="pillar-step">Stage 03</span>
+                <h3>Milestone-Gated Disbursements</h3>
+                <p>
+                  Funds are not disbursed blindly upfront. Grants are released in controlled tranches strictly upon verified deliverables—such as borehole construction audits, classroom tech delivery logs, or accredited medical receipts.
+                </p>
+                <ul className="pillar-features">
+                  <li>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#10b981" strokeWidth="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                    Tranches released against verified deliverables
+                  </li>
+                  <li>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#10b981" strokeWidth="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                    Direct settlement to accredited institutions
+                  </li>
+                </ul>
               </div>
-              <span className="pillar-step">Stage 03</span>
-              <h3>Milestone-Gated Disbursements</h3>
-              <p>
-                Funds are not disbursed blindly upfront. Grants are released in controlled tranches strictly upon verified deliverables—such as borehole construction audits, classroom tech delivery logs, or accredited medical receipts.
-              </p>
-              <ul className="pillar-features">
-                <li>
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#10b981" strokeWidth="2.5"><polyline points="20 6 9 17 4 12"/></svg>
-                  Tranches released against verified deliverables
-                </li>
-                <li>
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#10b981" strokeWidth="2.5"><polyline points="20 6 9 17 4 12"/></svg>
-                  Direct settlement to accredited institutions
-                </li>
-              </ul>
-            </div>
+            </TiltCard>
           </div>
         </section>
 

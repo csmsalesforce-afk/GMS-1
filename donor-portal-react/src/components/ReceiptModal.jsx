@@ -19,8 +19,11 @@ export default function ReceiptModal({ isOpen, onClose, receiptData }) {
     : new Date().toLocaleDateString();
 
   return (
-    <div className="modal-backdrop" onClick={onClose}>
+    <div className="modal-backdrop receipt-modal-backdrop" onClick={onClose}>
       <div className="receipt-modal-card" onClick={e => e.stopPropagation()}>
+        <button type="button" className="receipt-close-btn" onClick={onClose} aria-label="Close Receipt">
+          ✕
+        </button>
         <div className="receipt-header-banner">
           <div className="success-icon-wrap">
             <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#10b981" strokeWidth="2.5">
@@ -46,8 +49,16 @@ export default function ReceiptModal({ isOpen, onClose, receiptData }) {
           </div>
 
           <div className="receipt-number-badge">
-            <span>Receipt #:</span>
-            <strong>{receiptData.receiptNumber || 'REC-8921-120'}</strong>
+            <div>
+              <span>Receipt #:</span>
+              <strong>{receiptData.receiptNumber || 'REC-8921-120'}</strong>
+            </div>
+            {receiptData.transactionRef && (
+              <div style={{ fontSize: '0.75rem', color: '#64748b' }}>
+                <span>Txn Ref: </span>
+                <strong style={{ fontFamily: 'monospace', color: '#334155' }}>{receiptData.transactionRef}</strong>
+              </div>
+            )}
           </div>
 
           <div className="receipt-grid">
@@ -57,15 +68,40 @@ export default function ReceiptModal({ isOpen, onClose, receiptData }) {
             </div>
             <div className="receipt-field">
               <span className="field-label">Payment Status</span>
-              <span className="field-value status-paid">Completed / Settled</span>
+              <span className="field-value status-paid">Verified & Completed (Settled)</span>
+            </div>
+            <div className="receipt-field">
+              <span className="field-label">Giving Option</span>
+              <span className="field-value font-medium" style={{ color: '#047857' }}>
+                {(() => {
+                  const freq = receiptData.frequency || '';
+                  if (freq.includes('Recurring (Yearly)') || freq.includes('Annual')) {
+                    return '📅 Recurring Sustainer (Annual / Yearly)';
+                  }
+                  if (freq.includes('Recurring') || freq.includes('Monthly')) {
+                    return '🔁 Recurring Sustainer (Monthly)';
+                  }
+                  return 'One-Time Gift';
+                })()}
+              </span>
+            </div>
+            <div className="receipt-field">
+              <span className="field-label">Designation / Cause</span>
+              <span className="field-value font-medium">{receiptData.designation || receiptData.programName || 'Education & STEM'}</span>
             </div>
             <div className="receipt-field">
               <span className="field-label">Donor Name</span>
-              <span className="field-value">{receiptData.donorName || 'Generous Donor'}</span>
+              <span className="field-value">
+                {receiptData.isAnonymous ? 'Anonymous Donor (Publicly Hidden)' : (receiptData.donorName || 'Generous Donor')}
+              </span>
             </div>
             <div className="receipt-field">
               <span className="field-label">Donor Email</span>
-              <span className="field-value">{receiptData.donorEmail || 'receipt@donor.org'}</span>
+              <span className="field-value">
+                {receiptData.donorEmail && receiptData.donorEmail !== 'receipt@donor.org'
+                  ? receiptData.donorEmail
+                  : (receiptData.email || receiptData.userEmail || 'donor@example.com')}
+              </span>
             </div>
             <div className="receipt-field full-width">
               <span className="field-label">Designated Campaign</span>
@@ -77,11 +113,22 @@ export default function ReceiptModal({ isOpen, onClose, receiptData }) {
                 <span className="field-value">{receiptData.programName}</span>
               </div>
             )}
+            {(receiptData.frequency && receiptData.frequency.includes('Recurring')) && (
+              <div className="receipt-field full-width" style={{ background: '#f0fdf4', padding: '10px 14px', borderRadius: '8px', border: '1px solid #bbf7d0' }}>
+                <span className="field-label" style={{ color: '#166534', fontWeight: 600 }}>Recurring Billing Schedule</span>
+                <span className="field-value" style={{ color: '#15803d', fontSize: '0.85rem' }}>
+                  ✓ Automated renewal: Stripe will automatically process subsequent contributions on this schedule without needing manual intervention. You can track or view pledges anytime under <strong>My Giving</strong>.
+                </span>
+              </div>
+            )}
           </div>
 
           <div className="receipt-amount-box">
             <span>Total Charitable Contribution:</span>
-            <span className="total-amount">${parseFloat(receiptData.amount || 0).toFixed(2)} USD</span>
+            <span className="total-amount">
+              ${parseFloat(receiptData.amount || 0).toFixed(2)} USD
+              {(receiptData.frequency && receiptData.frequency.includes('Recurring (Yearly)')) ? ' / yr' : (receiptData.frequency && receiptData.frequency.includes('Recurring')) ? ' / mo' : ''}
+            </span>
           </div>
 
           <p className="tax-exemption-note">

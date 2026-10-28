@@ -281,14 +281,14 @@ const Programs = () => {
                     <div className="funding-col">
                       <span className="funding-label">MAX ALLOCATION</span>
                       <span className="funding-val">
-                        {formatCurrency(program.Max_Amount__c || program.Program_Fund__c)}
+                        {formatCurrency(program.Max_Amount__c)}
                       </span>
                     </div>
                     <div className="funding-sep"></div>
                     <div className="funding-col">
-                      <span className="funding-label">PROGRAM FUND</span>
+                      <span className="funding-label">TOTAL FUNDED</span>
                       <span className="funding-val font-green">
-                        {formatCurrency(program.Program_Fund__c)}
+                        {formatCurrency(program.Total_Funded__c)}
                       </span>
                     </div>
                   </div>

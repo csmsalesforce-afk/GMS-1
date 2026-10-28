@@ -274,6 +274,33 @@ class SalesforceService {
     return { success: true, leadId: '00Q' + Math.floor(100000000000 + Math.random() * 900000000000) };
   }
 
+  // Retrieve donor document requirements purely from Program_Document__c for the selected campaign / program
+  async getDonorRequirementsForCampaign(campaignId = null, programId = null) {
+    if (this.actions?.getDonorRequirementsForCampaign) {
+      try {
+        const res = await this.actions.getDonorRequirementsForCampaign(campaignId, programId);
+        return Array.isArray(res) ? res : [];
+      } catch (e) {
+        console.error('Error fetching campaign donor requirements from Apex:', e);
+      }
+    }
+    return [];
+  }
+
+  // Request authorization to contribute to a campaign
+  async requestCampaignAccess(campaignId, notes = '') {
+    if (this.actions?.requestCampaignAccess) {
+      try {
+        return await this.actions.requestCampaignAccess(campaignId, notes);
+      } catch (e) {
+        console.error('Error requesting campaign access:', e);
+        const errMsg = e?.body?.message || e?.message || (typeof e === 'string' ? e : 'Failed to request campaign access.');
+        return { success: false, error: errMsg };
+      }
+    }
+    return { success: true, status: 'PENDING', message: 'Campaign authorization requested.' };
+  }
+
   // Platform high level stats
   async getDonorPlatformStats() {
     if (this.actions?.getDonorPlatformStats) {
@@ -289,6 +316,197 @@ class SalesforceService {
       uniqueDonors: 1420,
       programsCount: 14
     };
+  }
+
+  // Get authenticated donor's giving history & recurring pledges
+  async getDonorGivingHistory() {
+    if (this.actions?.getDonorGivingHistory) {
+      try {
+        return await this.actions.getDonorGivingHistory();
+      } catch (e) {
+        console.error('Error fetching donor giving history:', e);
+        const errMsg = e?.body?.message || e?.message || (typeof e === 'string' ? e : 'Failed to fetch giving history.');
+        return { success: false, error: errMsg, recurringDonations: [], oneTimeDonations: [] };
+      }
+    }
+    // Standalone fallback
+    return {
+      isLoggedIn: this.isLoggedIn,
+      totalDonated: 250,
+      activeRecurringCount: 1,
+      initiativesCount: 1,
+      recurringDonations: [
+        {
+          id: 'a0Ndemo001',
+          receiptNumber: 'REC-DEMO-REC-01',
+          amount: 100,
+          date: new Date().toISOString(),
+          frequency: 'Recurring (Monthly)',
+          isRecurring: true,
+          campaignName: 'Cancer Vaccine & Translational Oncology Research',
+          programName: 'Cancer Vaccine Research Program',
+          status: 'Active Sustainer',
+          donorName: this.userName || 'Verified Donor',
+          transactionRef: 'sub_demo_recur_001'
+        }
+      ],
+      oneTimeDonations: [
+        {
+          id: 'a0Ndemo002',
+          receiptNumber: 'REC-DEMO-OT-02',
+          amount: 150,
+          date: new Date(Date.now() - 86400000 * 5).toISOString(),
+          frequency: 'One-Time',
+          isRecurring: false,
+          campaignName: 'Youth Vocational Skills & Job Readiness Drive',
+          programName: 'Skill Enhancement & Capacity Building Initiative',
+          status: 'Completed',
+          donorName: this.userName || 'Verified Donor',
+          transactionRef: 'pi_demo_onetime_002'
+        }
+      ]
+    };
+  }
+
+  // Cancel an active recurring donation / auto-pay pledge
+  async cancelRecurringDonation(donationId) {
+    if (this.actions?.cancelRecurringDonation) {
+      try {
+        const res = await this.actions.cancelRecurringDonation(donationId);
+        return res;
+      } catch (e) {
+        console.error('Error cancelling recurring donation:', e);
+        const errMsg = e?.body?.message || e?.message || (typeof e === 'string' ? e : 'Failed to cancel recurring donation.');
+        return { success: false, error: errMsg };
+      }
+    }
+    // Standalone fallback
+    return {
+      success: true,
+      donationId,
+      autoPayStatus: 'Cancelled',
+    };
+  }
+
+  // Get required KYC documents for the donor's program and donor type
+  async getRequiredDonorDocuments() {
+    if (this.actions?.getRequiredDonorDocuments) {
+      try {
+        return await this.actions.getRequiredDonorDocuments();
+      } catch (e) {
+        console.error('Error fetching required documents from Apex:', e);
+        const errMsg = e?.body?.message || e?.message || (typeof e === 'string' ? e : 'Failed to fetch required documents.');
+        return { success: false, error: errMsg, documents: [] };
+      }
+    }
+    // Standalone fallback
+    return {
+      isLoggedIn: this.isLoggedIn,
+      hasDonor: true,
+      donorId: 'DEMO-DNR-001',
+      donorName: this.userName || 'Alex Morgan',
+      donorType: 'Individual',
+      programName: 'Global Medical Grant Initiative',
+      complianceStatus: 'Pending',
+      kycVerified: false,
+      uploadedCount: 1,
+      mandatoryCount: 2,
+      allMandatoryUploaded: false,
+      documents: [
+        {
+          id: 'GOVT_ID',
+          name: 'Government Issued Photo ID',
+          isMandatory: true,
+          donorType: 'Individual',
+          description: 'Valid Passport, Driving License, or National Identification Document.',
+          isUploaded: true,
+          contentDocumentId: 'demo-doc-001',
+          fileName: 'passport_scan.pdf',
+          fileExtension: 'pdf',
+          uploadDate: new Date().toISOString()
+        },
+        {
+          id: 'TAX_EXEMPT',
+          name: 'Tax ID or Address Verification Proof',
+          isMandatory: true,
+          donorType: 'Individual',
+          description: 'Recent utility bill (under 90 days) or Tax Identification Card.',
+          isUploaded: false
+        },
+        {
+          id: 'SOURCE_OF_FUNDS',
+          name: 'Source of Wealth / Funding Declaration',
+          isMandatory: false,
+          donorType: 'All',
+          description: 'Declaration letter or bank endorsement for AML compliance.',
+          isUploaded: false
+        }
+      ]
+    };
+  }
+
+  // Upload a KYC document for a requirement
+  async uploadDonorKYCDocument(programDocKey, fileName, base64Data) {
+    if (this.actions?.uploadDonorKYCDocument) {
+      try {
+        return await this.actions.uploadDonorKYCDocument(programDocKey, fileName, base64Data);
+      } catch (e) {
+        console.error('Error uploading KYC document to Apex:', e);
+        const errMsg = e?.body?.message || e?.message || (typeof e === 'string' ? e : 'Document upload failed.');
+        return { success: false, error: errMsg };
+      }
+    }
+    // Standalone fallback
+    return {
+      success: true,
+      contentDocumentId: 'demo-doc-' + Date.now(),
+      fileName: fileName,
+      programDocKey: programDocKey
+    };
+  }
+
+  // Delete an uploaded KYC document
+  async deleteDonorKYCDocument(contentDocumentId) {
+    if (this.actions?.deleteDonorKYCDocument) {
+      try {
+        return await this.actions.deleteDonorKYCDocument(contentDocumentId);
+      } catch (e) {
+        console.error('Error deleting KYC document from Apex:', e);
+        const errMsg = e?.body?.message || e?.message || (typeof e === 'string' ? e : 'Failed to delete document.');
+        return { success: false, error: errMsg };
+      }
+    }
+    // Standalone fallback
+    return { success: true };
+  }
+
+  // Submit all uploaded documents for administrative compliance review
+  async submitDonorDocumentsForReview() {
+    if (this.actions?.submitDonorDocumentsForReview) {
+      try {
+        const res = await this.actions.submitDonorDocumentsForReview();
+        if (res && res.success) {
+          if (!this.data) this.data = {};
+          if (this.data.profileStatus) {
+            this.data.profileStatus.complianceStatus = 'Pending';
+            this.data.profileStatus.kycVerified = false;
+            this.data.profileStatus.status = 'Pending';
+          }
+        }
+        return res;
+      } catch (e) {
+        console.error('Error submitting documents for review to Apex:', e);
+        const errMsg = e?.body?.message || e?.message || (typeof e === 'string' ? e : 'Failed to submit documents for review.');
+        return { success: false, error: errMsg };
+      }
+    }
+    // Standalone fallback
+    if (!this.data) this.data = {};
+    if (this.data.profileStatus) {
+      this.data.profileStatus.complianceStatus = 'Pending';
+      this.data.profileStatus.kycVerified = false;
+    }
+    return { success: true, complianceStatus: 'Pending', message: 'Documents submitted successfully for admin review.' };
   }
 }
 

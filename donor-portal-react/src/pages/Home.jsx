@@ -1,6 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import salesforceService from '../services/salesforceService';
+import TiltCard from '../components/TiltCard';
+import InteractiveGlobe3D from '../components/InteractiveGlobe3D';
+import ErrorBoundary from '../components/ErrorBoundary';
+import LiveImpactTicker from '../components/LiveImpactTicker';
+import ImpactCalculator from '../components/ImpactCalculator';
 import './Home.css';
 
 export default function Home({ onOpenDonate, onOpenInquiry, isLoggedIn }) {
@@ -102,95 +107,147 @@ export default function Home({ onOpenDonate, onOpenInquiry, isLoggedIn }) {
 
   return (
     <div className="home-page animate-fade-in">
-      {/* Hero Section */}
+      {/* Hero Section with Interactive 3D Visualizer */}
       <section className="hero-section">
+        {/* Ambient 3D Aurora Lighting */}
+        <div className="hero-aurora-glow glow-blue"></div>
+        <div className="hero-aurora-glow glow-green"></div>
+
         <div className="container hero-container">
-          <div className="hero-content">
-            <div className="hero-pill">
-              <span className="live-dot"></span>
-              Verified 501(c)(3) Giving Engine • Multi-Program Treasury
+          {/* Main Top Row: Left Content + Right 3D Globe */}
+          <div className="hero-main-row">
+            {/* Left Column: Vision & Action */}
+            <div className="hero-content">
+              <div className="hero-pill-3d">
+                <span className="live-dot-pulse"></span>
+                <span className="pill-text">Verified 501(c)(3) Giving Engine • Multi-Program Treasury</span>
+                <span className="pill-tag-verified">IRS Vetted</span>
+              </div>
+
+              <h1 className="hero-title">
+                Direct Philanthropy.<br />
+                <span className="text-gradient-animated">Verifiable Global Impact.</span>
+              </h1>
+
+              <p className="hero-subtitle">
+                Empowering breakthrough change across education, clean water, women's welfare, emergency relief, and healthcare. 100% of public gifts directly replenish verified Grant Program funds for audited, milestone-based disbursements.
+              </p>
+
+              <div className="hero-cta-group">
+                <button onClick={() => onOpenDonate()} className="btn btn-accent btn-lg hero-btn glow-btn">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>
+                  Donate To A Cause
+                </button>
+                <Link to="/campaigns" className="btn btn-secondary btn-lg hero-btn-secondary">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                  Browse All Campaigns
+                </Link>
+              </div>
+
+              {/* Micro Trust Proof Bar */}
+              <div className="hero-trust-bar">
+                <div className="trust-item">
+                  <span className="trust-icon">✓</span>
+                  <span>Zero Overhead Leakage</span>
+                </div>
+                <div className="trust-divider"></div>
+                <div className="trust-item">
+                  <span className="trust-icon">✓</span>
+                  <span>Real-Time Milestone Ledger</span>
+                </div>
+                <div className="trust-divider"></div>
+                <div className="trust-item">
+                  <span className="trust-icon">✓</span>
+                  <span>Instant IRS Tax Receipts</span>
+                </div>
+              </div>
             </div>
-            <h1 className="hero-title">
-              Direct Philanthropy.<br />
-              <span className="text-gradient">Verifiable Global Impact.</span>
-            </h1>
-            <p className="hero-subtitle">
-              Empowering change across education, clean water, women's welfare, emergency relief, and healthcare. 100% of public gifts directly replenish verified Grant Program funds for audited, milestone-based disbursements.
-            </p>
-            <div className="hero-cta-group">
-              <button onClick={() => onOpenDonate()} className="btn btn-accent btn-lg hero-btn">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>
-                Donate To A Cause
-              </button>
-              <Link to="/campaigns" className="btn btn-secondary btn-lg hero-btn">
-                Browse All Campaigns
-              </Link>
+
+            {/* Right Column: 3D Interactive Earth Globe */}
+            <div className="hero-visual-column">
+              <ErrorBoundary
+                fallback={
+                  <div style={{ padding: '2rem', textAlign: 'center', background: 'rgba(255,255,255,0.75)', borderRadius: '20px', border: '1.5px solid #e2e8f0', backdropFilter: 'blur(10px)' }}>
+                    <div style={{ fontSize: '3rem', marginBottom: '0.5rem' }}>🌍</div>
+                    <h4 style={{ margin: '0 0 0.5rem 0', color: '#0f172a', fontWeight: '700' }}>Global Impact Network</h4>
+                    <p style={{ margin: 0, color: '#64748b', fontSize: '0.9rem' }}>Live telemetry across 6 active global nodes</p>
+                  </div>
+                }
+              >
+                <InteractiveGlobe3D />
+              </ErrorBoundary>
             </div>
           </div>
 
-          {/* Impact Ledger Card */}
-          <div className="hero-stats-card">
-            <div className="stats-header">
-              <div>
-                <span className="ledger-subtitle">Philanthropic Transparency</span>
-                <h3>Live Program Ledger</h3>
+          {/* Integrated Horizontal Live Program Ledger Strip */}
+          <div className="hero-ledger-strip">
+            <div className="ledger-strip-header">
+              <div className="ledger-strip-title">
+                <span className="live-dot-pulse"></span>
+                <div>
+                  <span className="ledger-micro-tag">Audited Transparency</span>
+                  <h4>Live Program Ledger</h4>
+                </div>
               </div>
               <span className="real-time-tag">
-                <span className="tag-dot"></span> Real-Time Sync
+                <span className="tag-dot"></span> Real-Time
               </span>
             </div>
 
-            <div className="stats-grid">
-              <div className="stat-box">
-                <div className="stat-icon-wrap icon-green">
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+            <div className="ledger-strip-stats">
+              <div className="strip-stat-item">
+                <div className="strip-stat-icon icon-green">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
                 </div>
-                <div>
-                  <span className="stat-num">${(stats.totalRaised || 0).toLocaleString()}</span>
-                  <span className="stat-lbl">Funds Raised & Deployed</span>
-                </div>
-              </div>
-
-              <div className="stat-box">
-                <div className="stat-icon-wrap icon-blue">
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-                </div>
-                <div>
-                  <span className="stat-num">{stats.activeCampaigns || 0}</span>
-                  <span className="stat-lbl">Active Campaigns</span>
+                <div className="strip-stat-text">
+                  <span className="strip-stat-num">${(stats.totalRaised || 0).toLocaleString()}</span>
+                  <span className="strip-stat-lbl">Funds Deployed</span>
                 </div>
               </div>
 
-              <div className="stat-box">
-                <div className="stat-icon-wrap icon-purple">
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+              <div className="strip-stat-item">
+                <div className="strip-stat-icon icon-blue">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
                 </div>
-                <div>
-                  <span className="stat-num">{stats.uniqueDonors || 0}</span>
-                  <span className="stat-lbl">Verified Donors</span>
+                <div className="strip-stat-text">
+                  <span className="strip-stat-num">{stats.activeCampaigns || 0}</span>
+                  <span className="strip-stat-lbl">Active Campaigns</span>
                 </div>
               </div>
 
-              <div className="stat-box">
-                <div className="stat-icon-wrap icon-amber">
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+              <div className="strip-stat-item">
+                <div className="strip-stat-icon icon-purple">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
                 </div>
-                <div>
-                  <span className="stat-num">{stats.programsCount || 0}</span>
-                  <span className="stat-lbl">Grant Programs Backed</span>
+                <div className="strip-stat-text">
+                  <span className="strip-stat-num">{stats.uniqueDonors || 0}</span>
+                  <span className="strip-stat-lbl">Verified Donors</span>
+                </div>
+              </div>
+
+              <div className="strip-stat-item">
+                <div className="strip-stat-icon icon-amber">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                </div>
+                <div className="strip-stat-text">
+                  <span className="strip-stat-num">{stats.programsCount || 0}</span>
+                  <span className="strip-stat-lbl">Programs Backed</span>
                 </div>
               </div>
             </div>
 
-            <div className="stats-footer">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#10b981" strokeWidth="2.5"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg>
-              <span>100% of contributions replenish program disbursement pools</span>
+            <div className="ledger-strip-badge">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#10b981" strokeWidth="2.5"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg>
+              <span>100% Direct Impact</span>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Featured Active Campaigns */}
+      {/* Real-time Philanthropic Activity Ticker */}
+      <LiveImpactTicker />
+
+      {/* Featured Active Campaigns in 3D Cards */}
       <section className="featured-campaigns-section" id="campaigns">
         <div className="container">
           <div className="section-head-split">
@@ -199,7 +256,7 @@ export default function Home({ onOpenDonate, onOpenInquiry, isLoggedIn }) {
               <h2>Active Giving Campaigns</h2>
               <p>Explore verified causes below. Every dollar contributed feeds directly into grant allocations.</p>
             </div>
-            <Link to="/campaigns" className="btn btn-outline">
+            <Link to="/campaigns" className="btn btn-outline view-all-btn">
               View All Campaigns →
             </Link>
           </div>
@@ -211,79 +268,60 @@ export default function Home({ onOpenDonate, onOpenInquiry, isLoggedIn }) {
             </div>
           ) : (
             <div className="campaigns-grid">
-              {campaigns.map(c => {
+              {campaigns.map((c) => {
                 const theme = getCampaignTheme(c.name, c.type || c.programType, c.programName);
                 const percent = Math.min(100, Math.round(c.progressPercent || 0));
 
                 return (
-                  <div key={c.id} className="campaign-card">
-                    {/* Visual Card Banner */}
-                    <div className="campaign-visual-bar" style={{ background: theme.headerBg }}>
-                      <div className="category-tag">
-                        {theme.icon}
-                        <span style={{ color: theme.accentColor }}>{theme.label}</span>
-                      </div>
-                      <span className="live-status-pill">Active</span>
-                    </div>
-
-                    <div className="campaign-body">
-                      <h3 className="campaign-title">
-                        <Link to={`/campaign/${c.id}`}>{c.name}</Link>
-                      </h3>
-
-                      <div className="campaign-program-tag">
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-                        <span>Grant Fund: <strong>{c.programName}</strong></span>
-                      </div>
-
-                      <p className="campaign-desc">
-                        {c.description ? (c.description.length > 140 ? c.description.slice(0, 140) + '...' : c.description) : 'Vital funding for vetted grant applicants.'}
-                      </p>
-
-                      <div className="progress-block">
-                        <div className="progress-labels">
-                          <span className="amount-raised">
-                            <strong>${(c.raisedAmount || 0).toLocaleString()}</strong>
-                          </span>
-                          <span className="goal-amount">Goal: ${(c.goalAmount || 0).toLocaleString()}</span>
+                  <TiltCard key={c.id} className="campaign-card-tilt" maxTilt={6}>
+                    <div className="campaign-card-inner">
+                      {/* Visual Card Banner */}
+                      <div className="campaign-visual-bar" style={{ background: theme.headerBg }}>
+                        <div className="category-tag">
+                          {theme.icon}
+                          <span style={{ color: theme.accentColor }}>{theme.label}</span>
                         </div>
-                        <div className="progress-container">
-                          <div className="progress-bar-fill" style={{ width: `${Math.max(percent, 4)}%` }}></div>
-                        </div>
-                        <div className="progress-sub">
-                          <span>{percent}% Funded</span>
-                          <span>{c.donorCount || 0} Supporters</span>
-                        </div>
+                        <span className="live-status-pill">Active</span>
                       </div>
 
-                      {/* Quick Gift Row */}
-                      <div className="quick-gift-row">
-                        <span className="quick-gift-lbl">Quick Gift:</span>
-                        {[25, 50, 100, 250].map(val => (
-                          <button
-                            key={val}
-                            type="button"
-                            onClick={() => onOpenDonate(c, val)}
-                            className="quick-chip"
-                          >
-                            ${val}
-                          </button>
-                        ))}
-                      </div>
+                      <div className="campaign-body">
+                        <h3 className="campaign-title">
+                          <Link to={`/campaign/${c.id}`}>{c.name}</Link>
+                        </h3>
 
-                      <div className="campaign-card-footer">
-                        <button
-                          onClick={() => onOpenDonate(c)}
-                          className="btn btn-accent btn-sm card-donate-btn"
-                        >
-                          Donate Now
-                        </button>
-                        <Link to={`/campaign/${c.id}`} className="btn btn-secondary btn-sm">
-                          Details & Wall
-                        </Link>
+                        <div className="campaign-program-tag">
+                          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                          <span>Grant Fund: <strong>{c.programName}</strong></span>
+                        </div>
+
+                        <p className="campaign-desc">
+                          {c.description ? (c.description.length > 135 ? c.description.slice(0, 135) + '...' : c.description) : 'Vital funding for vetted grant applicants.'}
+                        </p>
+
+                        <div className="progress-block">
+                          <div className="progress-labels">
+                            <span className="amount-raised">
+                              <strong>${(c.raisedAmount || 0).toLocaleString()}</strong>
+                            </span>
+                            <span className="goal-amount">Goal: ${(c.goalAmount || 0).toLocaleString()}</span>
+                          </div>
+                          <div className="progress-container">
+                            <div className="progress-bar-fill" style={{ width: `${Math.max(percent, 4)}%` }}></div>
+                          </div>
+                          <div className="progress-sub">
+                            <span>{percent}% Funded</span>
+                            <span>{c.donorCount || 0} Supporters</span>
+                          </div>
+                        </div>
+
+                        <div className="campaign-card-footer">
+                          <Link to={`/campaign/${c.id}`} className="btn btn-primary btn-sm btn-block card-details-btn">
+                            Details & Wall →
+                          </Link>
+                        </div>
                       </div>
                     </div>
-                  </div>
+                  </TiltCard>
                 );
               })}
             </div>
@@ -291,7 +329,13 @@ export default function Home({ onOpenDonate, onOpenInquiry, isLoggedIn }) {
         </div>
       </section>
 
-      {/* How It Works Section */}
+      {/* Verifiable Real-World Giving Impact Calculator */}
+      <ImpactCalculator
+        onDonateAmount={(amt, targetCampaign) => onOpenDonate(targetCampaign, amt)}
+        campaigns={campaigns}
+      />
+
+      {/* How It Works Section with 3D Stepped Depth Cards */}
       <section className="how-it-works-section">
         <div className="container">
           <div className="section-head text-center">
@@ -301,35 +345,51 @@ export default function Home({ onOpenDonate, onOpenInquiry, isLoggedIn }) {
           </div>
 
           <div className="flow-steps-grid">
-            <div className="flow-step-card">
-              <div className="step-badge">01</div>
-              <h4>Choose Cause</h4>
-              <p>Select an active education, clean water, women's welfare, disaster relief, or healthcare campaign directly linked to a vetted Grant Program.</p>
-            </div>
-            <div className="flow-step-card">
-              <div className="step-badge">02</div>
-              <h4>Instant Receipt</h4>
-              <p>Donate securely. An official IRS 501(c)(3) tax receipt with a unique serial number is generated on confirmation.</p>
-            </div>
-            <div className="flow-step-card">
-              <div className="step-badge">03</div>
-              <h4>Direct Allocation</h4>
-              <p>100% of your gift is credited directly to the selected program treasury, expanding community grant capacity.</p>
-            </div>
-            <div className="flow-step-card">
-              <div className="step-badge">04</div>
-              <h4>Audited Milestones</h4>
-              <p>Grant managers disburse installment tranches only upon verified project milestones, receipts, or authenticated care.</p>
-            </div>
+            <TiltCard className="flow-step-tilt" maxTilt={8}>
+              <div className="flow-step-inner">
+                <div className="step-badge-3d">01</div>
+                <h4>Choose Cause</h4>
+                <p>Select an active education, clean water, women's welfare, disaster relief, or healthcare campaign directly linked to a vetted Grant Program.</p>
+                <div className="step-glow-line"></div>
+              </div>
+            </TiltCard>
+
+            <TiltCard className="flow-step-tilt" maxTilt={8}>
+              <div className="flow-step-inner">
+                <div className="step-badge-3d">02</div>
+                <h4>Instant Receipt</h4>
+                <p>Donate securely. An official IRS 501(c)(3) tax receipt with a unique serial number is generated on confirmation.</p>
+                <div className="step-glow-line"></div>
+              </div>
+            </TiltCard>
+
+            <TiltCard className="flow-step-tilt" maxTilt={8}>
+              <div className="flow-step-inner">
+                <div className="step-badge-3d">03</div>
+                <h4>Direct Allocation</h4>
+                <p>100% of your gift is credited directly to the selected program treasury, expanding community grant capacity.</p>
+                <div className="step-glow-line"></div>
+              </div>
+            </TiltCard>
+
+            <TiltCard className="flow-step-tilt" maxTilt={8}>
+              <div className="flow-step-inner">
+                <div className="step-badge-3d">04</div>
+                <h4>Audited Milestones</h4>
+                <p>Grant managers disburse installment tranches only upon verified project milestones, receipts, or authenticated care.</p>
+                <div className="step-glow-line"></div>
+              </div>
+            </TiltCard>
           </div>
         </div>
       </section>
 
-      {/* Corporate Partner Banner for Non-Logged-In Prospects */}
+      {/* Corporate Partner Banner for Non-Logged-In Prospects / Authenticated Donors */}
       {!isLoggedIn ? (
         <section className="partner-banner-section">
           <div className="container">
-            <div className="partner-box">
+            <div className="partner-box-3d">
+              <div className="partner-ambient-glow"></div>
               <div className="partner-text">
                 <span className="badge badge-amber">Institutional &amp; Corporate Giving</span>
                 <h2>Looking to Partner With Our Initiatives?</h2>
@@ -346,7 +406,8 @@ export default function Home({ onOpenDonate, onOpenInquiry, isLoggedIn }) {
       ) : (
         <section className="partner-banner-section">
           <div className="container">
-            <div className="partner-box">
+            <div className="partner-box-3d">
+              <div className="partner-ambient-glow"></div>
               <div className="partner-text">
                 <span className="badge badge-success">Direct Impact Donor Portal</span>
                 <h2>Verified Philanthropic Allocation</h2>

@@ -109,19 +109,16 @@ body .cHeaderPanel {
   overflow-x: hidden !important;
 }
 
-/* Full Width Breakout for Experience Cloud */
+/* Fluid 100% Full-Width Layout */
 .donor-app {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  width: 100vw !important;
-  position: relative !important;
-  left: 50% !important;
-  right: 50% !important;
-  margin-left: -50vw !important;
-  margin-right: -50vw !important;
-  margin-top: 0;
-  padding-top: 0;
+  width: 100% !important;
+  max-width: 100% !important;
+  position: relative;
+  margin: 0 !important;
+  padding: 0 !important;
   overflow-x: hidden !important;
   background: var(--bg-main);
 }

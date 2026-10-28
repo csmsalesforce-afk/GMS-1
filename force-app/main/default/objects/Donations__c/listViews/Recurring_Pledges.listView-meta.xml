@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ListView xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Recurring_Pledges</fullName>
+    <columns>NAME</columns>
+    <columns>Donor_Name__c</columns>
+    <columns>Donation_Amount__c</columns>
+    <columns>Frequency__c</columns>
+    <columns>Pledge_Duration__c</columns>
+    <columns>Auto_Pay_Status__c</columns>
+    <columns>Payment_Status__c</columns>
+    <columns>Payment_Date__c</columns>
+    <columns>Donor_Campaign__c</columns>
+    <columns>Receipt_Number__c</columns>
+    <filterScope>Everything</filterScope>
+    <filters>
+        <field>Frequency__c</field>
+        <operation>contains</operation>
+        <value>Recurring</value>
+    </filters>
+    <label>Active &amp; Recurring Pledges</label>
+</ListView>

@@ -121,21 +121,25 @@
   gap: 2rem;
 }
 
+.pillar-card-tilt {
+  height: 100%;
+}
+
 .pillar-card {
   background: #ffffff;
-  border: 1.5px solid var(--border-subtle);
+  border: 1.5px solid #e2e8f0;
   border-radius: var(--radius-lg);
   padding: 2.4rem 2rem;
   display: flex;
   flex-direction: column;
-  transition: all var(--transition-fast);
-  box-shadow: 0 4px 15px -3px rgba(0, 0, 0, 0.03);
+  height: 100%;
+  box-shadow: 0 4px 15px -3px rgba(15, 23, 42, 0.04);
   position: relative;
+  transition: all var(--transition-fast);
 }
 
-.pillar-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 20px 30px -10px rgba(0, 0, 0, 0.08);
+.pillar-card-tilt:hover .pillar-card {
+  box-shadow: 0 20px 35px -8px rgba(37, 99, 235, 0.12);
   border-color: #93c5fd;
 }
 

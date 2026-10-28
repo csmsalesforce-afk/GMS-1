@@ -1,0 +1,49 @@
+.tilt-card-wrapper {
+  position: relative;
+  transform-style: preserve-3d;
+  transition: transform 0.15s cubic-bezier(0.2, 0, 0.2, 1), box-shadow 0.25s ease;
+  will-change: transform;
+  border-radius: var(--radius-lg, 18px);
+}
+
+.tilt-card-wrapper.tilt-hovered {
+  transition: transform 0.08s linear, box-shadow 0.25s ease;
+  z-index: 5;
+}
+
+.tilt-card-content {
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+  position: relative;
+  border-radius: inherit;
+}
+
+.tilt-card-glare {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  pointer-events: none;
+  border-radius: inherit;
+  transition: opacity 0.25s ease;
+  mix-blend-mode: overlay;
+  z-index: 10;
+}
+
+/* Layer pop-out utilities for tilt children */
+.tilt-depth-sm {
+  transform: translateZ(14px);
+  transform-style: preserve-3d;
+}
+
+.tilt-depth-md {
+  transform: translateZ(24px);
+  transform-style: preserve-3d;
+}
+
+.tilt-depth-lg {
+  transform: translateZ(36px);
+  transform-style: preserve-3d;
+}

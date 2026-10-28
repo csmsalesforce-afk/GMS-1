@@ -3,7 +3,7 @@ import { Link, useLocation } from 'react-router-dom';
 import salesforceService from '../services/salesforceService';
 import './Navbar.css';
 
-export default function Navbar({ onOpenDonate, onOpenInquiry, userAuth, profileStatus, onOpenProfile }) {
+export default function Navbar({ onOpenDonate, onOpenInquiry, userAuth, profileStatus, onOpenProfile, onOpenGiving }) {
   const location = useLocation();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
@@ -11,9 +11,10 @@ export default function Navbar({ onOpenDonate, onOpenInquiry, userAuth, profileS
   const userName = userAuth?.userName || salesforceService.userName;
   const loginUrl = salesforceService.loginUrl;
 
-  const currentStatus = profileStatus?.status || profileStatus?.complianceStatus || (isLoggedIn ? 'NO_PROFILE' : 'GUEST');
-  const isApproved = currentStatus === 'Approved' && profileStatus?.kycVerified === true;
-  const isPending = currentStatus === 'Pending' || (currentStatus === 'Approved' && !profileStatus?.kycVerified);
+  const hasExistingDonor = Boolean(profileStatus?.donorId || profileStatus?.donorCode || (profileStatus?.donorName && profileStatus?.donorName !== userName));
+  const currentStatus = profileStatus?.status || profileStatus?.complianceStatus || (hasExistingDonor ? 'Approved' : (isLoggedIn ? 'NO_PROFILE' : 'GUEST'));
+  const isApproved = hasExistingDonor || (currentStatus === 'Approved' && profileStatus?.kycVerified === true);
+  const isPending = !isApproved && (currentStatus === 'Pending' || (currentStatus === 'Approved' && !profileStatus?.kycVerified));
 
   // Close mobile menu on route change
   useEffect(() => {
@@ -98,6 +99,20 @@ export default function Navbar({ onOpenDonate, onOpenInquiry, userAuth, profileS
                 ) : (
                   <span className="donor-status-pill needed" title="KYC Verification Required">⚠️ Verify</span>
                 )}
+              </button>
+
+              <button 
+                type="button"
+                onClick={() => { if (onOpenGiving) onOpenGiving(); }}
+                className="btn btn-secondary btn-sm nav-giving-btn desktop-only"
+                title="View your active recurring gifts & official tax receipts"
+              >
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M21 12V7H5a2 2 0 0 1 0-4h14v4"/>
+                  <path d="M3 5v14a2 2 0 0 0 2 2h16v-5"/>
+                  <path d="M18 12a2 2 0 0 0 0 4h4v-4Z"/>
+                </svg>
+                <span>My Giving</span>
               </button>
 
               <button 
@@ -236,6 +251,20 @@ export default function Navbar({ onOpenDonate, onOpenInquiry, userAuth, profileS
                 </svg>
                 <span>Program Impact Ledger</span>
               </Link>
+              {isLoggedIn && (
+                <button
+                  type="button"
+                  onClick={() => { setMobileMenuOpen(false); if (onOpenGiving) onOpenGiving(); }}
+                  className="mobile-nav-link text-btn"
+                >
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <path d="M21 12V7H5a2 2 0 0 1 0-4h14v4"/>
+                    <path d="M3 5v14a2 2 0 0 0 2 2h16v-5"/>
+                    <path d="M18 12a2 2 0 0 0 0 4h4v-4Z"/>
+                  </svg>
+                  <span>My Giving &amp; Recurring Pledges</span>
+                </button>
+              )}
               {!isLoggedIn && (
                 <button 
                   type="button" 

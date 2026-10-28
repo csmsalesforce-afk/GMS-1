@@ -184,11 +184,8 @@ public without sharing class DonationsTriggerHandler {
 
         for (Program__c p : programsToUpdate) {
             Decimal campaignDonation = programDonationTotals.containsKey(p.Id) ? programDonationTotals.get(p.Id) : 0;
-            // Update Program_Fund__c and Total_Funded__c
-            p.Total_Funded__c = (p.Total_Funded__c != null ? p.Total_Funded__c : 0) + campaignDonation;
-            if (p.Program_Fund__c == null || p.Program_Fund__c == 0) {
-                p.Program_Fund__c = campaignDonation;
-            }
+            // Update Total_Funded__c with total amount raised from paid donations
+            p.Total_Funded__c = campaignDonation;
         }
 
         if (!programsToUpdate.isEmpty()) {

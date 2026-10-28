@@ -9,6 +9,9 @@ public with sharing class GrantProgramsController {
                        Program_Type__c,
                        Max_Amount__c,
                        Program_Fund__c,
+                       Total_Funded__c,
+                       Remaining_Budget__c,
+                       Total_Disbursed__c,
                        Status__c,
                        Requirements__c,
                        Overview__c
@@ -32,6 +35,9 @@ public static Map<String, Object> getProgramById(Id programId) {
                Program_Type__c,
                Max_Amount__c,
                Program_Fund__c,
+               Total_Funded__c,
+               Remaining_Budget__c,
+               Total_Disbursed__c,
                Status__c,
                Overview__c
         FROM Program__c
@@ -46,9 +52,11 @@ public static Map<String, Object> getProgramById(Id programId) {
     ];
 
     List<Program_Document__c> documents = [
-        SELECT Id, Name, Is_Mandatory__c
+        SELECT Id, Name, Is_Mandatory__c, Applies_To__c, Description__c
         FROM Program_Document__c
         WHERE Program__c = :programId
+          AND (Applies_To__c = 'Applicant' OR Applies_To__c = 'Both')
+        ORDER BY Is_Mandatory__c DESC, Name ASC
     ];
 
     return new Map<String, Object>{
@@ -61,9 +69,11 @@ public static Map<String, Object> getProgramById(Id programId) {
     @AuraEnabled(cacheable=true)
 public static List<Program_Document__c> getProgramDocuments(Id programId) {
     return [
-        SELECT Id, Name, Is_Mandatory__c
+        SELECT Id, Name, Is_Mandatory__c, Applies_To__c, Description__c
         FROM Program_Document__c
         WHERE Program__c = :programId
+          AND (Applies_To__c = 'Applicant' OR Applies_To__c = 'Both')
+        ORDER BY Is_Mandatory__c DESC, Name ASC
     ];
 }
 }

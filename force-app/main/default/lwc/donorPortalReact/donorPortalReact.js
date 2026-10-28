@@ -12,6 +12,14 @@ import getDonorProfileStatus from '@salesforce/apex/DonorPortalController.getDon
 import submitDonorProfile from '@salesforce/apex/DonorPortalController.submitDonorProfile';
 import createStripeCheckoutSession from '@salesforce/apex/DonorPortalController.createStripeCheckoutSession';
 import confirmStripeDonation from '@salesforce/apex/DonorPortalController.confirmStripeDonation';
+import getDonorGivingHistory from '@salesforce/apex/DonorPortalController.getDonorGivingHistory';
+import cancelRecurringDonation from '@salesforce/apex/DonorPortalController.cancelRecurringDonation';
+import getRequiredDonorDocuments from '@salesforce/apex/DonorPortalController.getRequiredDonorDocuments';
+import getDonorRequirementsForCampaign from '@salesforce/apex/DonorPortalController.getDonorRequirementsForCampaign';
+import uploadDonorKYCDocument from '@salesforce/apex/DonorPortalController.uploadDonorKYCDocument';
+import deleteDonorKYCDocument from '@salesforce/apex/DonorPortalController.deleteDonorKYCDocument';
+import submitDonorDocumentsForReview from '@salesforce/apex/DonorPortalController.submitDonorDocumentsForReview';
+import requestCampaignAccess from '@salesforce/apex/DonorPortalController.requestCampaignAccess';
 
 export default class DonorPortalReact extends LightningElement {
     _scriptLoaded = false;
@@ -125,14 +133,32 @@ export default class DonorPortalReact extends LightningElement {
                 window.location.href = logoutUrl;
             },
             createStripeCheckoutSession: (payload) => createStripeCheckoutSession({ payload }).then(res => this._deepCopy(res)),
-            confirmStripeDonation: (sessionId) => confirmStripeDonation({ sessionId }).then(res => this._deepCopy(res))
+            confirmStripeDonation: (sessionId) => confirmStripeDonation({ sessionId }).then(res => this._deepCopy(res)),
+            getDonorGivingHistory: () => getDonorGivingHistory().then(res => this._deepCopy(res)),
+            cancelRecurringDonation: (donationId) => cancelRecurringDonation({ donationId }).then(res => this._deepCopy(res)),
+            getRequiredDonorDocuments: () => getRequiredDonorDocuments().then(res => this._deepCopy(res)),
+            getDonorRequirementsForCampaign: (campaignId, programId) => getDonorRequirementsForCampaign({ campaignId, programId }).then(res => this._deepCopy(res)),
+            uploadDonorKYCDocument: (programDocKey, fileName, base64Data) => uploadDonorKYCDocument({ programDocKey, fileName, base64Data }).then(res => this._deepCopy(res)),
+            deleteDonorKYCDocument: (contentDocumentId) => deleteDonorKYCDocument({ contentDocumentId }).then(res => this._deepCopy(res)),
+            submitDonorDocumentsForReview: () => submitDonorDocumentsForReview().then(res => {
+                if (res && res.success) {
+                    this._profileStatus = Object.assign({}, this._profileStatus, {
+                        complianceStatus: 'Pending',
+                        kycVerified: false,
+                        status: 'Pending'
+                    });
+                    this._pushData();
+                }
+                return this._deepCopy(res);
+            }),
+            requestCampaignAccess: (campaignId, notes) => requestCampaignAccess({ campaignId, notes }).then(res => this._deepCopy(res))
         };
 
         const payload = {
             campaigns: this._campaigns || [],
             stats: this._stats || {},
             isLoggedIn: loggedIn,
-            userName: loggedIn ? (this._userName || 'Donor') : '',
+            userName: loggedIn ? (this._userName || this._profileStatus?.userName || this._profileStatus?.donorName || '') : '',
             profileStatus: this._profileStatus || { status: loggedIn ? 'NO_PROFILE' : 'GUEST' },
             loginUrl: loginUrl,
             logoutUrl: logoutUrl

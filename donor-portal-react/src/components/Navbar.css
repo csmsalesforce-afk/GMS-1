@@ -2,9 +2,11 @@
   position: sticky;
   top: 0;
   z-index: 1000;
-  background: #ffffff;
-  border-bottom: 1px solid rgba(226, 232, 240, 0.9);
-  box-shadow: 0 4px 20px -2px rgba(15, 23, 42, 0.05);
+  background: rgba(255, 255, 255, 0.88);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  border-bottom: 1px solid rgba(226, 232, 240, 0.85);
+  box-shadow: 0 4px 25px -4px rgba(15, 23, 42, 0.05);
   width: 100%;
 }
 
@@ -26,16 +28,22 @@
 }
 
 .logo-badge {
-  width: 40px;
-  height: 40px;
+  width: 42px;
+  height: 42px;
   border-radius: var(--radius-md);
   background: linear-gradient(135deg, #10b981 0%, #059669 100%);
   display: flex;
   align-items: center;
   justify-content: center;
   color: #ffffff;
-  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.28);
+  box-shadow: 0 4px 14px rgba(16, 185, 129, 0.35);
   flex-shrink: 0;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.brand-logo:hover .logo-badge {
+  transform: rotate(-5deg) scale(1.08);
+  box-shadow: 0 8px 22px rgba(16, 185, 129, 0.5);
 }
 
 .brand-text {

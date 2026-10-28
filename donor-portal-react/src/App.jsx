@@ -1,15 +1,17 @@
 import React, { useState, useEffect } from 'react';
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, useNavigate } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
-import DonationModal from './components/DonationModal';
 import ReceiptModal from './components/ReceiptModal';
 import PartnerInquiryModal from './components/PartnerInquiryModal';
 import DonorProfileModal from './components/DonorProfileModal';
+import MyGivingModal from './components/MyGivingModal';
 import Home from './pages/Home';
 import Campaigns from './pages/Campaigns';
 import CampaignDetails from './pages/CampaignDetails';
 import ImpactStory from './pages/ImpactStory';
+import Donate from './pages/Donate';
+import ErrorBoundary from './components/ErrorBoundary';
 import salesforceService from './services/salesforceService';
 import './App.css';
 
@@ -22,7 +24,9 @@ export default function App({ userAuth }) {
   const [receiptData, setReceiptData] = useState(null);
   const [inquiryModalOpen, setInquiryModalOpen] = useState(false);
   const [profileModalOpen, setProfileModalOpen] = useState(false);
+  const [givingModalOpen, setGivingModalOpen] = useState(false);
   const [profileStatus, setProfileStatus] = useState(() => userAuth?.profileStatus || salesforceService.profileStatus);
+  const [isCampaignLocked, setIsCampaignLocked] = useState(false);
 
   useEffect(() => {
     async function initCampaigns() {
@@ -65,8 +69,13 @@ export default function App({ userAuth }) {
               campaignName: res.campaignName || 'Grant Program Giving',
               programName: res.programName || 'Philanthropic Initiative',
               donorName: res.donorName,
-              donorEmail: res.donorEmail,
-              date: res.date
+              donorEmail: (res.donorEmail && res.donorEmail !== 'receipt@donor.org')
+                ? res.donorEmail
+                : (profileStatus?.donorEmail || profileStatus?.email || profileStatus?.userEmail || userAuth?.userEmail || ''),
+              date: res.date,
+              frequency: res.frequency,
+              designation: res.designation,
+              transactionRef: res.transactionRef
             });
           }
         }).catch(err => {
@@ -78,16 +87,32 @@ export default function App({ userAuth }) {
     }
   }, []);
 
+  // Auto-open Partner Inquiry Modal if URL contains #contact, #inquiry, or ?inquiry=true
+  useEffect(() => {
+    const handleUrlTrigger = () => {
+      const hash = window.location.hash;
+      const searchParams = new URLSearchParams(window.location.search);
+      if (hash === '#contact' || hash === '#inquiry' || searchParams.get('inquiry') === 'true' || searchParams.get('contact') === 'true') {
+        setInquiryModalOpen(true);
+      }
+    };
+
+    handleUrlTrigger();
+    window.addEventListener('hashchange', handleUrlTrigger);
+    return () => window.removeEventListener('hashchange', handleUrlTrigger);
+  }, []);
+
+  const navigate = useNavigate();
+
   const handleOpenDonate = (campaign = null, amount = null) => {
-    if (campaign) {
-      setSelectedCampaign(campaign);
-    } else if (campaigns.length > 0 && !selectedCampaign) {
-      setSelectedCampaign(campaigns[0]);
-    }
-    if (amount) {
-      setInitialAmount(amount);
-    }
-    setDonateModalOpen(true);
+    navigate('/donate', {
+      state: {
+        campaign: campaign,
+        amount: amount,
+        isLocked: Boolean(campaign)
+      }
+    });
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const handleDonationSuccess = (receipt) => {
@@ -100,10 +125,18 @@ export default function App({ userAuth }) {
   };
 
   const isLoggedIn = userAuth?.isLoggedIn ?? salesforceService.isLoggedIn;
+  const [inquiryInitialCampaign, setInquiryInitialCampaign] = useState(null);
 
-  const handleOpenInquiry = () => {
-    if (!isLoggedIn) {
-      setInquiryModalOpen(true);
+  const handleOpenInquiry = (campaign = null) => {
+    setInquiryInitialCampaign(campaign);
+    setInquiryModalOpen(true);
+  };
+
+  const handleCloseInquiry = () => {
+    setInquiryModalOpen(false);
+    setInquiryInitialCampaign(null);
+    if (window.location.hash === '#contact' || window.location.hash === '#inquiry') {
+      window.history.replaceState(null, document.title, window.location.pathname + window.location.search);
     }
   };
 
@@ -115,67 +148,67 @@ export default function App({ userAuth }) {
         onOpenDonate={handleOpenDonate}
         onOpenInquiry={handleOpenInquiry}
         onOpenProfile={() => setProfileModalOpen(true)}
+        onOpenGiving={() => setGivingModalOpen(true)}
       />
 
       <main className="main-viewport">
-        <Routes>
-          <Route
-            path="/"
-            element={
-              <Home
-                onOpenDonate={handleOpenDonate}
-                onOpenInquiry={handleOpenInquiry}
-                isLoggedIn={isLoggedIn}
-              />
-            }
-          />
-          <Route
-            path="/campaigns"
-            element={<Campaigns onOpenDonate={handleOpenDonate} />}
-          />
-          <Route
-            path="/campaign/:campaignId"
-            element={<CampaignDetails onOpenDonate={handleOpenDonate} />}
-          />
-          <Route
-            path="/impact"
-            element={
-              <ImpactStory
-                campaigns={campaigns}
-                onOpenDonate={handleOpenDonate}
-                onOpenInquiry={handleOpenInquiry}
-                isLoggedIn={isLoggedIn}
-              />
-            }
-          />
-        </Routes>
+        <ErrorBoundary>
+          <Routes>
+            <Route
+              path="/"
+              element={
+                <Home
+                  onOpenDonate={handleOpenDonate}
+                  onOpenInquiry={handleOpenInquiry}
+                  isLoggedIn={isLoggedIn}
+                />
+              }
+            />
+            <Route
+              path="/campaigns"
+              element={<Campaigns onOpenDonate={handleOpenDonate} onOpenInquiry={handleOpenInquiry} isLoggedIn={isLoggedIn} />}
+            />
+            <Route
+              path="/campaign/:campaignId"
+              element={<CampaignDetails onOpenDonate={handleOpenDonate} onOpenInquiry={handleOpenInquiry} isLoggedIn={isLoggedIn} />}
+            />
+            <Route
+              path="/impact"
+              element={
+                <ImpactStory
+                  campaigns={campaigns}
+                  onOpenDonate={handleOpenDonate}
+                  onOpenInquiry={handleOpenInquiry}
+                  isLoggedIn={isLoggedIn}
+                />
+              }
+            />
+            <Route
+              path="/donate"
+              element={
+                <Donate
+                  campaigns={campaigns}
+                  userAuth={userAuth}
+                  profileStatus={profileStatus}
+                  onOpenProfile={() => setProfileModalOpen(true)}
+                  onDonationSuccess={handleDonationSuccess}
+                />
+              }
+            />
+          </Routes>
+        </ErrorBoundary>
       </main>
 
       <Footer onOpenInquiry={handleOpenInquiry} isLoggedIn={isLoggedIn} />
 
       {/* Global Modals */}
-      <DonationModal
-        isOpen={donateModalOpen}
-        onClose={() => setDonateModalOpen(false)}
-        defaultCampaign={selectedCampaign}
-        initialAmount={initialAmount}
-        campaigns={campaigns}
-        onDonationSuccess={handleDonationSuccess}
-        userAuth={userAuth}
-        profileStatus={profileStatus}
-        onOpenProfile={() => setProfileModalOpen(true)}
-      />
-
-      <ReceiptModal
-        isOpen={receiptModalOpen}
-        onClose={() => setReceiptModalOpen(false)}
-        receiptData={receiptData}
-      />
 
       <PartnerInquiryModal
         isOpen={inquiryModalOpen}
-        onClose={() => setInquiryModalOpen(false)}
+        onClose={handleCloseInquiry}
         campaigns={campaigns}
+        initialCampaign={inquiryInitialCampaign}
+        profileStatus={profileStatus}
       />
 
       <DonorProfileModal
@@ -183,6 +216,27 @@ export default function App({ userAuth }) {
         onClose={() => setProfileModalOpen(false)}
         profileStatus={profileStatus}
         onProfileUpdated={(updated) => setProfileStatus(updated)}
+      />
+
+      <MyGivingModal
+        isOpen={givingModalOpen}
+        onClose={() => setGivingModalOpen(false)}
+        onOpenDonate={handleOpenDonate}
+        onViewReceipt={(receipt) => {
+          setReceiptData(receipt);
+          setReceiptModalOpen(true);
+        }}
+      />
+
+      <ReceiptModal
+        isOpen={receiptModalOpen}
+        onClose={() => setReceiptModalOpen(false)}
+        receiptData={{
+          ...receiptData,
+          donorEmail: (receiptData?.donorEmail && receiptData.donorEmail !== 'receipt@donor.org')
+            ? receiptData.donorEmail
+            : (profileStatus?.donorEmail || profileStatus?.email || profileStatus?.userEmail || userAuth?.userEmail || '')
+        }}
       />
     </div>
   );

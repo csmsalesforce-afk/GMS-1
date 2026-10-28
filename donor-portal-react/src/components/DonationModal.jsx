@@ -13,27 +13,38 @@ export default function DonationModal({
   onDonationSuccess, 
   userAuth,
   profileStatus,
-  onOpenProfile
+  onOpenProfile,
+  isLocked: initialLocked = false
 }) {
   const isLoggedIn = userAuth?.isLoggedIn ?? salesforceService.isLoggedIn;
   const userName = userAuth?.userName || salesforceService.userName || '';
 
-  const currentStatus = profileStatus?.status || profileStatus?.complianceStatus || (isLoggedIn ? 'NO_PROFILE' : 'GUEST');
-  const isApproved = currentStatus === 'Approved' && profileStatus?.kycVerified === true;
-  const isPending = currentStatus === 'Pending' || (currentStatus === 'Approved' && !profileStatus?.kycVerified);
-  const isNoProfile = currentStatus === 'NO_PROFILE';
+  const hasExistingDonor = Boolean(profileStatus?.donorId || profileStatus?.donorCode || (profileStatus?.donorName && profileStatus?.donorName !== userName));
+  const currentStatus = profileStatus?.status || profileStatus?.complianceStatus || (hasExistingDonor ? 'Approved' : (isLoggedIn ? 'NO_PROFILE' : 'GUEST'));
+  const isApproved = hasExistingDonor || (currentStatus === 'Approved' && profileStatus?.kycVerified === true);
+  const isPending = !isApproved && (currentStatus === 'Pending' || (currentStatus === 'Approved' && !profileStatus?.kycVerified));
+  const isNoProfile = !hasExistingDonor && currentStatus === 'NO_PROFILE';
 
   const [selectedCampaignId, setSelectedCampaignId] = useState(defaultCampaign?.id || campaigns[0]?.id || '');
-  const [amount, setAmount] = useState(initialAmount);
+  const [designation, setDesignation] = useState(defaultCampaign?.programName || campaigns[0]?.programName || 'Direct Grant Allocation');
+  const [isLocked, setIsLocked] = useState(initialLocked);
+  const [amount, setAmount] = useState(initialAmount || 100);
   const [customAmount, setCustomAmount] = useState('');
   const [isCustom, setIsCustom] = useState(false);
   const [frequency, setFrequency] = useState('one-time');
+  const [recurringInterval, setRecurringInterval] = useState('monthly');
+  const [duration, setDuration] = useState('Ongoing (Until Cancelled)');
   
   // Donor details
-  const [donorName, setDonorName] = useState('');
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
   const [donorEmail, setDonorEmail] = useState('');
   const [donorPhone, setDonorPhone] = useState('');
   const [donorMessage, setDonorMessage] = useState('');
+
+  // Consent preferences
+  const [consentTaxReceipt, setConsentTaxReceipt] = useState(true);
+  const [consentAnonymous, setConsentAnonymous] = useState(false);
   
   // Card mock state
   const [cardNumber, setCardNumber] = useState('');
@@ -45,38 +56,79 @@ export default function DonationModal({
   const [errorMsg, setErrorMsg] = useState('');
 
   React.useEffect(() => {
-    if (profileStatus) {
-      if (profileStatus.donorName) setDonorName(profileStatus.donorName);
-      else if (userName && !donorName) setDonorName(userName);
+    // 1. If profileStatus has direct firstName and lastName, use them
+    if (profileStatus?.firstName && (!firstName || firstName === 'Donor')) {
+      setFirstName(profileStatus.firstName);
+      if (profileStatus?.lastName) {
+        setLastName(profileStatus.lastName);
+      }
+    } else {
+      // 2. Otherwise extract from donorName or userName, strictly ignoring placeholder 'Donor'
+      const candidateName = (profileStatus?.donorName && profileStatus.donorName !== 'Donor' && profileStatus.donorName !== 'Philanthropic Contributor')
+        ? profileStatus.donorName
+        : (userName && userName !== 'Donor' ? userName : (profileStatus?.userName && profileStatus.userName !== 'Donor' ? profileStatus.userName : ''));
 
-      if (profileStatus.email) setDonorEmail(profileStatus.email);
-      else if (profileStatus.userEmail && !donorEmail) setDonorEmail(profileStatus.userEmail);
-
-      if (profileStatus.phone && !donorPhone) setDonorPhone(profileStatus.phone);
-    } else if (userName && !donorName) {
-      setDonorName(userName);
+      if (candidateName && (!firstName || firstName === 'Donor' || !lastName)) {
+        const parts = candidateName.trim().split(/\s+/);
+        setFirstName(parts[0] || '');
+        if (parts.length > 1) {
+          setLastName(parts.slice(1).join(' ') || '');
+        }
+      }
     }
-  }, [profileStatus, userName]);
+
+    const resolvedEmail = profileStatus?.donorEmail || profileStatus?.email || profileStatus?.userEmail || '';
+    if (resolvedEmail && (!donorEmail || donorEmail === 'receipt@donor.org')) {
+      setDonorEmail(resolvedEmail);
+    }
+
+    const resolvedPhone = profileStatus?.donorPhone || profileStatus?.phone || profileStatus?.userPhone || '';
+    if (resolvedPhone && !donorPhone) {
+      setDonorPhone(resolvedPhone);
+    }
+  }, [profileStatus, userName, isOpen]);
 
   React.useEffect(() => {
     if (initialAmount) {
       setAmount(initialAmount);
       setIsCustom(false);
+    } else if (!amount && !isCustom) {
+      setAmount(100);
+      setIsCustom(false);
     }
   }, [initialAmount, isOpen]);
 
   React.useEffect(() => {
-    if (defaultCampaign?.id) {
-      setSelectedCampaignId(defaultCampaign.id);
-    } else if (campaigns.length > 0 && !selectedCampaignId) {
-      setSelectedCampaignId(campaigns[0].id);
+    if (isOpen) {
+      const shouldLock = Boolean(initialLocked);
+      setIsLocked(shouldLock);
+
+      const target = defaultCampaign || (selectedCampaignId ? campaigns.find(c => c.id === selectedCampaignId) : campaigns[0]);
+      if (target?.id) {
+        setSelectedCampaignId(target.id);
+        const resolvedProg = target.programName || target.programType || 'Direct Grant Allocation';
+        setDesignation(resolvedProg);
+      }
     }
-  }, [defaultCampaign, campaigns, isOpen]);
+  }, [defaultCampaign, campaigns, isOpen, initialLocked]);
 
   if (!isOpen) return null;
 
   const currentCampaign = campaigns.find(c => c.id === selectedCampaignId) || defaultCampaign || campaigns[0];
   const finalAmount = isCustom ? parseFloat(customAmount) || 0 : amount;
+  const resolvedFrequency = frequency === 'one-time'
+    ? 'One-Time'
+    : (recurringInterval === 'yearly' ? 'Recurring (Yearly)' : 'Recurring (Monthly)');
+  const frequencyUnit = frequency === 'one-time' ? '' : (recurringInterval === 'yearly' ? ' / yr' : ' / mo');
+
+  const handleCampaignChange = (campaignId) => {
+    setSelectedCampaignId(campaignId);
+    const c = campaigns.find(item => item.id === campaignId);
+    if (c) {
+      const resolvedProg = c.programName || c.programType || 'Direct Grant Allocation';
+      setDesignation(resolvedProg);
+    }
+  };
 
   const handlePresetClick = (val) => {
     setIsCustom(false);
@@ -105,6 +157,10 @@ export default function DonationModal({
       setErrorMsg('Please enter a valid email address to receive your official tax receipt.');
       return;
     }
+    if (!donorPhone || donorPhone.trim().length < 6) {
+      setErrorMsg('Please enter a valid phone number.');
+      return;
+    }
 
     setLoading(true);
 
@@ -114,14 +170,23 @@ export default function DonationModal({
       const successUrl = `${origin}${path}?stripe_session_id={CHECKOUT_SESSION_ID}`;
       const cancelUrl = `${origin}${path}#campaigns`;
 
+      const resolvedDonorName = consentAnonymous 
+        ? 'Anonymous Donor' 
+        : `${firstName} ${lastName}`.trim() || 'Generous Supporter';
+
       const payload = {
         campaignId: currentCampaign?.id,
         campaignName: currentCampaign?.name,
+        designation: designation || currentCampaign?.programName || 'Education & STEM',
+        frequency: resolvedFrequency,
+        duration: frequency !== 'one-time' ? duration : 'N/A',
         amount: finalAmount,
-        donorName: donorName.trim() || 'Anonymous Supporter',
+        donorName: resolvedDonorName,
         donorEmail: donorEmail.trim(),
         donorPhone: donorPhone.trim(),
         donorMessage: donorMessage.trim(),
+        isAnonymous: consentAnonymous,
+        consentTaxReceipt: consentTaxReceipt,
         successUrl,
         cancelUrl
       };
@@ -147,7 +212,12 @@ export default function DonationModal({
             donorName: payload.donorName,
             donorEmail: payload.donorEmail,
             campaignName: currentCampaign?.name,
-            programName: currentCampaign?.programName
+            programName: payload.designation || currentCampaign?.programName,
+            frequency: payload.frequency,
+            designation: payload.designation,
+            isAnonymous: consentAnonymous,
+            consentTaxReceipt: consentTaxReceipt,
+            transactionRef: simulatedSessionId
           });
           onClose();
           return;
@@ -363,21 +433,50 @@ export default function DonationModal({
                 </div>
               )}
 
-            {/* Campaign Designation */}
-            <div className="form-group">
-              <label className="form-label">Designate Contribution To Campaign</label>
-              <select
-                className="form-select"
-                value={selectedCampaignId}
-                onChange={e => setSelectedCampaignId(e.target.value)}
-              >
-                {campaigns.map(c => (
-                  <option key={c.id} value={c.id}>
-                    {c.name} {c.programName ? `(${c.programName})` : ''}
-                  </option>
-                ))}
-              </select>
-            </div>
+              {/* Campaign and Designation Grid */}
+              <div className="form-grid-2">
+                <div className="form-group">
+                  <label className="form-label">Campaign</label>
+                  <select
+                    className="form-select"
+                    value={selectedCampaignId}
+                    onChange={e => handleCampaignChange(e.target.value)}
+                    disabled={isLocked}
+                    title={currentCampaign?.name}
+                  >
+                    {campaigns.map(c => (
+                      <option key={c.id} value={c.id}>
+                        {c.name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                <div className="form-group">
+                  <label className="form-label">Designation / Program</label>
+                  <select
+                    className="form-select"
+                    value={designation}
+                    onChange={e => setDesignation(e.target.value)}
+                    disabled={isLocked}
+                    title={designation}
+                  >
+                    {currentCampaign?.programName && (
+                      <option value={currentCampaign.programName}>
+                        {currentCampaign.programName}
+                      </option>
+                    )}
+                    {campaigns
+                      .filter(c => c.programName && c.programName !== currentCampaign?.programName)
+                      .map(c => (
+                        <option key={c.id} value={c.programName}>
+                          {c.programName}
+                        </option>
+                      ))}
+                    <option value="General Philanthropic Fund">General Philanthropic Fund</option>
+                  </select>
+                </div>
+              </div>
 
             {/* Frequency Toggle */}
             <div className="frequency-toggle">
@@ -390,12 +489,63 @@ export default function DonationModal({
               </button>
               <button
                 type="button"
-                className={`freq-btn ${frequency === 'monthly' ? 'active' : ''}`}
-                onClick={() => setFrequency('monthly')}
+                className={`freq-btn ${frequency !== 'one-time' ? 'active' : ''}`}
+                onClick={() => setFrequency('recurring')}
               >
-                ✨ Monthly Sustainer
+                🔁 Recurring Gift
               </button>
             </div>
+
+            {/* When Recurring is selected: Monthly vs Yearly pill selector */}
+            {frequency !== 'one-time' && (
+              <div className="recurring-cadence-container">
+                <div className="cadence-selector-row">
+                  <span className="cadence-label">Recurring Cadence:</span>
+                  <div className="cadence-pill-group">
+                    <button
+                      type="button"
+                      className={`cadence-pill-btn ${recurringInterval === 'monthly' ? 'active' : ''}`}
+                      onClick={() => setRecurringInterval('monthly')}
+                    >
+                      🗓️ Monthly
+                    </button>
+                    <button
+                      type="button"
+                      className={`cadence-pill-btn ${recurringInterval === 'yearly' ? 'active' : ''}`}
+                      onClick={() => setRecurringInterval('yearly')}
+                    >
+                      📅 Annual / Yearly
+                    </button>
+                  </div>
+                </div>
+
+                <div className="cadence-selector-row" style={{ marginTop: '10px' }}>
+                  <span className="cadence-label">Commitment Duration:</span>
+                  <div className="cadence-pill-group">
+                    {(recurringInterval === 'yearly' 
+                      ? ['Ongoing (Until Cancelled)', '2 Years', '3 Years', '5 Years'] 
+                      : ['Ongoing (Until Cancelled)', '3 Months', '6 Months', '12 Months']
+                    ).map(d => (
+                      <button
+                        type="button"
+                        key={d}
+                        className={`cadence-pill-btn ${duration === d ? 'active' : ''}`}
+                        onClick={() => setDuration(d)}
+                      >
+                        {d}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="recurring-notice-banner">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                  <span>
+                    <strong>{recurringInterval === 'yearly' ? 'Annual Recurring Sustainer:' : 'Monthly Recurring Sustainer:'}</strong> Billed {recurringInterval === 'yearly' ? 'once per year' : 'every month'} ({duration}). You can pause, review, or cancel auto-pay anytime under <strong>My Giving</strong>.
+                  </span>
+                </div>
+              </div>
+            )}
 
             {/* Amount Selection */}
             <div className="amount-section">
@@ -432,15 +582,30 @@ export default function DonationModal({
 
             <div className="form-grid-2">
               <div className="form-group">
-                <label className="form-label">Full Name</label>
+                <label className="form-label">First Name *</label>
                 <input
                   type="text"
+                  required
                   className="form-input"
-                  placeholder="e.g. Sarah Jenkins"
-                  value={donorName}
-                  onChange={e => setDonorName(e.target.value)}
+                  placeholder="e.g. Sarah"
+                  value={firstName}
+                  onChange={e => setFirstName(e.target.value)}
                 />
               </div>
+              <div className="form-group">
+                <label className="form-label">Last Name *</label>
+                <input
+                  type="text"
+                  required
+                  className="form-input"
+                  placeholder="e.g. Jenkins"
+                  value={lastName}
+                  onChange={e => setLastName(e.target.value)}
+                />
+              </div>
+            </div>
+
+            <div className="form-grid-2">
               <div className="form-group">
                 <label className="form-label">Email Address *</label>
                 <input
@@ -452,28 +617,78 @@ export default function DonationModal({
                   onChange={e => setDonorEmail(e.target.value)}
                 />
               </div>
-            </div>
-
-            <div className="form-grid-2">
               <div className="form-group">
-                <label className="form-label">Phone Number (Optional)</label>
+                <label className="form-label">Phone Number *</label>
                 <input
                   type="tel"
+                  required
                   className="form-input"
                   placeholder="+1 (555) 000-0000"
                   value={donorPhone}
                   onChange={e => setDonorPhone(e.target.value)}
                 />
               </div>
-              <div className="form-group">
-                <label className="form-label">Dedication / Message</label>
+            </div>
+
+            <div className="form-group">
+              <label className="form-label">Dedication / Gift Message (Optional)</label>
+              <input
+                type="text"
+                className="form-input"
+                placeholder="In honor of... or words of encouragement"
+                value={donorMessage}
+                onChange={e => setDonorMessage(e.target.value)}
+              />
+            </div>
+
+            {/* Consent Preferences */}
+            <div className="consent-section">
+              <label className="consent-label">
                 <input
-                  type="text"
-                  className="form-input"
-                  placeholder="In honor of... or words of hope"
-                  value={donorMessage}
-                  onChange={e => setDonorMessage(e.target.value)}
+                  type="checkbox"
+                  className="consent-checkbox"
+                  checked={consentTaxReceipt}
+                  onChange={e => setConsentTaxReceipt(e.target.checked)}
                 />
+                <span>I consent to receive official 501(c)(3) tax receipts and verified milestone updates by email.</span>
+              </label>
+
+              <label className="consent-label">
+                <input
+                  type="checkbox"
+                  className="consent-checkbox"
+                  checked={consentAnonymous}
+                  onChange={e => setConsentAnonymous(e.target.checked)}
+                />
+                <span>Keep my gift anonymous on public donor walls and campaign supporter lists.</span>
+              </label>
+            </div>
+
+            {/* Donation Summary Card */}
+            <div className="donation-summary-card">
+              <div className="donation-summary-header">
+                <span>Donation Summary</span>
+                <span>🔒 SSL Protected</span>
+              </div>
+              <div className="summary-row-grid">
+                <div>
+                  <span className="summary-item-label">Giving Option</span>
+                  <span className="summary-item-val">{resolvedFrequency}</span>
+                </div>
+                {frequency !== 'one-time' && (
+                  <div>
+                    <span className="summary-item-label">Duration</span>
+                    <span className="summary-item-val" style={{ color: '#047857', fontWeight: 600 }}>{duration}</span>
+                  </div>
+                )}
+                <div>
+                  <span className="summary-item-label">Designation</span>
+                  <span className="summary-item-val" style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{designation}</span>
+                </div>
+                <div>
+                  <span className="summary-item-label">Donation Amount</span>
+                  <span className="summary-item-val highlight">${finalAmount.toFixed(2)} USD{frequencyUnit}</span>
+                </div>
               </div>
             </div>
 
@@ -528,7 +743,7 @@ export default function DonationModal({
           <div className="modal-fixed-footer">
             <div className="summary-text">
               <span>Total Gift:</span>
-              <strong className="summary-amount">${finalAmount.toFixed(2)} USD</strong>
+              <strong className="summary-amount">${finalAmount.toFixed(2)} USD{frequencyUnit}</strong>
             </div>
             <button
               type="submit"
@@ -543,7 +758,7 @@ export default function DonationModal({
               ) : (
                 <>
                   <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><rect width="20" height="14" x="2" y="5" rx="2"/><line x1="2" x2="22" y1="10" y2="10"/></svg>
-                  Proceed to Stripe Checkout (${finalAmount.toFixed(2)})
+                  Proceed to Stripe Checkout (${finalAmount.toFixed(2)}{frequencyUnit})
                 </>
               )}
             </button>

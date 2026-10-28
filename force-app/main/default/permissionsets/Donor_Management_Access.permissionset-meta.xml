@@ -172,6 +172,26 @@
         <field>Donations__c.Stripe_Payment_Intent_ID__c</field>
         <readable>true</readable>
     </fieldPermissions>
+    <fieldPermissions>
+        <editable>true</editable>
+        <field>Donations__c.Designation__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>true</editable>
+        <field>Donations__c.Frequency__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>true</editable>
+        <field>Donations__c.Pledge_Duration__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>true</editable>
+        <field>Donations__c.Auto_Pay_Status__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
 
     <!-- Donor__c Field Permissions -->
     <fieldPermissions>

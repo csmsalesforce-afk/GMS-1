@@ -86,4 +86,41 @@ public class DonorPortalControllerTest {
         Lead createdLead = [SELECT Id, Company FROM Lead WHERE Email = 'john@acme.com' LIMIT 1];
         System.assertEquals('Acme Corp', createdLead.Company);
     }
+
+    @IsTest
+    static void testGetDonorProfileStatusAndSubmit() {
+        // Create an active donor record
+        Donor__c d = new Donor__c(
+            Donor_Name__c = 'Test Donor Org',
+            Donor_Type__c = 'Corporate',
+            Email__c = UserInfo.getUserEmail(),
+            Status__c = 'Active',
+            User__c = UserInfo.getUserId(),
+            Compliance_Status__c = 'Approved',
+            KYC_Verified__c = true
+        );
+        insert d;
+
+        Test.startTest();
+        Map<String, Object> statusMap = DonorPortalController.getDonorProfileStatus();
+        System.assertEquals('Approved', statusMap.get('status'), 'Should be Approved for active donor record');
+        System.assertEquals(true, statusMap.get('kycVerified'), 'KYC should be verified');
+        System.assertEquals(d.Id, statusMap.get('donorId'), 'Should return correct donor record Id');
+
+        // Test submitDonorProfile
+        Map<String, Object> profilePayload = new Map<String, Object>{
+            'donorName' => 'Updated Donor Org',
+            'donorType' => 'Corporate',
+            'email' => UserInfo.getUserEmail(),
+            'phone' => '1234567890',
+            'address' => '123 Test Ave',
+            'preferredFundingType' => 'Mixed',
+            'fundingCapacity' => 10000
+        };
+        Map<String, Object> submitResult = DonorPortalController.submitDonorProfile(profilePayload);
+        Test.stopTest();
+
+        System.assertEquals(true, submitResult.get('success'), 'Profile submission should succeed');
+        System.assertEquals(d.Id, submitResult.get('donorId'), 'Should update existing donor record rather than duplicate');
+    }
 }
